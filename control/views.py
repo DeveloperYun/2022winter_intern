@@ -3,7 +3,26 @@ from django.http import HttpResponse
 from .models import *
 from ctypes import *
 
+# DWORD = unsigned long int
+#python int == c long
 loaddll = WinDLL('./AXL.dll') # 불러오기 성공
+
+#초기화 함수 처리 후에 모션 모듈의 존재 여부 확인작업 필요
+def is_moduleExists():
+    uStatus = c_ulong
+    AxmInfoIsMotionModule = loaddll['AxmInfoIsMotionModule']
+    Code = AxmInfoIsMotionModule(pointer(uStatus))
+    print("============================================")
+    print(Code)
+    print("============================================")
+
+# 시스템에 장착된 축의 수 확인
+AxmInfoGetAxisCount = loaddll['AxmInfoGetAxisCount']
+lAxisCount = c_long()
+AxisCount = AxmInfoGetAxisCount(pointer(lAxisCount)) 
+print("============================================")
+print(AxisCount)
+print("============================================")
 
 def is_lib_open():
     AxlIsOpened = loaddll['AxlIsOpened']
