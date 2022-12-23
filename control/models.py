@@ -12,4 +12,4 @@ class MoveVel(models.Model):
     lAxisNo = models.IntegerField()
     dVel = models.FloatField()
     dAccel = models.FloatField()
-    dDecel = models.FloatField()
+    dDecel = models.FloatField() 
