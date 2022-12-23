@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>controller dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+        <link rel='stylesheet' type="text/css" href="{% static 'css/styles.css'%}">
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed sb-sidenav-toggled">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3"  href="{% url 'hello:index' %}">Ajinextek controller</a>
+            
+            <!-- Navbar-->
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href=""> user : {{ user.username }}</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Dashboard</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                        {% if user.is_authenticated %}
+                            <div class="row">
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-primary text-white mb-4">
+                                        <div class="card-body">AxmMovePos</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <form action="{% url 'control:AxmMovePos' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                    <input type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                                    <input type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                    <input type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                    <input type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                    <input type="submit" value="제출">
+                                                </div>
+                                            </form>
+                                            <i class="fas fa-angle-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-warning text-white mb-4">
+                                        <div class="card-body">AxmMoveStartPos</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <form action="{% url 'control:AxmMoveStartPos' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                    <input type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                                    <input type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                    <input type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                    <input type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                    <input type="submit" value="제출">
+                                                </div>
+                                            </form>
+                                            <i class="fas fa-angle-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-success text-white mb-4">
+                                        <div class="card-body">AxmMoveVel</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <form action="{% url 'control:AxmMoveVel' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                    <input type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                    <input type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                    <input type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                    <input type="submit" value="제출">
+                                                    <i class="fas fa-angle-right"></i>
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-6">
+                                    <div class="card bg-danger text-white mb-4">
+                                        <div class="card-body">AxmMoveToAbsPos</div>
+                                        <div class="card-footer d-flex align-items-center justify-content-between">
+                                            <form action="{% url 'control:AxmMoveToAbsPos' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                    <input type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                                    <input type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                    <input type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                    <input type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                    <input type="submit" value="제출">
+                                                </div>
+                                            </form>
+                                            <i class="fas fa-angle-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            로그인 후 이용해주세요 
+                            <br/><br/><br/>
+                            <a class="btn btn-primary btn-xl text-uppercase" href="{% url 'accounts:login' %}">로그인</a>
+                        {%endif%}
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-area me-1"></i>
+                                        Area Chart Example
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="myAreaChart" width="100%" height="40">
+                                        </canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} <div class="col-xl-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Bar Chart Example
+                                    </div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                </div>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{% static 'js/scripts.js'%}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="{% static 'assets/demo/chart-area-demo.js'%}"></script>
+        {% comment %} <script src="{% static 'assets/demo/chart-bar-demo.js'%}"></script> {% endcomment %}
+
+    </body>
+</html>

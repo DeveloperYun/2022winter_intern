@@ -1,0 +1,12 @@
+from django.contrib import admin
+from .models import MovePos, MoveVel
+
+# Register your models here.
+class userMovePos(admin.ModelAdmin):
+    list_display = ('lAxisNo','dPos','dVel','dAccel','dDecel')
+admin.site.register(MovePos,userMovePos)
+
+class userMoveVel(admin.ModelAdmin):
+    list_display = ('lAxisNo','dVel','dAccel','dDecel')
+admin.site.register(MoveVel,userMoveVel)
+
