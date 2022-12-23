@@ -73,7 +73,7 @@ def AxmMoveStartPos(request):
     is_lib_open()
 
     if request.method == 'POST':
-        mov = MovePos()
+        mov = MoveStartPos()
         mov.lAxisNo = request.POST['lAxisNo']
         mov.dPos = request.POST['dPos']
         mov.dVel = request.POST['dVel']
@@ -122,7 +122,7 @@ def AxmMoveToAbsPos(request):
     is_lib_open()
 
     if request.method == 'POST':
-        mov = MovePos()
+        mov = MoveToAbsPos()
         mov.lAxisNo = request.POST['lAxisNo']
         mov.dPos = request.POST['dPos']
         mov.dVel = request.POST['dVel']
