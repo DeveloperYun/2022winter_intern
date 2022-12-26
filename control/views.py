@@ -7,33 +7,7 @@ from ctypes import *
 #python int == c long
 loaddll = WinDLL('./AXL.dll') # 불러오기 성공
 
-#초기화 함수 처리 후에 모션 모듈의 존재 여부 확인작업 필요
-def is_moduleExists():
-    uStatus = c_ulong
-    AxmInfoIsMotionModule = loaddll['AxmInfoIsMotionModule']
-    Code = AxmInfoIsMotionModule(pointer(uStatus))
-    print("============================================")
-    print(Code)
-    print("============================================")
-
-# 시스템에 장착된 축의 수 확인
-AxmInfoGetAxisCount = loaddll['AxmInfoGetAxisCount']
-lAxisCount = c_long()
-AxisCount = AxmInfoGetAxisCount(pointer(lAxisCount)) 
-print("============================================")
-print(AxisCount)
-print("============================================")
-
-def is_lib_open():
-    AxlIsOpened = loaddll['AxlIsOpened']
-    if AxlIsOpened():
-        print("라이브러리가 초기화되어 있습니다.")
-    else:
-        print("라이브러리가 초기화되지 않았습니다.")
-
-def main(request):
-    return render(request, 'control/control.html')
-
+# 초기화 함수 처리가 최우선!
 def control_initialization(request):
     #라이브러리 초기화 여부 확인 (보드에 연결되지 않으면 초기화 안되는게 맞음)
     AxlOpenNoReset = loaddll['AxlOpenNoReset']
@@ -42,15 +16,12 @@ def control_initialization(request):
     check = AxlOpenNoReset(7)
     
     if check == 1001: #AXT_RT_OPEN_ERROR
-        #라이브러리 초기화 (DWORD = unsigned long int)
+        #라이브러리 초기화 
         AxlOpen = loaddll['AxlOpen']
         # AxlOpen.argtypes=(c_int,)
         # AxlOpen.restype = (c_ulong)
-        code = AxlOpen()
-        print(code)
-
-        # 0000  함수실행 성공
-        # 1001  라이브러리가 오픈되지 않음
+        code = AxlOpen()  # 0000  함수실행 성공
+                          # 1001  라이브러리가 오픈되지 않음
         if (code == 0000):
             print("초기화 성공")
         else:
@@ -58,9 +29,74 @@ def control_initialization(request):
 
     return render(request, 'control/ready_to_control.html')
 
+# 모션 모듈의 존재 여부 확인
+def is_moduleExists():
+    uStatus = c_ulong()
+    AxmInfoIsMotionModule = loaddll['AxmInfoIsMotionModule']
+    Code = AxmInfoIsMotionModule(pointer(uStatus))
+    
+    print("============================================")
+    if Code == 0000:
+        print("모듈 존재 : 모듈이 존재합니다")
+    elif Code == 1053:
+        print("모듈 존재 : AXL 라이브러리 초기화 실패")
+    else:
+        print("모듈 존재 : 알 수 없는 에러로 모듈의 존재를 확인할 수 없음")
+    print("============================================")
+
+    Axis_counter() # 축의 수 확인
+
+    return Code
+
+# 시스템에 장착된 축의 수 확인
+def Axis_counter():
+    AxmInfoGetAxisCount = loaddll['AxmInfoGetAxisCount']
+    lAxisCount = c_long()
+    AxisCount = AxmInfoGetAxisCount(pointer(lAxisCount)) 
+    print("============================================")
+    if AxisCount == 0000:
+        print("시스템에 장착된 축 개수 : ", AxisCount)
+    elif AxisCount == 1053:
+        print("축 개수 : AXL 라이브러리 초기화 실패")
+    elif AxisCount == 4051:
+        print("축 개수 : 시스템에 장착된 모션 모듈이 없음")
+    else:
+        print("축 개수 : 알 수 없는 에러로 개수를 알 수 없음")
+    print("============================================")
+
+def is_lib_open():
+    AxlIsOpened = loaddll['AxlIsOpened']
+    if AxlIsOpened():
+        print("라이브러리가 초기화되어 있습니다.")
+    else:
+        print("라이브러리가 초기화되지 않았습니다.")
+
+def close_lib():
+    AxlClose = loaddll['AxlClose']
+    if (AxlClose()):
+        print("라이브러리가 종료됨 : ",AxlClose())
+    else:
+        print("라이브러리가 종료되지 않음 : ",AxlClose())
+
+def main(request):
+    return render(request, 'control/control.html')
+
+def set_startVel():
+    startvel = loaddll['AxmMotSetMinVel']
+    
+    AxmMotSetMinVel = startvel(0,1) # 0축의 초기속도는 1
+    print("초기 속도 : " , AxmMotSetMinVel)
+
+#################### 테스트해볼 4가지 함수 ####################
 def AxmMovePos(request):
     is_lib_open()
-
+    is_moduleExists()
+    # code = is_moduleExists()
+    # if code == 0000:
+    #       .....
+    # else: 예외처리
+    
+    
     if request.method == 'POST':
         mov = MovePos()
         mov.lAxisNo = request.POST['lAxisNo']
@@ -84,12 +120,12 @@ def AxmMovePos(request):
         float(mov.dDecel)
     )
     print(ResAxmMovePos)
-
     #임시 템플릿
     return render(request, 'control/ready_to_control.html')
 
 def AxmMoveStartPos(request):
     is_lib_open()
+    is_moduleExists()
 
     if request.method == 'POST':
         mov = MoveStartPos()
@@ -115,6 +151,7 @@ def AxmMoveStartPos(request):
 
 def AxmMoveVel(request):
     is_lib_open()
+    is_moduleExists()
 
     if request.method == 'POST':
         mov = MoveVel()
@@ -139,6 +176,7 @@ def AxmMoveVel(request):
 
 def AxmMoveToAbsPos(request):
     is_lib_open()
+    is_moduleExists()
 
     if request.method == 'POST':
         mov = MoveToAbsPos()
