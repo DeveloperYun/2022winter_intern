@@ -223,4 +223,3 @@ def AxmMoveToAbsPos(request):
     )
     print(ResAxmMoveToAbsPos)
     return render(request, 'control/ready_to_control.html')
-
