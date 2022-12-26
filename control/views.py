@@ -64,6 +64,7 @@ def Axis_counter():
         print("축 개수 : 알 수 없는 에러로 개수를 알 수 없음")
     print("============================================")
 
+# 라이브러리 초기화 확인
 def is_lib_open():
     AxlIsOpened = loaddll['AxlIsOpened']
     if AxlIsOpened():
@@ -71,32 +72,49 @@ def is_lib_open():
     else:
         print("라이브러리가 초기화되지 않았습니다.")
 
+# 라이브러리 종료
 def close_lib():
     AxlClose = loaddll['AxlClose']
     if (AxlClose()):
         print("라이브러리가 종료됨 : ",AxlClose())
     else:
         print("라이브러리가 종료되지 않음 : ",AxlClose())
-
+ 
 def main(request):
     return render(request, 'control/control.html')
 
+# 축 초기속도 설정
 def set_startVel():
     startvel = loaddll['AxmMotSetMinVel']
     
     AxmMotSetMinVel = startvel(0,1) # 0축의 초기속도는 1
     print("초기 속도 : " , AxmMotSetMinVel)
 
+# 해당 축이 사용 가능한지 확인, 제어 가능한지 확인
+def isInvalidAxis(axis):
+    AxmInfoIsInvalidAxisNo = loaddll['AxmInfoIsInvalidAxisNo']
+    uReturn = AxmInfoIsInvalidAxisNo(axis)
+    AxmInfoGetAxisStatus = loaddll['AxmInfoGetAxisStatus']
+    isControl = AxmInfoGetAxisStatus(axis)
+
+    if uReturn != 0000:
+        print(uReturn," : 해당 축이 없음")
+    else:
+        if isControl != 0000:
+            print(isControl, " : 제어 불가능")
+        elif isControl == 0000:
+            print(isControl, " : 제어 가능")
+
 #################### 테스트해볼 4가지 함수 ####################
 def AxmMovePos(request):
     is_lib_open()
     is_moduleExists()
-    # code = is_moduleExists()
-    # if code == 0000:
-    #       .....
-    # else: 예외처리
-    
-    
+    '''
+    code = is_moduleExists()
+    if code == 0000:
+          .....
+    else: 예외처리
+    '''
     if request.method == 'POST':
         mov = MovePos()
         mov.lAxisNo = request.POST['lAxisNo']
@@ -112,6 +130,7 @@ def AxmMovePos(request):
     AxmMovePos.argtypes = (c_long, c_double, c_double, c_double, c_double)
     AxmMovePos.restype = (c_ulong)
 
+    isInvalidAxis(int(mov.lAxisNo))
     ResAxmMovePos = AxmMovePos(
         int(mov.lAxisNo), 
         float(mov.dPos), 
@@ -139,6 +158,8 @@ def AxmMoveStartPos(request):
     AxmMoveStartPos = loaddll['AxmMoveStartPos']
     AxmMoveStartPos.argtypes = (c_long, c_double, c_double, c_double, c_double)
     AxmMoveStartPos.restype = (c_ulong)
+
+    isInvalidAxis(int(mov.lAxisNo))
     ResAxmMoveStartPos = AxmMoveStartPos(
         int(mov.lAxisNo), 
         float(mov.dPos), 
@@ -165,6 +186,7 @@ def AxmMoveVel(request):
     AxmMoveVel.argtypes = (c_long, c_double, c_double, c_double)
     AxmMoveVel.restype = (c_ulong)
 
+    isInvalidAxis(int(mov.lAxisNo))
     ResAxmMoveVel = AxmMoveVel(
         int(mov.lAxisNo), 
         float(mov.dVel), 
@@ -191,6 +213,7 @@ def AxmMoveToAbsPos(request):
     AxmMoveToAbsPos.argtypes = (c_long, c_double, c_double, c_double, c_double)
     AxmMoveToAbsPos.restype = (c_ulong)
     
+    isInvalidAxis(int(mov.lAxisNo))
     ResAxmMoveToAbsPos = AxmMoveToAbsPos(
         int(mov.lAxisNo), 
         float(mov.dPos), 
