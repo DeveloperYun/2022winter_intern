@@ -4,9 +4,9 @@ from .models import *
 from ctypes import *
 
 # DWORD = unsigned long int
-#python int == c long
-loaddll = WinDLL('./AXL.dll') # 불러오기 성공
-
+# python int == c long
+#loaddll = WinDLL('./AXL.dll') # 불러오기 성공
+loaddll = cdll.LoadLibrary("C:\\Users\\yhb38\\Desktop\\EzSoftwareUC_V4.3.0.4163_20211109_General\\ReleaseFiles\\AXL(Library)\\Library\\64Bit\\AXL.dll")
 # 초기화 함수 처리가 최우선!
 def control_initialization(request):
     #라이브러리 초기화 여부 확인 (보드에 연결되지 않으면 초기화 안되는게 맞음)
@@ -105,7 +105,7 @@ def isInvalidAxis(axis):
         elif isControl == 0000:
             print(isControl, " : 제어 가능")
 
-#################### 테스트해볼 4가지 함수 ####################
+#################### (input)테스트해볼 4가지 함수 ####################
 def AxmMovePos(request):
     is_lib_open()
     is_moduleExists()
@@ -142,10 +142,11 @@ def AxmMovePos(request):
     #임시 템플릿
     return render(request, 'control/ready_to_control.html')
 
-def AxmMoveStartPos(request):
+def AxmMoveStartPos(request): # + AxmStatusReadVel()
     is_lib_open()
     is_moduleExists()
 
+    dVelocity = c_double()
     if request.method == 'POST':
         mov = MoveStartPos()
         mov.lAxisNo = request.POST['lAxisNo']
@@ -168,6 +169,12 @@ def AxmMoveStartPos(request):
         float(mov.dDecel)
     )
     print(ResAxmMoveStartPos)
+
+    # AxmStatusReadVel
+    AxmStatusReadVel = loaddll['AxmStatusReadVel']
+    now_velocity = AxmStatusReadVel(int(mov.lAxisNo),pointer(dVelocity))
+    print("속도 >>",now_velocity)
+
     return render(request, 'control/ready_to_control.html')
 
 def AxmMoveVel(request):
@@ -223,3 +230,12 @@ def AxmMoveToAbsPos(request):
     )
     print(ResAxmMoveToAbsPos)
     return render(request, 'control/ready_to_control.html')
+
+#################### (output)테스트해볼 2가지 함수 ####################
+# def AxmStatusReadMotionInfo(request):
+#     pass
+
+# def AxmStatusReadVel(axis):
+#     velo = loaddll['AxmStatusReadVel']
+
+
