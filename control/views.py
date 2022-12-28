@@ -5,8 +5,8 @@ from ctypes import *
 
 # DWORD = unsigned long int
 # python int == c long
-loaddll = cdll.LoadLibrary('./AXL.dll') # 불러오기 성공
 #loaddll = cdll.LoadLibrary("C:\\Users\\yhb38\\Desktop\\EzSoftwareUC_V4.3.0.4163_20211109_General\\ReleaseFiles\\AXL(Library)\\Library\\64Bit\\AXL.dll")
+loaddll = cdll.LoadLibrary('./AXL.dll') # 불러오기 성공
 
 # 초기화 함수 처리가 최우선!
 def control_initialization(request):
