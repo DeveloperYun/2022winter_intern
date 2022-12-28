@@ -7,6 +7,7 @@ from ctypes import *
 # python int == c long
 loaddll = cdll.LoadLibrary('./AXL.dll') # 불러오기 성공
 #loaddll = cdll.LoadLibrary("C:\\Users\\yhb38\\Desktop\\EzSoftwareUC_V4.3.0.4163_20211109_General\\ReleaseFiles\\AXL(Library)\\Library\\64Bit\\AXL.dll")
+
 # 초기화 함수 처리가 최우선!
 def control_initialization(request):
     #라이브러리 초기화 여부 확인 (보드에 연결되지 않으면 초기화 안되는게 맞음)
