@@ -7,7 +7,7 @@ import os
 # DWORD = unsigned long int
 # python int == c long
 #loaddll = cdll.LoadLibrary("C:\\Users\\yhb38\\Desktop\\EzSoftwareUC_V4.3.0.4163_20211109_General\\ReleaseFiles\\AXL(Library)\\Library\\64Bit\\AXL.dll")
-if os.path.isfile('./AXL.dll'):
+if os.path.isfile('C:\\AXL.dll'):
     loaddll = cdll.LoadLibrary('./AXL.dll') # 불러오기 성공
 else:
     print("there's no dll file")
