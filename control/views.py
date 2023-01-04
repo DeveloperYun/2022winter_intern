@@ -2,27 +2,19 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
 from ctypes import *
-import os
-# if os.path.isfile('C:\\AXL.dll'):
-#     loaddll = cdll.LoadLibrary('C:\AXL.dll') # 불러오기 성공
-# else:
-#     print("there's no dll file")
 
 # DWORD = unsigned long int
 # python int == c long
-# if os.path.isfile('C:\\Users\\yhb38\\Desktop\\axl\\AXL.dll'):
-#     print("있다")
-#     loaddll = PyDLL("C:\\Users\\yhb38\\Desktop\\axl\\AXL.dll")
-#     print(">>>>>>>>>>>>>>>>>>" ,loaddll)
-loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 
+loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 # 초기화 함수 처리가 최우선!
 def control_initialization(request):
     #라이브러리 초기화 여부 확인 (보드에 연결되지 않으면 초기화 안되는게 맞음)
     if loaddll:
-        AxlOpenNoReset = loaddll['AxlOpenNoReset']
-    # AxlOpenNoReset.argtypes=(c_int,)
-    # AxlOpenNoReset.restype=(c_ulong)
+        # AxlOpen 된 상태에서 추가적인 프로그램 구동 시 사용
+        AxlOpenNoReset = loaddll['AxlOpenNoReset'] 
+    
+    
     check = AxlOpenNoReset(7)
     
     if check == 1001: #AXT_RT_OPEN_ERROR
