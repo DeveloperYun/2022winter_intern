@@ -5,6 +5,7 @@ from ctypes import *
 
 # DWORD = unsigned long int
 # python int == c long
+# 제품명 : PCIe-Rxx05-MLIII (네트워크)
 
 loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 
@@ -30,7 +31,6 @@ def control_initialization(request):
     
     return render(request, 'control/ready_to_control.html')
 
-
 def open_no_reset():
 
     AxlOpenNoReset = loaddll['AxlOpenNoReset'] 
@@ -40,7 +40,6 @@ def open_no_reset():
         print("재 초기화 성공 : 기존값 유지")
     else:
         print("재 초기화 실패")
-
 
 # 라이브러리 초기화 확인
 def is_lib_open():
@@ -52,7 +51,6 @@ def is_lib_open():
     else:
         print("라이브러리가 초기화되지 않았습니다.")
         return AxlIsOpened
-
 
 # 모션 모듈의 존재 여부 확인
 def is_moduleExists():
@@ -125,28 +123,122 @@ def close_lib():
  
 #############################################################################################
 
+####TODO:##########################  모션 구동의 용어 해설  #################################
+
+def signalset_servo_on_level(axis):
+    #FIXME: 0으로 설정됨
+    AxmSignalSetServoOnLevel = loaddll['AxmSignalSetServoOnLevel']
+    AxmSignalGetServoOnLevel = loaddll['AxmSignalGetServoOnLevel']
+
+    res_AxmSignalSetServoOnLevel = AxmSignalSetServoOnLevel(axis, 1) # axis 축에 레벨설정
+    if res_AxmSignalSetServoOnLevel == 0000:
+        print("servo on 레벨 설정 성공 : ",res_AxmSignalSetServoOnLevel)
+    elif res_AxmSignalSetServoOnLevel == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmSignalSetServoOnLevel == 4101:
+        print("해당 축이 존재하지 않음")
+
+    uLevel = c_ulong()
+    AxmSignalGetServoOnLevel(axis, pointer(uLevel))
+    print("설정한 Servo-On level : ",uLevel)
+
+
+#############################################################################################
+
 ####TODO:########################## 서보모터(모션 파라미터) #################################
+#FIXME: pulseout_method, Encoder_input_method : 1054(지원하지 않는 하드웨어)
+#FIXME: 현재 초기속도는 0으로 나옴
 
-# 축 초기속도 설정
-def set_startVel():
-    startvel = loaddll['AxmMotSetMinVel']
+# unit per pulse
+def set_moveUnitPerPulse(axis):
+    lAxisNo = axis
+    lPulse = 1 # 1회전을 위한 펄스 수
+    dUnit = 100 # 1회전시 이동 거리
+
+    lpPulse = c_long()
+    dpUnit = c_double()
+
+    AxmMotSetMoveUnitPerPulse = loaddll['AxmMotSetMoveUnitPerPulse']
+    AxmMotGetMoveUnitPerPulse = loaddll['AxmMotGetMoveUnitPerPulse']
+    setpulse = AxmMotSetMoveUnitPerPulse(lAxisNo,dUnit,lPulse)
+    getpulse = AxmMotGetMoveUnitPerPulse(lAxisNo,pointer(dpUnit),pointer(lpPulse))
+
+    if setpulse == 0000:
+        print("unit per pulse 단위 적용")
+    elif setpulse == 4053:
+        print("unit per pulse : 해당 축 모션 초기화 실패")
+    elif setpulse == 4254:
+        print("unit per pulse : 구동 단위 값이 0으로 설정됨")
+    else:
+        print("알 수 없는 이유로 unit per pulse 설정이 실패함")
+
     
-    AxmMotSetMinVel = startvel(0,1) # 0축의 초기속도는 1
-    print("초기 속도 : " , AxmMotSetMinVel)
+    if getpulse == 0000:
+        print("lpPulse : ",lpPulse, ", ","dpunit : ",dpUnit)
+    elif getpulse == 4053:
+        print("unit per pulse : 해당 축 모션 초기화 실패")
+    elif getpulse == 4254:
+        print("unit per pulse : 구동 단위 값이 0으로 설정됨")
+    else:
+        print("알 수 없는 이유로 unit per pulse 설정이 실패함")
 
+# 축 초기속도 설정( start speed )
+def set_startVel(axis):
+    startvel = loaddll['AxmMotSetMinVel']
+    check_vel = loaddll['AxmMotGetMinVel']
 
-def set_moveUnitPerPulse():
-    pass
+    MinVelocity = c_double()
+    
+    # 초기속도 단위는 unit per pulse가 1/1인 경우의 초당 펄스
+    AxmMotSetMinVel = startvel(axis,100) # [axis]축의 초기속도는 1
+    AxmMotGetMinVel = check_vel(axis, pointer(MinVelocity))
 
+    if AxmMotSetMinVel == 0000:
+        print("초기 속도 : " , AxmMotGetMinVel)
+    elif AxmMotSetMinVel == 4053:
+        print("start speed : 해당 축 모션 초기화 실패")
+    elif AxmMotSetMinVel == 4101:
+        print("start speed : 해당 축이 존재하지 않음")
+    else:
+        print("알 수 없는 이유로 초기속도 설정에 실패함")
 
+# PulseOut Method 
+def pulseout_method(axis):
+    AxmMotSetPulseOutMethod = loaddll['AxmMotSetPulseOutMethod']
+    AxmMotGetPulseOutMethod = loaddll['AxmMotGetPulseOutMethod']
 
+    uMethod = c_ulong()
+    # axis 축의 펄스 출력 방식을 OneLowHighLow 로 설정
+    res_AxmMotSetPulseOutMethod = AxmMotSetPulseOutMethod(axis, 3) # OneLowHighLow = 0x3
+    if res_AxmMotSetPulseOutMethod == 0000:
+        print("Encoder_input_method : " , res_AxmMotSetPulseOutMethod)
+    elif res_AxmMotSetPulseOutMethod == 4053:
+        print("Encoder_input_method : 해당 축 모션 초기화 실패")
+    elif res_AxmMotSetPulseOutMethod == 4101:
+        print("Encoder_input_method : 해당 축이 존재하지 않음")
 
+    # 설정 값 잘 들어갔나 확인
+    res_AxmMotGetPulseOutMethod = AxmMotGetPulseOutMethod(axis, pointer(uMethod))
+    print("pulseout_method : ",res_AxmMotGetPulseOutMethod)
 
+# Encoder Input Method
+def Encoder_input_method(axis):
+    AxmMotSetEncInputMethod = loaddll['AxmMotSetEncInputMethod']
+    AxmMotGetEncInputMethod = loaddll['AxmMotGetEncInputMethod']
 
+    Method = c_ulong()
 
-
-
-
+    # ObverseSqr4Mode 설정
+    res_AxmMotSetEncInputMethod = AxmMotSetEncInputMethod(axis, 3) # 정방향 4체배
+    if res_AxmMotSetEncInputMethod == 0000:
+        print("Encoder_input_method : " , res_AxmMotSetEncInputMethod)
+    elif res_AxmMotSetEncInputMethod == 4053:
+        print("Encoder_input_method : 해당 축 모션 초기화 실패")
+    elif res_AxmMotSetEncInputMethod == 4101:
+        print("Encoder_input_method : 해당 축이 존재하지 않음")
+    
+    res_AxmMotGetEncInputMethod = AxmMotGetEncInputMethod(axis, pointer(Method))
+    print("Encoder_input_method : ",res_AxmMotGetEncInputMethod)
 
 
 #############################################################################################
@@ -155,12 +247,8 @@ def main(request):
     return render(request, 'control/control.html')
 
 
-
-
-
-#################### (input)테스트해볼 4가지 함수 ####################
-# AxmMoveStartPos, AxmMoveToAbsPos table에러 발생
-
+################################# (input)테스트해볼 4가지 함수 ###############################
+#TODO: AxmMovePos 함수 하나 구동될 때 까지 test
 def AxmMovePos(request):
     is_lib_open()
     is_moduleExists()
@@ -173,7 +261,13 @@ def AxmMovePos(request):
         mov.dAccel = request.POST['dAccel']
         mov.dDecel = request.POST['dDecel']
         mov.save()
-    
+
+    set_moveUnitPerPulse(int(mov.lAxisNo))
+    set_startVel(int(mov.lAxisNo))
+    signalset_servo_on_level(int(mov.lAxisNo))
+    pulseout_method(int(mov.lAxisNo))
+    Encoder_input_method(int(mov.lAxisNo))
+
     #print(type(mov.lAxisNo)) # type이 <class 'str'>
     #move
     AxmMovePos = loaddll['AxmMovePos']
