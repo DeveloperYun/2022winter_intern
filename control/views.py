@@ -292,7 +292,34 @@ def Encoder_input_method(axis):
 #############################################################################################
 
 
-####TODO:##########################      모션 신호 설정     #################################
+####TODO:##########################      모션 신호 설정      ################################
+def signal_servo_alarm_Reset(axis):
+    AxmSignalServoAlarmReset = loaddll['AxmSignalServoAlarmReset']
+
+    resetalarm = AxmSignalServoAlarmReset(axis,1)    
+    if resetalarm == 0000:
+        print("alarm reset 성공")
+    elif resetalarm == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif resetalarm == 4101:
+        print("해당 축이 존재하지 않음")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #############################################################################################
