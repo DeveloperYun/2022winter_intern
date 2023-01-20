@@ -1,6 +1,7 @@
 db.sqlite3
 *.log
 *.pot
-*.pyc
+*.toc
+*.pyz
 __pycache__
 .idea
