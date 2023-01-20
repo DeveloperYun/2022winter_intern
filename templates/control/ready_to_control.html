@@ -30,6 +30,7 @@
                 </li>
             </ul>
         </nav>
+    
         <div id="layoutSidenav">
             <div id="layoutSidenav_content">
                 <main>
@@ -44,7 +45,7 @@
                         </ol>
                             <div class="row">
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-primary text-white mb-4">
+                                    <div class="card border-left-primary text-primary mb-4">
                                         <div class="card-body">AxmMovePos</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <form action="{% url 'control:AxmMovePos' %}" method="POST">
@@ -63,7 +64,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-warning text-white mb-4">
+                                    <div class="card border-left-success text-success mb-4">
                                         <div class="card-body">AxmMoveStartPos</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <form action="{% url 'control:AxmMoveStartPos' %}" method="POST">
@@ -78,11 +79,12 @@
                                                 </div>
                                             </form>
                                             <i class="fas fa-angle-right"></i>
+                                            
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-success text-white mb-4">
+                                    <div class="card border-left-info text-info mb-4">
                                         <div class="card-body">
                                             AxmMoveVel
                                         </div>
@@ -95,23 +97,24 @@
                                                     <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
                                                     <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
                                                     <input type="submit" value="제출">
-                                                    <i class="fas fa-angle-right"></i>
-                                                    <i class="fas fa-angle-right"></i>
+                                                    
                                                 </div>
+                                                <i class="fas fa-angle-right"></i>
+                                                <i class="fas fa-angle-right"></i>
                                             </form>
                                             <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="small text-white" style="display:inline;">
                                                     <input id="socket-cut" type="button" value="cut">
                                                     <input type="submit" name="stop" id="stop" value="중지">  
-                                                    <i class="fas fa-angle-right"></i>
                                                 </div>
+                                                <i class="fas fa-angle-right"></i>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card bg-danger text-white mb-4">
+                                    <div class="card border-left-warning text-warning mb-4">
                                         <div class="card-body">원점탐색</div>
                                         <div class="card-footer d-flex align-items-center justify-content-between">
                                             <form action="{% url 'control:HomeSearchMove' %}" method="POST">
@@ -119,10 +122,9 @@
                                                 <div class="small text-white">
                                                     <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
                                                     <input type="submit" value="제출">
-                                                    <i class="fas fa-angle-right"></i>
-
                                                 </div>
                                             </form>
+                                            <i class="fas fa-angle-right"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -138,7 +140,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        AxmMoveStartPos 속도 측정 그래프
+                                        AxmMoveStartPos, AxmMoveVel 속도 측정 그래프
                                     </div>
                                     <h3 id="app">{{text}}</h3>
                                     <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
