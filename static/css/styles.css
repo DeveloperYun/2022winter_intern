@@ -1593,7 +1593,7 @@ progress {
 
   .col-xl-3 {
     flex: 0 0 auto;
-    width: 25%;
+    /* width: 25%; */
   }
 
   .col-xl-4 {
@@ -11308,6 +11308,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+
 html,
 body {
   height: 100%;
@@ -11350,19 +11351,7 @@ body {
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
   transform: translateX(0);
 }
-.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  z-index: 1037;
-  opacity: 0.5;
-  transition: opacity 0.3s ease-in-out;
-}
+
 
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
@@ -11705,3 +11694,5 @@ body {
   font-size: 0.75rem;
   border-radius: 0.25rem !important;
 }
+
+

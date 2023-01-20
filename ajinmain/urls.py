@@ -1,17 +1,12 @@
 from django.contrib import admin
 from django.urls import path, include
 from hello import views
-from django.conf.urls.static import static
-from django.conf import settings
-#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+# 127.0.0.1:8000/control/
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('control/', include('control.urls')),
+    path('control/', include('control.urls')), #path('', include('graph.urls')),
     path('hello/', include('hello.urls')),
     path('accounts/',include('accounts.urls')),
     path('', views.index, name='index'),
 ]
-# + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-#urlpatterns += static_urlpatterns()

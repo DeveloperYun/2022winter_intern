@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     #local apps
+    'channels',
     'accounts',
     'control',
     'hello',
@@ -50,7 +51,7 @@ ROOT_URLCONF = 'ajinmain.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR.joinpath('templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,6 +65,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ajinmain.wsgi.application'
+ASGI_APPLICATION = 'ajinmain.asgi.application'
 
 
 # Database

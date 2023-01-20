@@ -8,39 +8,98 @@
         <meta name="author" content="" />
         <title>controller</title>
         <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link rel="stylesheet" type="text/css" href="{% static 'css2/styles.css'%}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>    
+        <link rel="stylesheet" type="text/css" href="{% static 'css2/main.css'%}">
+
     </head>
-    <body id="page-top">
-        <!-- Masthead-->
-        <header class="masthead">
-            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
-                <div class="d-flex justify-content-center">
-                    <div class="text-center">
-                        <h1 class="mx-auto my-0 text-uppercase">Ajinextek</h1>
-                        <h2 class="text-white-50 mx-auto mt-2 mb-5">아진엑스텍 이더캣 컨트롤러 웹버전</h2>
-                        {% if user.is_authenticated %}
-                            <a class="btn btn-primary" href="{% url 'accounts:logout' %}">
-                                로그아웃
-                            </a><br/><br/>
-                            <a class="btn btn-primary" href="{% url 'control:control_initialization' %}" >
-                                control<br/>
-                                initialization
-                            </a>
-                        {%else%}
-                            <a class="btn btn-primary" href="{% url 'accounts:login' %}" width:196px>로그인</a>
-                            <a class="btn btn-primary" href="{% url 'accounts:signup' %}">회원가입</a>
-                        {%endif%}
-                    </div>
-                </div>
+    <body>
+        <!-- about -->
+        <div class="about">
+            <a class="bg_links social portfolio" href="http://www.ajinextek.com/" target="_blank">
+                <span class="icon"></span>
+            </a>
+            <a class="bg_links social dribbble" href="https://dribbble.com/rafaelalucas" target="_blank">
+                <span class="icon"></span>
+            </a>
+            <a class="bg_links social linkedin" href="http://www.ajinextek.com/" target="_blank">
+                <span class="icon"></span>
+            </a>
+            <a class="bg_links logo"></a>
+        </div>
+        <!-- end about -->
+        <nav>
+            <div class="menu">
+                <p class="website_name">AjinExtek</p>
             </div>
-        </header>
+        </nav>
+        <!-- Masthead-->
+        
+        <section class="wrapper">
+
+            <div class="container">
+
+                <div id="scene" class="scene" data-hover-only="false">
+
+
+                    <div class="circle" data-depth="1.2"></div>
+
+                    <div class="one" data-depth="0.9">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+
+                    <div class="two" data-depth="0.60">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+
+                    <div class="three" data-depth="0.40">
+                        <div class="content">
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                            <span class="piece"></span>
+                        </div>
+                    </div>
+
+                    <p class="p404" data-depth="0.50">AjinExtek</p>
+                    <p class="p404" data-depth="0.10">AjinExtek</p>
+
+                </div>
+
+                <div class="text">
+                    <article>
+                        <p>아진엑스텍 웹 컨트롤러 <br>사용가능한 제품군 : MLIII, RTEX, SIIIH</p>
+                        {% if user.is_authenticated %}
+                            <div class="find-btn">
+                                <button class="find-btn1" type="button" onclick="location.href='{% url 'accounts:logout' %}'">
+                                    로그아웃
+                                </button>
+                                <button class="find-btn1" type="button" onclick="location.href='{% url 'control:control_initialization' %}'">
+                                    대시보드
+                                </button>
+                            </div>
+                        {%else%}
+                        <div class="find-btn">
+                            <button class="find-btn1" type="button" onclick="location.href='{% url 'accounts:login' %}'">로그인</button>
+                            <button class="find-btn1" type="button" onclick="location.href='{% url 'accounts:signup' %}'">회원가입</button>
+                        </div>    
+                        {%endif%}
+                    </article>
+                </div>
+
+            </div>
+        </section>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
+        <script>
+            // Parallax Code
+            var scene = document.getElementById('scene');
+            var parallax = new Parallax(scene);
+        </script>
     </body>
 </html>
