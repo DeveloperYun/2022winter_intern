@@ -46,12 +46,13 @@ socket.onmessage = function(e){
     var axis = counter
     console.log(newx)
     
-    if(counter==400){
-        counter = 0
-        for(var i=0; i<400; i++){
-            newGraphData.shift();
-            newx.pop();
-        }
+    // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
+    if(counter>=400){
+        // counter = 0
+        // for(var i=0; i<75; i++){
+        newGraphData.shift();
+        newx.pop();
+        //}
         console.log(counter);
     }
 

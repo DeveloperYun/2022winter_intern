@@ -842,40 +842,42 @@ class GraphConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
 
-        AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
-        AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
+        # AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
+        # AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
 
-        upStatus = c_long()
-        dVelocity = c_int()
+        # upStatus = c_long()
+        # dVelocity = c_int()
 
-        res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-        if res1==0000: 
-            print("AxmStatusReadInMotion 성공")
-        elif res1 == 4053:
-            print("해당 축 모션 초기화 실패")
-        elif res1 == 4101:
-            print("해당 축이 존재하지 않음")
-        else:
-            print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
+        # res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        # if res1==0000: 
+        #     print("AxmStatusReadInMotion 성공")
+        # elif res1 == 4053:
+        #     print("해당 축 모션 초기화 실패")
+        # elif res1 == 4101:
+        #     print("해당 축이 존재하지 않음")
+        # else:
+        #     print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
         
-        while True: 
-            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        # while True: 
+        #     AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
 
-            if upStatus.value == 1:
-                AxmStatusReadVel(axis, pointer(dVelocity))
+        #     if upStatus.value == 1:
+        #         AxmStatusReadVel(axis, pointer(dVelocity))
             
-                veldata = dVelocity.value
-                print("현재속도 >> ", veldata)
-                self.send(json.dumps({'value': veldata}))
-                sleep(0.01)
-            else:
-                break
-            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        #         veldata = dVelocity.value
+        #         print("현재속도 >> ", veldata)
+        #         self.send(json.dumps({'value': veldata}))
+        #         sleep(0.01)
+        #     else:
+        #         break
+        #     AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
         
-        # #TODO: graph.js 테스트용 코드
-        # for i in range(5000):
-        #     self.send(json.dumps({'value': randint(0,5000)}))
-        #     sleep(0.01)
+        #TODO: graph.js 테스트용 코드
+        count=1
+        for i in range(1000):
+            self.send(json.dumps({'value': count}))
+            count = count+4
+            sleep(0.01)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")
