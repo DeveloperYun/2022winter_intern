@@ -1,4 +1,4 @@
-var ctx = document.getElementById('myChart').getContext('2d');
+var ctx = document.getElementById('myChart').getContext('2d'); //'mychart' canvas에 렌더링
 var graphData = {
     type: 'bar',
     data: {
@@ -33,18 +33,19 @@ var graphData = {
     }
 }
 var myChart = new Chart(ctx, graphData);
-var socket = new WebSocket('ws://localhost:8000/ws/control/');
+var socket = new WebSocket('ws://localhost:8000/ws/control/'); //해당 서버에 대한 웹소켓 연결 설정
 
 let counter = 0
 //서버로부터 전송받은 데이터
+//onmessage 이벤트 트리거시 차트의 데이터와 레이블을 업데이트하고 차트에서 업데이트 메소드를 호출
 socket.onmessage = function(e){
     djangoData = JSON.parse(e.data);
-    console.log(djangoData);
+    //console.log(djangoData);
 
     var newGraphData = graphData.data.datasets[0].data;
     var newx = graphData.data.labels;
     var axis = counter
-    console.log(newx)
+    //console.log(newx)
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
     if(counter>=400){
@@ -53,7 +54,7 @@ socket.onmessage = function(e){
         newGraphData.shift();
         newx.pop();
         //}
-        console.log(counter);
+        //console.log(counter);
     }
 
     newGraphData.push(djangoData.value);
