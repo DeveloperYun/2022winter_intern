@@ -123,12 +123,14 @@ ul {
 }
 
 a {
-  text-decoration: none;
-  cursor: pointer;
+  text-decoration: none   !important;
+  font-size: xx-large;
+  color: white;
 }
 
 button {
   cursor: pointer;
+  background-color: #00cfde;
 }
 
 .nav-list {
@@ -183,7 +185,6 @@ button {
   justify-content: center;
   align-items: center;
   border: none;
-  background-color: var(--app-bg-dark);
   border-radius: 4px;
   height: 40px;
   width: 40px;
@@ -199,7 +200,7 @@ button {
 .main-header-line h1 {
   color: var(--main-color);
   margin: 0;
-  font-size: 24px;
+  font-size: 30px;
   line-height: 32px;
 }
 .main-header-line input {
@@ -684,36 +685,8 @@ button {
     flex-basis: 200px;
   }
 }
-@media screen and (max-width: 1200px) {
-  .app-right {
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    z-index: 2;
-    height: 100%;
-    width: 320px;
-    right: -100%;
-    box-shadow: 0 0 10px 5px rgba(1, 8, 31, 0.4);
-  }
-  .app-right .close-right {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: transparent;
-    padding: 0;
-    color: var(--main-color);
-    cursor: pointer;
-  }
 
-  .app-main .open-right-area {
-    display: flex;
-    color: var(--main-color);
-  }
-}
+
 @media screen and (max-width: 1180px) {
   .chart-row.two {
     flex-direction: column;
@@ -820,4 +793,9 @@ button {
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.plzLogin{
+  color: white;
+  font-size: xx-large;
 }
