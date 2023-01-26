@@ -496,7 +496,7 @@ def signal_set_stop(axis):
     else:
         print("뭔지 모를 이유로 AxmSignalSetStop 설정 실패")
 
-################################# (input)테스트해볼 5가지 함수 ###############################
+################################# (input)테스트해볼 5가지 단축구동 함수 ###############################
 
 def HomeSearchMove(request): # 원점찾기(완성)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -532,7 +532,6 @@ def HomeSearchMove(request): # 원점찾기(완성)
 
     return render(request, 'control/ready_to_control.html')
 
-#FIXME: AxmMovePos 에 대해서는 속도 측정이 되지 않음
 def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
@@ -746,7 +745,7 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
     elif ResAxmMoveVel == 4255:
         print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
     else:
-        print("뭔가 모를 이유로 AxmMovePos 가 실행되지 않음. Error: ",ResAxmMoveVel)
+        print("뭔가 모를 이유로 AxmMoveVel 가 실행되지 않음. Error: ",ResAxmMoveVel)
 
     return render(request, 'control/ready_to_control.html')
 
@@ -797,44 +796,29 @@ def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)
     
     return render(request, 'control/ready_to_control.html')
 
+################################# (input)테스트해볼 +a 함수 ###############################
+def AxmOverRide(request):# override 구동
+    # 축이 구동 중에 호출된다.
+    pass
+
+def AxmMoveStartMultiPos(request): 
+    # 다축위치 구동 - 시점탈출
+    # 축 개수만큼 배열을 선언해서 for문 돌리는 식으로 구현
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    board_status()
+    board_count()
+    info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
+    is_lib_open()
+    is_moduleExists() 
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    pass
+
+
 ################################# (output)테스트해볼 2가지 함수 #################################
 veldata = 0
-
-'''
-def AxmStatusReadVel(axis): # 속도 측정 함수
-    AxmStatusReadVel = loaddll['AxmStatusReadVel']
-    AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
-    upStatus = c_long()
-    dVelocity = c_double()
-    global veldata
-
-    res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-    if res==0000: 
-        print("AxmStatusReadInMotion 성공")
-    elif res == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif res == 4101:
-        print("해당 축이 존재하지 않음")
-    else:
-        print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res)
-    
-    
-    # dVelocity.value 를 실시간으로 보여줘야함.
-    # 밀리초 단위로 나오는 값이라 DB에 담은 후에 그걸 꺼내는건 힘들어보임. 
-    # dVelocity.value 를 프론트단의 JS로 실시간으로 넘겨줄 수 있어야함.
-    
-    while True:
-        # AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-        # if upStatus.value == 1:
-        #     AxmStatusReadVel(axis, pointer(dVelocity))
-           
-        #     veldata = dVelocity.value
-        #     #print("현재속도 >> ",veldata)
-        # else:
-        #     break
-        #veldata = uniform(0,4.32e-322)
-        sleep(0.1)
-'''  
 
 # channels를 통한 소켓 통신(백엔드 to 프론트엔드)
 class GraphConsumer(WebsocketConsumer):
@@ -842,42 +826,42 @@ class GraphConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
 
-        # AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
-        # AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
+        AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
+        AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
 
-        # upStatus = c_long()
-        # dVelocity = c_int()
+        upStatus = c_long()
+        dVelocity = c_int()
 
-        # res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-        # if res1==0000: 
-        #     print("AxmStatusReadInMotion 성공")
-        # elif res1 == 4053:
-        #     print("해당 축 모션 초기화 실패")
-        # elif res1 == 4101:
-        #     print("해당 축이 존재하지 않음")
-        # else:
-        #     print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
+        res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        if res1==0000: 
+            print("AxmStatusReadInMotion 성공")
+        elif res1 == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res1 == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
         
-        # while True: 
-        #     AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        while True: 
+            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
 
-        #     if upStatus.value == 1:
-        #         AxmStatusReadVel(axis, pointer(dVelocity))
+            if upStatus.value == 1:
+                AxmStatusReadVel(axis, pointer(dVelocity))
             
-        #         veldata = dVelocity.value
-        #         print("현재속도 >> ", veldata)
-        #         self.send(json.dumps({'value': veldata}))
-        #         sleep(0.01)
-        #     else:
-        #         break
-        #     AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+                veldata = dVelocity.value
+                print("현재속도 >> ", veldata)
+                self.send(json.dumps({'value': veldata}))
+                sleep(0.01)
+            else:
+                break
+            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
         
-        #TODO: graph.js 테스트용 코드
-        count=1
-        for i in range(1000):
-            self.send(json.dumps({'value': count}))
-            count = count+4
-            sleep(0.01)
+        # #TODO: graph.js 테스트용 코드
+        # count=1
+        # for i in range(1000):
+        #     self.send(json.dumps({'value': count}))
+        #     count = count+4
+        #     sleep(0.01)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")
@@ -885,3 +869,4 @@ class GraphConsumer(WebsocketConsumer):
     def receive(self, text_data):
         test = json.loads(text_data)
         print(test)
+
