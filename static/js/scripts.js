@@ -7,6 +7,13 @@
 // Scripts
 // 
 
+$(".test .nav-list nav-list-item").on("click",function(e){
+    var el = $(e.target).closest('li');
+      // 다른 active되어있는 li의 class를 제거
+    el.siblings('li').removeClass("active");
+    el.addClass("active");
+});
+
 window.addEventListener('DOMContentLoaded', event => {
 
     // Toggle the side navigation
@@ -24,3 +31,5 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+
+
