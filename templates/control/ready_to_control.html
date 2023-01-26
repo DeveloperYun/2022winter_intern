@@ -39,21 +39,16 @@
                         </a>
                     </li>
                     <li class="nav-list-item active">
-                        <a class="nav-list-link" href="https://github.com/DeveloperYun">
+                        <a class="nav-list-link" href="https://github.com/DeveloperYun" target='_blank'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Developers
+                            Github
                         </a>
                     </li>
+                   
                     <li class="nav-list-item active">
-                        <a class="nav-list-link" href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                            temp
-                        </a>
-                    </li>
-                    <li class="nav-list-item active">
-                        <a class="nav-list-link" href="#">
+                        <a class="nav-list-link" href="https://www.notion.so/2022-_-96985f828766434abd960ef9db872bb9" target='_blank'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                            temp
+                            Docs
                         </a>
                     </li>
                     
@@ -74,102 +69,8 @@
                     <main>
                         <div class="container-fluid px-4">
                             {% if user.is_authenticated %}
-                           
                                 <div class="row">
                                     <div class="chart-row three">
-                                        
-                                        {% comment %} <div class="chart-container-wrapper">
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="chart-container">
-                                                    <div class="chart-info-wrapper">
-                                                      <h2>AxmMovePos</h2>
-                                                        <form action="{% url 'control:AxmMovePos' %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="small text-white">
-                                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                                                <input type="submit" value="제출">
-                                                            </div>
-                                                        </form>
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="chart-container-wrapper">
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="chart-container">
-                                                    <div class="chart-info-wrapper">
-                                                        <h2>AxmMoveStartPos</h2>
-                                                        <form action="{% url 'control:AxmMoveStartPos' %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="small text-white">
-                                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                                                <input type="submit" value="제출">
-                                                            </div>
-                                                        </form>
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="chart-container-wrapper">
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="chart-container">
-                                                    <div class="chart-info-wrapper">
-                                                        <h2>AxmMoveVel</h2>
-                                                        <form action="{% url 'control:AxmMoveVel' %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="small text-white" style="display:inline;">
-                                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                                                <input type="submit" value="제출">
-                                                                
-                                                            </div>
-                                                            <i class="fas fa-angle-right"></i>
-                                                            <i class="fas fa-angle-right"></i>
-                                                        </form>
-                                                        <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="small text-white" style="display:inline;">
-                                                                <input id="socket-cut" type="button" value="cut">
-                                                                <input type="submit" name="stop" id="stop" value="중지">  
-                                                            </div>
-                                                            <i class="fas fa-angle-right"></i>
-                                                        </form>
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="chart-container-wrapper">
-                                            <div class="col-xl-3 col-md-6">
-                                                <div class="chart-container">
-                                                    <div class="chart-info-wrapper">
-                                                        <h2>AxmHomeSearch</h2>
-                                                        <form action="{% url 'control:HomeSearchMove' %}" method="POST">
-                                                            {% csrf_token %}
-                                                            <div class="small text-white">
-                                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                                <input type="submit" value="제출">
-                                                            </div>
-                                                        </form>
-                                                        <i class="fas fa-angle-right"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>  {% endcomment %}
-                                       
-
                                         <div class="chart-container-wrapper">
                                             <div class="chart-container">
                                                 <div class="chart-info-wrapper">

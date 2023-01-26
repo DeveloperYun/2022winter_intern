@@ -1,9 +1,3 @@
-// $('.modal_button').click(function(){
-//     var buttonId = $(this).attr('id');
-//     $('#modal-container').removeAttr('class').addClass(buttonId);
-//     $('body').addClass('modal-active');
-//   })
-
 // Modal을 가져옵니다.
 var modals = document.getElementsByClassName("modal");
 // Modal을 띄우는 클래스 이름을 가져옵니다.
