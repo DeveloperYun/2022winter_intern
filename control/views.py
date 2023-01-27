@@ -240,10 +240,10 @@ def set_startVel(axis):
     startvel = loaddll['AxmMotSetMinVel']
     check_vel = loaddll['AxmMotGetMinVel']
 
-    MinVelocity = c_double()
+    MinVelocity = c_int()
     
     # 초기속도 단위는 unit per pulse가 1/1인 경우의 초당 펄스
-    AxmMotSetMinVel = startvel(axis,1000) # [axis]축의 초기속도는 1
+    AxmMotSetMinVel = startvel(axis,1) # [axis]축의 초기속도는 1
     AxmMotGetMinVel = check_vel(axis, pointer(MinVelocity))
 
     if AxmMotSetMinVel == 0000 and AxmMotGetMinVel == 0000:
@@ -382,7 +382,7 @@ def signal_set_limit(axis):
     elif res == 4101:
         print("해당 축이 존재하지 않음")
     else:
-        print("뭔지 모를 이유로 signal_set_limit 결정 실패")
+        print("뭔지 모를 이유로 signal_set_limit 결정 실패. Error: ",res)
 
 #############################################################################################
 ######################################### 전처리 함수 #######################################
