@@ -15,6 +15,31 @@
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
         <!-- 실시간 그래프 그려주는 cdn -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+        <!-- 다축구동을 위한 동적 입력폼 생성 -->
+        <script>
+            // 추가
+            var count=0
+            const add_textbox = () => {
+                const box = document.getElementById("box");
+                const newform = document.createElement('div');
+                count = count + 1;
+                newform.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
+                                     <input required type='number' name='dPos' id='dPos${count}' placeholder='구동거리' ; style='width:70px;'> \
+                                     <input required type='number' name='dVel' id='dVel${count}' placeholder='속도' ; style='width:70px;'> \
+                                     <input required type='number' name='dAccel' id='dAccel${count}' placeholder='가속도' ; style='width:70px;'> \
+                                     <input required type='number' name='dDecel' id='dDecel${count}' placeholder='감속도' ; style='width:70px;'> \
+                                     <input type='button' value='삭제' onclick='remove(this)'>`
+                box.appendChild(newform);
+            }
+    
+            // 삭제
+            const remove = (obj) => {
+                count = count - 1;
+                document.getElementById('box').removeChild(obj.parentNode);
+            }
+
+            document.getElementById("count").innerHTML = count;
+        </script>
     </head>
     <body>
         <div class="app-container">
@@ -120,7 +145,7 @@
                                                     <span>StartPos</span>
                                                 </div>
                                                 <div class="chart-svg">
-                                                    <svg viewBox="0 0 36 36" class="circular-chart red">
+                                                    <svg viewBox="0 0 36 36" class="circular-chart blue">
                                                         <path class="circle-bg" d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
                                                     a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -163,7 +188,7 @@
                                                     <span>MoveVel</span>
                                                 </div>
                                                 <div class="chart-svg">
-                                                    <svg viewBox="0 0 36 36" class="circular-chart pink">
+                                                    <svg viewBox="0 0 36 36" class="circular-chart blue">
                                                         <path class="circle-bg" d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
                                                     a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -213,7 +238,7 @@
                                                     <span>HomePos</span>
                                                 </div>
                                                 <div class="chart-svg">
-                                                    <svg viewBox="0 0 36 36" class="circular-chart orange">
+                                                    <svg viewBox="0 0 36 36" class="circular-chart blue">
                                                         <path class="circle-bg" d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
                                                     a 15.9155 15.9155 0 0 1 0 -31.831"></path>
@@ -244,7 +269,45 @@
                                         </div>
 
                                         <!-- 다축 구동 -->
-                                        
+                                        <div class="chart-container-wrapper">
+                                            <div class="chart-container">
+                                                <div class="chart-info-wrapper">
+                                                    <h2>다축구동</h2>
+                                                    <span>MultiPos</span>
+                                                </div>
+                                                <div class="chart-svg">
+                                                    <svg viewBox="0 0 36 36" class="circular-chart orange">
+                                                        <path class="circle-bg" d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                                                        <path class="circle" stroke-dasharray="100, 100" d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                                                    
+                                                    <!-- 모달창 -->
+                                                    <text class="btn" font-size="15px" x="50%" y="60%" stroke-width="2px" text-anchor="middle" stroke="#BBDEFB">on</text>
+                                                    </svg>
+
+                                                    <!-- 두 번째 Modal -->
+                                                    <div class="modal">
+                                                
+                                                        <!-- 두 번째 Modal의 내용 -->
+                                                        <!-- FIXME: AxmMoveStartPos 동적인 입력폼 -->
+                                                        <div class="modal-content">
+                                                        <span class="close">&times;</span>
+                                                        <h2>AxmMoveMultiStartPos</h2>
+                                                            <form action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <div id="box">
+                                                                    <input type="button" value="추가" onclick="add_textbox()">
+                                                                    <input type="submit" value="제출">
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
