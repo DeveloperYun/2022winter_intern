@@ -190,7 +190,7 @@ def close_lib():
     else:
         print("라이브러리가 종료되지 않음 : ",AxlClose())
  
-####TODO:##########################  모션 구동의 용어 해설  #################################
+##############################  모션 구동의 용어 해설  #################################
 
 # 이건 low 혹은 high를 serve on 으로 받아들이겠다를 셋팅하는 함수이다.
 # 자꾸 1053 에러가 뜬 것은 해당 기기가 디폴트로 low 혹은 high...를 받는데 바꾸라고 해서 에러가 떴을 확률이 있다.
@@ -210,7 +210,7 @@ def signal_servo_on(axis):
     elif res_AxmSignalServoOn == 4101:
         print("해당 축이 존재하지 않음")
 
-####TODO:########################## 서보모터(모션 파라미터) #################################
+############################## 서보모터(모션 파라미터) #################################
 
 # unit per pulse(프로그램상 지령값을 펄스 단위로 설정)
 def set_moveUnitPerPulse(axis):
@@ -255,7 +255,7 @@ def set_startVel(axis):
     else:
         print("알 수 없는 이유로 초기속도 설정에 실패함")
 
-####TODO:##########################      모션 신호 설정      ################################
+##############################      모션 신호 설정      ################################
 # 현재 알람 상태 확인
 def signal_read_servo_alarm(axis):
     upStatus = c_ulong()
@@ -385,7 +385,7 @@ def signal_set_limit(axis):
         print("뭔지 모를 이유로 signal_set_limit 결정 실패. Error: ",res)
 
 #############################################################################################
-######################################### 전처리 함수 #######################################
+##################################### 구동 전처리 함수 #######################################
 
 # 원점 검색(AxmHomeSetMethod, AxmHomeSetVel 로 설정 후 AxmHomeSetStart 호출, 검색시작)
 def mot_set_home_start(axis):
@@ -446,6 +446,22 @@ def mot_set_profile_mode(axis):
 
     uProfile = c_ulong()
     res = AxmMotSetProfileMode(axis, 0) # SYM_TRAPEZOIDE_MODE
+    AxmMotGetProfileMode(axis,pointer(uProfile))
+    if res==0000:
+        print("profile mode : ",uProfile.value)
+    elif res == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 profile 모드 설정 실패")
+
+def mot_set_profile_mode2(axis):
+    AxmMotSetProfileMode = loaddll['AxmMotSetProfileMode']
+    AxmMotGetProfileMode = loaddll['AxmMotGetProfileMode']
+
+    uProfile = c_ulong()
+    res = AxmMotSetProfileMode(axis, 3) 
     AxmMotGetProfileMode(axis,pointer(uProfile))
     if res==0000:
         print("profile mode : ",uProfile.value)
@@ -796,26 +812,73 @@ def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)
     
     return render(request, 'control/ready_to_control.html')
 
-################################# (input)테스트해볼 +a 함수 ###############################
-def AxmOverRide(request):# override 구동
-    # 축이 구동 중에 호출된다.
-    pass
+####TODO:############################# (input)테스트해볼 다축구동 함수 ###############################
 
 def AxmMoveStartMultiPos(request): 
     # 다축위치 구동 - 시점탈출
     # 축 개수만큼 배열을 선언해서 for문 돌리는 식으로 구현
+    # (축개수, 축번호 배열, 구동거리 배열, 속도 배열, 가속도 배열, 감속도 배열)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
     board_count()
     info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
+    info_get_axis(1) # 1번축 보드/모듈 정보 확인 : 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
     is_lib_open()
     is_moduleExists() 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    pass
+    
+    if request.method == 'POST':
+        lAxisNo = request.POST.getlist('lAxisNo') #list
+        dPos = request.POST.getlist('dPos')
+        dVel = request.POST.getlist('dVel')
+        dAccel = request.POST.getlist('dAccel')
+        dDecel = request.POST.getlist('dDecel')
+    
+    for i in range(len(lAxisNo)):
+        signal_set_limit(int(lAxisNo[i]))
+        set_moveUnitPerPulse(int(lAxisNo[i]))
+        set_startVel(int(lAxisNo[i]))
+        signal_read_limit(int(lAxisNo[i]))
+        
+        signal_servo_on(int(lAxisNo[i]))
+        mot_set_abs_mode(int(lAxisNo[i]))
+        mot_set_profile_mode2(int(lAxisNo[i]))
+    
+    lAxisNo2 = [int(x) for x in lAxisNo] #[1,2,...]
+    dPos2 = [int(x) for x in dPos]
+    dVel2 = [int(x) for x in dVel]
+    dAccel2 = [int(x) for x in dAccel]
+    dDecel2 = [int(x) for x in dDecel]
 
+    print(lAxisNo2, dPos2, dVel2, dAccel2, dDecel2)
+    
+    # a = (c_long * len(lAxisNo2))(*lAxisNo2) #배열
+    # b = (c_double * len(dPos2))(*dPos2)
+    # c = (c_double * len(dVel2))(*dVel2)
+    # d = (c_double * len(dAccel2))(*dAccel2)
+    # e = (c_double * len(dDecel2))(*dDecel2)
+
+    AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+    
+    # MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+    # 인자로 배열(포인터) 들어감 (long * 배열)...이중포인터?
+    res = AxmMoveStartMultiPos(len(lAxisNo), lAxisNo2, dPos2, dVel2, dAccel2, dDecel2)
+
+    if res == 0000:
+        print("AxmMoveStartPos 성공")
+    elif res == 4154:
+        print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+    elif res == 4201:
+        print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+    elif res == 4255:
+        print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+    else:
+        print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+    
+    return render(request, 'control/ready_to_control.html')
 
 ################################# (output)테스트해볼 2가지 함수 #################################
 veldata = 0
@@ -851,7 +914,7 @@ class GraphConsumer(WebsocketConsumer):
                 veldata = dVelocity.value
                 print("현재속도 >> ", veldata)
                 self.send(json.dumps({'value': veldata}))
-                sleep(0.01)
+                sleep(0.005)
             else:
                 break
             AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
@@ -859,9 +922,9 @@ class GraphConsumer(WebsocketConsumer):
         # #TODO: graph.js 테스트용 코드
         # count=1
         # for i in range(1000):
-        #     self.send(json.dumps({'value': count}))
+        #     self.send(json.dumps({'value': randint(0,10000)}))
         #     count = count+4
-        #     sleep(0.01)
+        #     sleep(0.001)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")
