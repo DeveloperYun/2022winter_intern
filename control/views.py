@@ -299,7 +299,6 @@ def signal_read_limit(axis):
     AxmSignalReadLimit = loaddll['AxmSignalReadLimit']
     res = AxmSignalReadLimit(axis,pointer(uPositiveStatus),pointer(uNegativeStatus))
 
-    print("***********************************************************************************")
     if res==0000:
         print("지정 축의 리미트 센서 신호 읽기 성공(0-비활성화,1-활성화)")
         print("센서가 감지되지 않았는데도 현재 상태가 1로 반환된다면 현재 설정된 Active Level이 센서 입력상태와 반대로 설정.")
@@ -311,7 +310,6 @@ def signal_read_limit(axis):
         print("해당 축이 존재하지 않음")
     else:
         print("뭔지 모를 이유로 알람 읽기 실패")
-    print("***********************************************************************************")
 
 # 지정 축의 Inpositon 신호의 입력 상태를 반환한다.
 def signal_read_inpos(axis):
@@ -446,22 +444,6 @@ def mot_set_profile_mode(axis):
 
     uProfile = c_ulong()
     res = AxmMotSetProfileMode(axis, 0) # SYM_TRAPEZOIDE_MODE
-    AxmMotGetProfileMode(axis,pointer(uProfile))
-    if res==0000:
-        print("profile mode : ",uProfile.value)
-    elif res == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif res == 4101:
-        print("해당 축이 존재하지 않음")
-    else:
-        print("뭔지 모를 이유로 profile 모드 설정 실패")
-
-def mot_set_profile_mode2(axis):
-    AxmMotSetProfileMode = loaddll['AxmMotSetProfileMode']
-    AxmMotGetProfileMode = loaddll['AxmMotGetProfileMode']
-
-    uProfile = c_ulong()
-    res = AxmMotSetProfileMode(axis, 3) 
     AxmMotGetProfileMode(axis,pointer(uProfile))
     if res==0000:
         print("profile mode : ",uProfile.value)
@@ -837,35 +819,46 @@ def AxmMoveStartMultiPos(request):
         dAccel = request.POST.getlist('dAccel')
         dDecel = request.POST.getlist('dDecel')
     
-    for i in range(len(lAxisNo)):
-        signal_set_limit(int(lAxisNo[i]))
-        set_moveUnitPerPulse(int(lAxisNo[i]))
-        set_startVel(int(lAxisNo[i]))
-        signal_read_limit(int(lAxisNo[i]))
-        
-        signal_servo_on(int(lAxisNo[i]))
-        mot_set_abs_mode(int(lAxisNo[i]))
-        mot_set_profile_mode2(int(lAxisNo[i]))
-    
     lAxisNo2 = [int(x) for x in lAxisNo] #[1,2,...]
     dPos2 = [int(x) for x in dPos]
     dVel2 = [int(x) for x in dVel]
     dAccel2 = [int(x) for x in dAccel]
     dDecel2 = [int(x) for x in dDecel]
 
-    print(lAxisNo2, dPos2, dVel2, dAccel2, dDecel2)
+    for i in range(len(lAxisNo2)):
+        print(">>> 다축구동 {i}축 전처리".format(i=i))
+        signal_set_limit(lAxisNo2[i])
+        set_moveUnitPerPulse(lAxisNo2[i])
+        set_startVel(lAxisNo2[i])
+        signal_read_limit(lAxisNo2[i])
+        signal_servo_on(lAxisNo2[i])
+
+        mot_set_abs_mode(lAxisNo2[i])
+        mot_set_profile_mode(lAxisNo2[i])
+
+    for i in range(len(lAxisNo2)):
+        print(">>>",i,"번 축의 세팅")
+        print("축 : ",lAxisNo2[i], ",위치 : ",dPos2[i],
+              ",속도 : ", dVel2[i], ",가속 : ",dAccel2[i], ",감속 : ", dDecel2[i])
     
-    # a = (c_long * len(lAxisNo2))(*lAxisNo2) #배열
-    # b = (c_double * len(dPos2))(*dPos2)
-    # c = (c_double * len(dVel2))(*dVel2)
-    # d = (c_double * len(dAccel2))(*dAccel2)
-    # e = (c_double * len(dDecel2))(*dDecel2)
+    a = (c_int * len(lAxisNo2))(*lAxisNo2) #배열
+    b = (c_int * len(dPos2))(*dPos2)
+    c = (c_int * len(dVel2))(*dVel2)
+    d = (c_int * len(dAccel2))(*dAccel2)
+    e = (c_int * len(dDecel2))(*dDecel2)
 
     AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
     
     # MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+    # FIXME:
+    # DWORD AxmMoveStartMultiPos(long lArraySize, 
+    #                            long *lpAxisNo, 
+    #                            double *dpPos, 
+    #                            double *dpVel, 
+    #                            double *dpAccel, 
+    #                            double *dpDecel);
     # 인자로 배열(포인터) 들어감 (long * 배열)...이중포인터?
-    res = AxmMoveStartMultiPos(len(lAxisNo), lAxisNo2, dPos2, dVel2, dAccel2, dDecel2)
+    res = AxmMoveStartMultiPos(len(lAxisNo), pointer(a), pointer(b), pointer(c), pointer(d), pointer(e))
 
     if res == 0000:
         print("AxmMoveStartPos 성공")
@@ -875,6 +868,8 @@ def AxmMoveStartMultiPos(request):
         print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
     elif res == 4255:
         print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+    elif res == 4536:
+        print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
     else:
         print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
     
