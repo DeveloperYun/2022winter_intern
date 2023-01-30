@@ -4,7 +4,6 @@ from .models import *
 from ctypes import *
 from channels.generic.websocket import WebsocketConsumer
 import json
-from random import randint, uniform
 from time import sleep
 
 '''
@@ -825,16 +824,41 @@ def AxmMoveStartMultiPos(request):
     dAccel2 = [int(x) for x in dAccel]
     dDecel2 = [int(x) for x in dDecel]
 
+    AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+    AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+
     for i in range(len(lAxisNo2)):
         print(">>> 다축구동 {i}축 전처리".format(i=i))
         signal_set_limit(lAxisNo2[i])
         set_moveUnitPerPulse(lAxisNo2[i])
         set_startVel(lAxisNo2[i])
         signal_read_limit(lAxisNo2[i])
+
+        res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+        res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+
         signal_servo_on(lAxisNo2[i])
 
         mot_set_abs_mode(lAxisNo2[i])
         mot_set_profile_mode(lAxisNo2[i])
+
+    if res_AxmStatusSetActPos == 0000:
+        print("AxmStatusSetActPos 함수 실행 성공")
+    elif res_AxmStatusSetActPos == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmStatusSetActPos == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패")
+
+    if res_AxmStatusSetCmdPos == 0000:
+        print("AxmStatusSetCmdPos 함수 실행 성공")
+    elif res_AxmStatusSetCmdPos == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmStatusSetCmdPos == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패")
 
     for i in range(len(lAxisNo2)):
         print(">>>",i,"번 축의 세팅")
@@ -847,10 +871,11 @@ def AxmMoveStartMultiPos(request):
     d = (c_int * len(dAccel2))(*dAccel2)
     e = (c_int * len(dDecel2))(*dDecel2)
 
+    # for i in a:
+    #     print(id(i))
     AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
     
-    # MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
-    # FIXME:
+    # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
     # DWORD AxmMoveStartMultiPos(long lArraySize, 
     #                            long *lpAxisNo, 
     #                            double *dpPos, 
