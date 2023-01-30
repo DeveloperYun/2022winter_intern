@@ -13,4 +13,5 @@ urlpatterns = [
     path('AxmMoveVel/', views.AxmMoveVel, name='AxmMoveVel'),
     path('HomeSearchMove/', views.HomeSearchMove, name='HomeSearchMove'),
     path('AxmMoveSStop/', views.AxmMoveSStop, name='AxmMoveSStop'),
+    path('AxmMoveStartMultiPos/', views.AxmMoveStartMultiPos, name='AxmMoveStartMultiPos'),
 ]
