@@ -323,12 +323,33 @@
                                       </div>
                                     </div>
                                 </div>
+
+                                <!-- django admin 에서 유저데이터 get -->
+                                <div class="chart-container applicants">
+                                    <div class="chart-container-header">
+                                      <h2>Applicants  </h2>
+                                    </div>
+                                   
+                                    <div class="applicant-line">
+                                        {% if users %}
+                                            {% for user in users %}
+                                                <img src="//source.unsplash.com/100x100" alt="">
+                                                <div class="applicant-info">
+                                                    <span>{{user.username}}</span>
+                                                    <p><strong>{{user.email}}</strong></p>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span>No users found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             {% else %}
                                 <div class="plzLogin">
                                     로그인 후 이용해주세요
                                 </div> 
                                 <br/><br/>
-                                <a href="{% url 'accounts:login' %}">로그인</a>
+                                <a href="{% url 'accounts:login' %}">>> 로그인하기</a>
                             {%endif%}
                         </div>
                     </main>
