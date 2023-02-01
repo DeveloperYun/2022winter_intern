@@ -1,3 +1,4 @@
+import gc
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
@@ -5,6 +6,7 @@ from ctypes import *
 from channels.generic.websocket import WebsocketConsumer
 import json
 from time import sleep
+from django.contrib.auth.models import User
 
 '''
 DWORD = unsigned long int
@@ -17,7 +19,7 @@ loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 axis = 0
 
 def main(request):
-    return render(request, 'control/ready_to_control.html', context={'text': 'Hello'})
+    return render(request, 'control/ready_to_control.html')
 
 ##############################       보드 정보       #####################################
 def board_count():
@@ -49,7 +51,8 @@ def board_status():
 # control initialization 버튼 누르자마자 아래 함수가 처음 실행
 def control_initialization(request):
     #라이브러리 초기화 (보드에 연결되지 않으면 초기화 안되는게 맞음)
-    
+    users = User.objects.all()
+
     if is_lib_open() == False:
         print("라이브러리 초기화는 처음이에요")
         AxlOpen = loaddll['AxlOpen']
@@ -65,7 +68,7 @@ def control_initialization(request):
         print("라이브러리 초기화가 처음이 아니에요")
         open_no_reset()
     
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html', {'users':users})
 
 def open_no_reset():
 
@@ -149,6 +152,8 @@ def Axis_counter():
         print("축 개수 : 알 수 없는 에러로 개수를 알 수 없음")
     print("============================================")
 
+    return lAxisCount.value
+    '''
     # 지정 베이스 보드의 지정 모듈에서 첫 번째 축 번호를 확인
     lBoardNo, lModulsPos = 1, 0
     lFirstAxisNo = c_long()
@@ -164,6 +169,7 @@ def Axis_counter():
     else:
         print("AxmInfoGetFirstAxisNo : 알 수 없는 이유로 에러")
     print("============================================")
+    '''
 
 # 해당 축이 사용 가능한지 확인, 제어 가능한지 확인
 def isInvalidAxis(axis):
@@ -174,12 +180,14 @@ def isInvalidAxis(axis):
 
     if uReturn != 0000:
         print(uReturn," : 해당 축이 없음")
+        return
     else:
         print(axis," 번 축은 사용할 수 있음")
         if isControl != 0000:
             print(isControl, " : 제어 불가능")
         elif isControl == 0000:
             print(isControl, " : 제어 가능")
+        return axis
 
 # 라이브러리 종료
 def close_lib():
@@ -192,8 +200,6 @@ def close_lib():
 ##############################  모션 구동의 용어 해설  #################################
 
 # 이건 low 혹은 high를 serve on 으로 받아들이겠다를 셋팅하는 함수이다.
-# 자꾸 1053 에러가 뜬 것은 해당 기기가 디폴트로 low 혹은 high...를 받는데 바꾸라고 해서 에러가 떴을 확률이 있다.
-
 def signal_servo_on(axis):
     AxmSignalServoOn = loaddll['AxmSignalServoOn']
     AxmSignalIsServoOn = loaddll['AxmSignalIsServoOn']
@@ -217,12 +223,13 @@ def set_moveUnitPerPulse(axis):
     # lPulse = 1 # 1회전을 위한 펄스 수
     # dUnit = 1 # 1회전시 이동 거리
 
-    lpPulse = c_long()
+    lpPulse = c_double()
     dpUnit = c_long()
 
     AxmMotSetMoveUnitPerPulse = loaddll['AxmMotSetMoveUnitPerPulse']
     AxmMotGetMoveUnitPerPulse = loaddll['AxmMotGetMoveUnitPerPulse']
 
+    AxmMotSetMoveUnitPerPulse.argtypes=[c_long,c_double,c_long]
     setpulse = AxmMotSetMoveUnitPerPulse(axis,1,1)
     getpulse = AxmMotGetMoveUnitPerPulse(axis,pointer(dpUnit),pointer(lpPulse))
     if setpulse == 0000 and getpulse == 0000:
@@ -396,8 +403,11 @@ def mot_set_home_start(axis):
     uHomeResult = c_ulong()
     uHomeStepNumber,uHomeMainStepNumber = c_ulong(), c_ulong()
 
+    AxmHomeSetMethod.argtypes=[c_long,c_long,c_ulong,c_ulong,c_double,c_double]
+    AxmHomeSetVel.argtypes=[c_long,c_double,c_double,c_double,c_double,c_double,c_double]
+
     AxmHomeSetMethod(axis,0,4,0,1000,0)
-    AxmHomeSetVel(axis,100, 100, 20, 1, 400, 400)
+    AxmHomeSetVel(axis,60000, 3000, 1000, 50, 20000, 80000)
 
     AxmHomeSetStart(axis)
 
@@ -496,6 +506,7 @@ def signal_set_stop(axis):
 ################################# (input)테스트해볼 5가지 단축구동 함수 ###############################
 
 def HomeSearchMove(request): # 원점찾기(완성)
+    users = User.objects.all()
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
     board_count()
@@ -527,9 +538,10 @@ def HomeSearchMove(request): # 원점찾기(완성)
 
     mot_set_home_start(lAxisNo) # 원점 탐색
 
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html', {'users':users})
 
 def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
+    users = User.objects.all()
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
     board_count()
@@ -542,23 +554,23 @@ def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     if request.method == 'POST':
-        mov = MovePos()
-        mov.lAxisNo = int(request.POST['lAxisNo'])
-        mov.dPos = int(request.POST['dPos'])
-        mov.dVel = int(request.POST['dVel'])
-        mov.dAccel = int(request.POST['dAccel'])
-        mov.dDecel = int(request.POST['dDecel'])
-        mov.save()
+        # mov = MovePos()
+        lAxisNo = int(request.POST['lAxisNo'])
+        dPos = c_double(int(request.POST['dPos']))
+        dVel = c_double(int(request.POST['dVel']))
+        dAccel = c_double(int(request.POST['dAccel']))
+        dDecel = c_double(int(request.POST['dDecel']))
+        # mov.save()
 
     #****************************** 55pg 순서대로 ***********************************************************
-    signal_set_limit(int(mov.lAxisNo)) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
-    set_moveUnitPerPulse(int(mov.lAxisNo)) #axis의 움직이는 거리당 출력되는 펄스 (1:1) 
-    set_startVel(int(mov.lAxisNo)) #axis 초기속도 설정
-    signal_read_limit(int(mov.lAxisNo)) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
+    signal_set_limit(lAxisNo)# 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
+    set_moveUnitPerPulse(lAxisNo) #axis의 움직이는 거리당 출력되는 펄스 (1:1) 
+    set_startVel(lAxisNo) #axis 초기속도 설정
+    signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
 
     # 현재 위치는 원점으로 설정한다.
     AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
-    res = AxmStatusSetActPos(int(mov.lAxisNo), 0)
+    res = AxmStatusSetActPos((lAxisNo), 0)
     if res == 0000:
         print("AxmStatusSetActPos 함수 실행 성공")
     elif res == 4053:
@@ -569,7 +581,7 @@ def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
         print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패")
         
     AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
-    res2 = AxmStatusSetCmdPos(int(mov.lAxisNo), 0)
+    res2 = AxmStatusSetCmdPos((lAxisNo), 0)
     if res2 == 0000:
         print("AxmStatusSetCmdPos 함수 실행 성공")
     elif res2 == 4053:
@@ -579,24 +591,23 @@ def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     else:
         print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패")
 
-    signal_servo_on(int(mov.lAxisNo)) #servo on
-    mot_set_abs_mode(int(mov.lAxisNo)) # axis 이동거리 계산 모드 설정
-    mot_set_profile_mode(int(mov.lAxisNo)) # axis의 구동 속도 프로파일 설정
+    signal_servo_on(lAxisNo) #servo on
+    mot_set_abs_mode(lAxisNo) # axis 이동거리 계산 모드 설정
+    mot_set_profile_mode(lAxisNo) # axis의 구동 속도 프로파일 설정
 
     AxmStatusReadVel = loaddll['AxmStatusReadVel']
     dVelocity = c_int()
     AxmStatusReadVel(axis, pointer(dVelocity))
 
     AxmMovePos = loaddll['AxmMovePos']
-
-
+    AxmMovePos.argtypes = [c_long,c_double,c_double,c_double,c_double]
     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&>> ", dVelocity.value)
     ResAxmMovePos = AxmMovePos(
-        (mov.lAxisNo), 
-        (mov.dPos), 
-        (mov.dVel), 
-        (mov.dAccel), 
-        (mov.dDecel)
+        (lAxisNo), 
+        (dPos).value, 
+        (dVel).value, 
+        (dAccel).value, 
+        (dDecel).value
     ) # input값 잘 받아오는거 확인함
     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&>> ", dVelocity.value)
 
@@ -614,13 +625,13 @@ def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     #AxmStatusReadVel(mov.lAxisNo)
     
     #임시 템플릿
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html', {'users':users})
 
 def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
+    users = User.objects.all()
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
     board_count()
-    info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
@@ -629,23 +640,23 @@ def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     if request.method == 'POST':
-        mov = MoveStartPos()
-        mov.lAxisNo = int(request.POST['lAxisNo'])
-        mov.dPos = int(request.POST['dPos'])
-        mov.dVel = int(request.POST['dVel'])
-        mov.dAccel = int(request.POST['dAccel'])
-        mov.dDecel = int(request.POST['dDecel'])
-        mov.save()
+        # mov = MoveStartPos()
+        lAxisNo = int(request.POST['lAxisNo'])
+        dPos = c_double(int(request.POST['dPos']))
+        dVel = c_double(int(request.POST['dVel']))
+        dAccel = c_double(int(request.POST['dAccel']))
+        dDecel = c_double(int(request.POST['dDecel']))
+        # mov.save()
 
     #****************************** 55pg 순서대로 ***********************************************************
-    signal_set_limit(int(mov.lAxisNo)) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
-    set_moveUnitPerPulse(int(mov.lAxisNo)) # axis의 움직이는 거리당 출력되는 펄스 (1:1) 
-    set_startVel(int(mov.lAxisNo)) # axis 초기속도 설정
-    signal_read_limit(int(mov.lAxisNo)) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
+    signal_set_limit(lAxisNo) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
+    set_moveUnitPerPulse(lAxisNo) # axis의 움직이는 거리당 출력되는 펄스 (1:1) 
+    set_startVel(lAxisNo) # axis 초기속도 설정
+    signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
 
     # 현재 위치는 원점으로 설정한다.
     AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
-    res = AxmStatusSetActPos(int(mov.lAxisNo), 0)
+    res = AxmStatusSetActPos(lAxisNo, 0)
     if res == 0000:
         print("AxmStatusSetActPos 함수 실행 성공")
     elif res == 4053:
@@ -656,7 +667,7 @@ def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
         print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패")
         
     AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
-    res2 = AxmStatusSetCmdPos(int(mov.lAxisNo), 0)
+    res2 = AxmStatusSetCmdPos(lAxisNo, 0)
     if res2 == 0000:
         print("AxmStatusSetCmdPos 함수 실행 성공")
     elif res2 == 4053:
@@ -666,18 +677,21 @@ def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
     else:
         print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패")
 
-    signal_servo_on(int(mov.lAxisNo)) #servo on
-    mot_set_abs_mode(int(mov.lAxisNo)) # axis 이동거리 계산 모드 설정
-    mot_set_profile_mode(int(mov.lAxisNo)) # axis의 구동 속도 프로파일 설정
+    signal_servo_on(lAxisNo) #servo on
+    mot_set_abs_mode(lAxisNo) # axis 이동거리 계산 모드 설정
+    mot_set_profile_mode(lAxisNo) # axis의 구동 속도 프로파일 설정
     AxmMoveStartPos = loaddll['AxmMoveStartPos']
 
-    isInvalidAxis(int(mov.lAxisNo))
+    isInvalidAxis(lAxisNo)
+    print(dPos.value)
+
+    AxmMoveStartPos.argtypes = [c_int, c_double, c_double, c_double, c_double]
     ResAxmMoveStartPos = AxmMoveStartPos(
-        (mov.lAxisNo), 
-        (mov.dPos), 
-        (mov.dVel), 
-        (mov.dAccel), 
-        (mov.dDecel)
+        lAxisNo, 
+        (dPos).value, 
+        (dVel).value, 
+        (dAccel).value, 
+        (dDecel).value
     )
 
     #AxmStatusReadVel(mov.lAxisNo) # 속도 측정
@@ -692,9 +706,10 @@ def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
     else:
         print("뭔가 모를 이유로 AxmMoveStartPos 가 실행되지 않음")
 
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html', {'users':users})
 
 def AxmMoveVel(request): # 속도구동(조그구동) (완성)
+    users = User.objects.all()
     # 종료 명령이 나올 때까지 계속 움직이는 형태
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
@@ -708,29 +723,29 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     if request.method == 'POST':
-        mov = MoveVel()
-        mov.lAxisNo = int(request.POST['lAxisNo'])
-        mov.dVel = int(request.POST['dVel'])
-        mov.dAccel = int(request.POST['dAccel'])
-        mov.dDecel = int(request.POST['dDecel'])
-        mov.save()
+        # mov = MoveVel()
+        lAxisNo = int(request.POST['lAxisNo'])
+        dVel = c_double(int(request.POST['dVel']))
+        dAccel = c_double(int(request.POST['dAccel']))
+        dDecel = c_double(int(request.POST['dDecel']))
+        # mov.save()
 
     global axis
-    axis = mov.lAxisNo
+    axis = lAxisNo
     
-    signal_set_limit(int(mov.lAxisNo)) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
-    set_moveUnitPerPulse(int(mov.lAxisNo)) #axis의 움직이는 거리당 출력되는 펄스 (1:1) 
-    set_startVel(int(mov.lAxisNo)) #axis 초기속도 설정
-    signal_read_limit(int(mov.lAxisNo)) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
+    signal_set_limit(lAxisNo) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
+    set_moveUnitPerPulse(lAxisNo) #axis의 움직이는 거리당 출력되는 펄스 (1:1) 
+    set_startVel(lAxisNo) #axis 초기속도 설정
+    signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
     
     AxmMoveVel = loaddll['AxmMoveVel']
-
-    isInvalidAxis(int(mov.lAxisNo))
+    AxmMoveVel.argtypes=[c_long,c_double,c_double,c_double]
+    isInvalidAxis(lAxisNo)
     ResAxmMoveVel = AxmMoveVel(
-        (mov.lAxisNo), 
-        (mov.dVel), 
-        (mov.dAccel), 
-        (mov.dDecel)
+        (lAxisNo), 
+        (dVel).value, 
+        (dAccel).value, 
+        (dDecel).value
     )
     
     if ResAxmMoveVel == 0000:
@@ -744,68 +759,62 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
     else:
         print("뭔가 모를 이유로 AxmMoveVel 가 실행되지 않음. Error: ",ResAxmMoveVel)
 
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html', {'users':users})
 
-'''
-# def mot_move_stop(axis):
-#     AxmMoveSStop = loaddll['AxmMoveSStop']
-#     res = AxmMoveSStop(axis)
-
-#     if res == 0000:
-#         print("AxmMoveSStop 함수 실행 성공. 해당 축 모션 구동 감속 정지.")
-#     elif res == 4053:
-#         print("해당 축 모션 초기화 실패")
-#     elif res == 4101:
-#         print("해당 축이 존재하지 않음")
-#     else:
-#         print("뭔지 모를 이유로 AxmMoveSStop 설정 실패. error: ",AxmMoveSStop)
-'''
 def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)    
+    users = User.objects.all()
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
     upStatus = c_long()
 
-    print("전역변수 확인: ",axis)
+    for i in range(8): #최대 8축이라 가정
+        axis = isInvalidAxis(i) # 제어 가능한 축 번호 반환(int)
 
-    AxmMoveEStop = loaddll['AxmMoveEStop']
-    
-    res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-    if res==0000: 
-        print("AxmMoveEStop 성공")
-    elif res == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif res == 4101:
-        print("해당 축이 존재하지 않음")
-    else:
-        print("뭔지 모를 이유로 AxmMoveEStop  실패")
+        AxmMoveEStop = loaddll['AxmMoveEStop']
+        res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
 
-    if upStatus.value == 1: #만약 모션이 구동중이라면
-        res2 = AxmMoveEStop(axis)
-        if res2 == 0000:
-            print("AxmMoveEStop 함수 실행 성공. 해당 축 모션 구동 감속 정지.")
-        elif res2 == 4053:
+        '''
+        if res==0000: 
+            print("AxmMoveEStop 성공")
+        elif res == 4053:
             print("해당 축 모션 초기화 실패")
-        elif res2 == 4101:
+        elif res == 4101:
             print("해당 축이 존재하지 않음")
         else:
-            print("뭔지 모를 이유로 AxmMoveEStop 설정 실패. error: ",AxmMoveEStop)
-    else:
-        print("모션이 구동하지 않음")
-    
-    return render(request, 'control/ready_to_control.html')
+            print("뭔지 모를 이유로 AxmMoveEStop  실패")
+        '''
+        if upStatus.value == 1: #만약 모션이 구동중이라면
+            res2 = AxmMoveEStop(axis)
+            '''
+            if res2 == 0000:
+                print("AxmMoveEStop 함수 실행 성공.")
+            elif res2 == 4053:
+                print("해당 축 모션 초기화 실패")
+            elif res2 == 4101:
+                print("해당 축이 존재하지 않음")
+            else:
+                print("뭔지 모를 이유로 AxmMoveEStop 설정 실패. error: ",AxmMoveEStop)
+            '''
+        else:
+            print("모션이 구동하지 않음")
+        
+    return render(request, 'control/ready_to_control.html',{'users':users})
 
 ####TODO:############################# (input)테스트해볼 다축구동 함수 ###############################
 
 def AxmMoveStartMultiPos(request): 
+    users = User.objects.all()
     # 다축위치 구동 - 시점탈출
     # 축 개수만큼 배열을 선언해서 for문 돌리는 식으로 구현
     # (축개수, 축번호 배열, 구동거리 배열, 속도 배열, 가속도 배열, 감속도 배열)
+    '''
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     board_status()
     board_count()
-    info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
-    info_get_axis(1) # 1번축 보드/모듈 정보 확인 : 
+    # info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
+    # info_get_axis(1) # 1번축 보드/모듈 정보 확인 : 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-
+    '''
+    
     print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
     is_lib_open()
     is_moduleExists() 
@@ -828,7 +837,8 @@ def AxmMoveStartMultiPos(request):
     AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
 
     for i in range(len(lAxisNo2)):
-        print(">>> 다축구동 {i}축 전처리".format(i=i))
+        print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+
         signal_set_limit(lAxisNo2[i])
         set_moveUnitPerPulse(lAxisNo2[i])
         set_startVel(lAxisNo2[i])
@@ -849,7 +859,7 @@ def AxmMoveStartMultiPos(request):
     elif res_AxmStatusSetActPos == 4101:
         print("해당 축이 존재하지 않음")
     else:
-        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패")
+        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
 
     if res_AxmStatusSetCmdPos == 0000:
         print("AxmStatusSetCmdPos 함수 실행 성공")
@@ -858,35 +868,54 @@ def AxmMoveStartMultiPos(request):
     elif res_AxmStatusSetCmdPos == 4101:
         print("해당 축이 존재하지 않음")
     else:
-        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패")
+        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+
+    #TODO: 파이썬과 c의 메모리 할당 방식의 차이가 에러의 원인?
+    def to_c_array(py_list):
+        arr = (c_int * len(py_list))(*py_list)
+        return arr
+
+    def to_c_array2(py_list):
+        arr = (c_double * len(py_list))(*py_list)
+        return arr
+
+    a = to_c_array(lAxisNo2)
+    b = to_c_array2(dPos2)
+    c = to_c_array2(dVel2)
+    d = to_c_array2(dAccel2)
+    e = to_c_array2(dDecel2)
 
     for i in range(len(lAxisNo2)):
         print(">>>",i,"번 축의 세팅")
-        print("축 : ",lAxisNo2[i], ",위치 : ",dPos2[i],
-              ",속도 : ", dVel2[i], ",가속 : ",dAccel2[i], ",감속 : ", dDecel2[i])
-    
-    a = (c_int * len(lAxisNo2))(*lAxisNo2) #배열
-    b = (c_int * len(dPos2))(*dPos2)
-    c = (c_int * len(dVel2))(*dVel2)
-    d = (c_int * len(dAccel2))(*dAccel2)
-    e = (c_int * len(dDecel2))(*dDecel2)
+        print("축 : ",a[i], ",위치 : ",b[i],
+              ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
 
-    # for i in a:
-    #     print(id(i))
+    print("------------------------------------------------------------")
+    '''
+    for i in range(len(a)):
+        print("축 값 : ",a[i], "/ 메모리주소 : ",(addressof(a) + i * sizeof(c_int)))
+    print("------------------------------------------------------------")
+    for i in range(len(a)):
+        print("거리 값 : ",b[i], "/ 메모리주소 : ",(addressof(b) + i * sizeof(c_int)))
+    print("------------------------------------------------------------")
+    for i in range(len(a)):
+        print("속도 값 : ",c[i], "/ 메모리주소 : ",(addressof(c) + i * sizeof(c_int)))
+    print("------------------------------------------------------------")
+    for i in range(len(a)):
+        print("가속 값 : ",d[i], "/ 메모리주소 : ",(addressof(d) + i * sizeof(c_int)))
+    print("------------------------------------------------------------")
+    for i in range(len(a)):
+        print("감속 값 : ",e[i], "/ 메모리주소 : ",(addressof(e) + i * sizeof(c_int)))
+    '''
+    
     AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
-    
+    AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
     # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
-    # DWORD AxmMoveStartMultiPos(long lArraySize, 
-    #                            long *lpAxisNo, 
-    #                            double *dpPos, 
-    #                            double *dpVel, 
-    #                            double *dpAccel, 
-    #                            double *dpDecel);
-    # 인자로 배열(포인터) 들어감 (long * 배열)...이중포인터?
-    res = AxmMoveStartMultiPos(len(lAxisNo), pointer(a), pointer(b), pointer(c), pointer(d), pointer(e))
-
+    res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+    
+    
     if res == 0000:
-        print("AxmMoveStartPos 성공")
+        print("AxmMoveStartMultiPos 성공")
     elif res == 4154:
         print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
     elif res == 4201:
@@ -898,7 +927,7 @@ def AxmMoveStartMultiPos(request):
     else:
         print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
     
-    return render(request, 'control/ready_to_control.html')
+    return render(request, 'control/ready_to_control.html',{'users':users})
 
 ################################# (output)테스트해볼 2가지 함수 #################################
 veldata = 0
@@ -913,7 +942,7 @@ class GraphConsumer(WebsocketConsumer):
         AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
 
         upStatus = c_long()
-        dVelocity = c_int()
+        dVelocity = c_double()
 
         res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
         if res1==0000: 
@@ -927,14 +956,16 @@ class GraphConsumer(WebsocketConsumer):
         
         while True: 
             AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-
             if upStatus.value == 1:
-                AxmStatusReadVel(axis, pointer(dVelocity))
-            
-                veldata = dVelocity.value
-                print("현재속도 >> ", veldata)
-                self.send(json.dumps({'value': veldata}))
-                sleep(0.005)
+                col = AxmStatusReadVel(axis, pointer(dVelocity))
+                if col == 0000:
+                    veldata = dVelocity.value
+                    self.send(json.dumps({'value': veldata}))
+                    sleep(0.0001)
+                elif col == 4053:
+                    print("모션 초기화 실패")
+                else:
+                    print("안됨 : ",col)
             else:
                 break
             AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
@@ -942,9 +973,9 @@ class GraphConsumer(WebsocketConsumer):
         # #TODO: graph.js 테스트용 코드
         # count=1
         # for i in range(1000):
-        #     self.send(json.dumps({'value': randint(0,10000)}))
+        #     self.send(json.dumps({'value': count}))
         #     count = count+4
-        #     sleep(0.001)
+        #     sleep(0.0001)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")
@@ -952,4 +983,3 @@ class GraphConsumer(WebsocketConsumer):
     def receive(self, text_data):
         test = json.loads(text_data)
         print(test)
-
