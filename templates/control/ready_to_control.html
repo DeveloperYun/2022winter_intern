@@ -31,11 +31,27 @@
                                      <input type='button' value='삭제' onclick='remove(this)'>`
                 box.appendChild(newform);
             }
-    
+            
+            //서브온오프 축
+            const add_textbox2 = () => {
+                const box2 = document.getElementById("box2");
+                const newform2 = document.createElement('div');
+                count = count + 1;
+                newform2.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
+                                     <input type='button' value='삭제' onclick='remove2(this)'>`
+                box2.appendChild(newform2);
+            }
+
             // 삭제
             const remove = (obj) => {
                 count = count - 1;
                 document.getElementById('box').removeChild(obj.parentNode);
+            }
+
+            // 삭제
+            const remove2 = (obj) => {
+                count = count - 1;
+                document.getElementById('box2').removeChild(obj.parentNode);
             }
 
         </script>
@@ -68,7 +84,6 @@
                             Github
                         </a>
                     </li>
-                   
                     <li class="nav-list-item active">
                         <a class="nav-list-link" href="https://www.notion.so/2022-_-96985f828766434abd960ef9db872bb9" target='_blank'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
@@ -76,18 +91,40 @@
                         </a>
                     </li>
 
-
-                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                    <!--TODO: serve on -->
+                    <!-- 모달창을 띄울 수 있도록 -->
                     <li class="nav-list-item active">
-                        <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
+                        <div class="text-white" style="display:inline;">
+                            <!-- 모달창 -->
+                            <input class="btn" type="submit" name="serveon" id="serveon" value="serve on" style="transform: translate(10px, 10px); font-size:30px; width:220px; height:100px; border-radius:90px">  
+                        </div>
+                        <!-- 2 번쨰 모달창 -->
+                        <div class="modal">
+                            <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>serve on</h2>
+                            <span>serve on 하려는 축 번호를 입력하세요</span>
+                            <form action="{% url 'control:signal_servo_on' %}" method="POST">
+                                {% csrf_token %}
+                                <div id="box2">
+                                    <input type="button" value="추가" onclick="add_textbox2()">
+                                    <input type="submit" value="제출">
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+
+                    <!--TODO: serve off -->
+                    <li class="nav-list-item active">
+                        <form id="serveoff" action="{% url 'control:AxmMoveSStop' %}" method="POST">
                             {% csrf_token %}
                             <div class="text-white" style="display:inline;">
-                                <input type="submit" name="stop" id="stop" value="serve on" style="transform: translate(10px, 10px); font-size:30px; width:220px; height:100px; border-radius:90px">  
+                                <input type="submit" name="serveoff" id="serveoff" value="serve off" style="transform: translate(10px, 10px); font-size:30px; width:220px; height:100px; border-radius:90px">  
                             </div>
                             <i class="fas fa-angle-right"></i>
                         </form>
                     </li>
-
 
                     <li class="nav-list-item active">
                         <form action="{% url 'control:AxmMoveSStop' %}" method="POST">

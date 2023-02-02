@@ -14,4 +14,5 @@ urlpatterns = [
     path('HomeSearchMove/', views.HomeSearchMove, name='HomeSearchMove'),
     path('AxmMoveSStop/', views.AxmMoveSStop, name='AxmMoveSStop'),
     path('AxmMoveStartMultiPos/', views.AxmMoveStartMultiPos, name='AxmMoveStartMultiPos'),
+    path('signal_servo_on/', views.signal_servo_on, name='signal_servo_on'),
 ]
