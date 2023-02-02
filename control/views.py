@@ -970,42 +970,134 @@ class GraphConsumer(WebsocketConsumer):
         #TODO: multiaxis 에 구동 축 담겨있음
         upStatus = c_long()
         dVelocity = c_double()
+        upStatus2 = c_long()
+        dVelocity2 = c_double()
+        upStatus3 = c_long()
+        dVelocity3 = c_double()
+        upStatus4 = c_long()
+        dVelocity4 = c_double()
 
-        res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-        if res1==0000: 
-            print("AxmStatusReadInMotion 성공")
-        elif res1 == 4053:
-            print("해당 축 모션 초기화 실패")
-        elif res1 == 4101:
-            print("해당 축이 존재하지 않음")
+        # 다축 구동
+        if len(multiaxis) >= 2:
+            # multiaxis 각각의 축에 대한 구동상태 파악
+            while True: 
+                # 한 보드당 최대 4개 축이니까 4가지 경우를 작성
+                if len(multiaxis)==2:
+                    AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
+                    
+                    if upStatus.value == 1 or upStatus2.value == 1:
+                        col = AxmStatusReadVel(multiaxis[0], pointer(dVelocity))
+                        col2 = AxmStatusReadVel(multiaxis[1], pointer(dVelocity2))
+                        if col == 0000 or col2 == 0000:
+                            veldata = dVelocity.value
+                            veldata2 = dVelocity2.value
+                            self.send(json.dumps({'value': veldata}))
+                            self.send(json.dumps({'value': veldata2}))
+                            sleep(0.005)
+                        elif col == 0000 or col2 == 0000:
+                            print("모션 초기화 실패")
+                        else:
+                            print("안됨 : ",col2)
+                    else:
+                        break
+
+                if len(multiaxis)==3:
+                    AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[2], pointer(upStatus3)) # 2번 축 모션 구동 상태 파악
+
+                    if upStatus.value == 1 or upStatus2.value == 1 or upStatus3.value == 1:
+                        col = AxmStatusReadVel(multiaxis[0], pointer(dVelocity))
+                        col2 = AxmStatusReadVel(multiaxis[1], pointer(dVelocity2))
+                        col3 = AxmStatusReadVel(multiaxis[2], pointer(dVelocity3))
+
+                        if col == 0000 or col2 == 0000 or col3 == 0000:
+                            veldata = dVelocity.value
+                            veldata2 = dVelocity2.value
+                            veldata3 = dVelocity3.value
+                            self.send(json.dumps({'value': veldata}))
+                            self.send(json.dumps({'value': veldata2}))
+                            self.send(json.dumps({'value': veldata3}))
+                            sleep(0.005)
+                        elif col == 0000 or col2 == 0000 or col3 == 0000:
+                            print("모션 초기화 실패")
+                        else:
+                            print("안됨 : ",col)
+                    else:
+                        break
+
+                if len(multiaxis)==4:
+                    AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[2], pointer(upStatus3)) # 2번 축 모션 구동 상태 파악
+                    AxmStatusReadInMotion(multiaxis[3], pointer(upStatus4)) # 2번 축 모션 구동 상태 파악
+
+                    if upStatus.value == 1 or upStatus2.value == 1 or upStatus3.value == 1 or upStatus4.value == 1:
+                        col = AxmStatusReadVel(multiaxis[0], pointer(dVelocity))
+                        col2 = AxmStatusReadVel(multiaxis[1], pointer(dVelocity2))
+                        col3 = AxmStatusReadVel(multiaxis[2], pointer(dVelocity3))
+                        col4 = AxmStatusReadVel(multiaxis[3], pointer(dVelocity4))
+
+                        if col == 0000 or col2 == 0000 or col3 == 0000 or col4 == 0000:
+                            veldata = dVelocity.value
+                            veldata2 = dVelocity2.value
+                            veldata3 = dVelocity3.value
+                            veldata4 = dVelocity4.value
+
+                            self.send(json.dumps({'value': veldata}))
+                            self.send(json.dumps({'value': veldata2}))
+                            self.send(json.dumps({'value': veldata3}))
+                            self.send(json.dumps({'value': veldata4}))
+
+                            sleep(0.005)
+                        elif col == 0000 or col2 == 0000 or col3 == 0000 or col4 == 0000:
+                            print("모션 초기화 실패")
+                        else:
+                            print("안됨 : ",col)
+                    else:
+                        break
+            #AxmStatusReadInMotion(multiaxis[0], pointer(upStatus)) # 모션 구동 상태 파악
+        # 단축 구동    
         else:
-            print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
-        
-        while True: 
-            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
-            if upStatus.value == 1:
-                col = AxmStatusReadVel(axis, pointer(dVelocity))
-                if col == 0000:
-                    veldata = dVelocity.value
-                    self.send(json.dumps({'value': veldata}))
-                    sleep(0.0001)
-                elif col == 4053:
-                    print("모션 초기화 실패")
-                else:
-                    print("안됨 : ",col)
+            res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+            if res1==0000: 
+                print("AxmStatusReadInMotion 성공")
+            elif res1 == 4053:
+                print("해당 축 모션 초기화 실패")
+            elif res1 == 4101:
+                print("해당 축이 존재하지 않음")
             else:
-                break
-            AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+                print("뭔지 모를 이유로 AxmStatusReadInMotion 실패. error: ",res1)
+            
+            while True: 
+                AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+                if upStatus.value == 1:
+                    col = AxmStatusReadVel(axis, pointer(dVelocity))
+                    if col == 0000:
+                        veldata = dVelocity.value
+                        self.send(json.dumps({'value': veldata}))
+                        sleep(0.005)
+                    elif col == 4053:
+                        print("모션 초기화 실패")
+                    else:
+                        print("안됨 : ",col)
+                else:
+                    break
+                AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+
+        self.send(json.dumps({'value': 0}))
         print(multiaxis)
 
         # #TODO: graph.js 테스트용 코드
         # count=1
-        # aas= 4
         # for i in range(1000):
         #     self.send(json.dumps({'value': count}))
-        #     self.send(json.dumps({'value': aas}))
+        #     if 'a' in locals():
+        #         self.send(json.dumps({'value': a}))
+        #         a = a + 2
+
         #     count = count+4
-        #     aas = aas + 2
         #     sleep(0.0001)
 
     def disconnect(self, code):
