@@ -42,6 +42,16 @@
                 box2.appendChild(newform2);
             }
 
+            //서브온오프 축
+            const add_textbox3 = () => {
+                const box3 = document.getElementById("box3");
+                const newform3 = document.createElement('div');
+                count = count + 1;
+                newform3.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
+                                     <input type='button' value='삭제' onclick='remove3(this)'>`
+                box3.appendChild(newform3);
+            }
+            
             // 삭제
             const remove = (obj) => {
                 count = count - 1;
@@ -54,6 +64,11 @@
                 document.getElementById('box2').removeChild(obj.parentNode);
             }
 
+            // 삭제
+            const remove3 = (obj) => {
+                count = count - 1;
+                document.getElementById('box3').removeChild(obj.parentNode);
+            }
         </script>
     </head>
     <body>
@@ -116,14 +131,26 @@
                     </li>
 
                     <!--TODO: serve off -->
+                    <!-- 모달창을 띄울 수 있도록 -->
                     <li class="nav-list-item active">
-                        <form id="serveoff" action="{% url 'control:AxmMoveSStop' %}" method="POST">
-                            {% csrf_token %}
-                            <div class="text-white" style="display:inline;">
-                                <input type="submit" name="serveoff" id="serveoff" value="serve off" style="transform: translate(10px, 10px); font-size:30px; width:220px; height:100px; border-radius:90px">  
-                            </div>
-                            <i class="fas fa-angle-right"></i>
-                        </form>
+                        <div class="text-white" style="display:inline;">
+                            <!-- 모달창 -->
+                            <input class="btn" type="submit" name="serveon" id="serveon" value="serve off" style="transform: translate(10px, 10px); font-size:30px; width:220px; height:100px; border-radius:90px">  
+                        </div>
+                        <!-- 2 번쨰 모달창 -->
+                        <div class="modal">
+                            <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>serve off</h2>
+                            <span>serve off 하려는 축 번호를 입력하세요</span>
+                            <form action="{% url 'control:signal_servo_off' %}" method="POST">
+                                {% csrf_token %}
+                                <div id="box3">
+                                    <input type="button" value="추가" onclick="add_textbox3()">
+                                    <input type="submit" value="제출">
+                                </div>
+                            </form>
+                        </div>
                     </li>
 
                     <li class="nav-list-item active">
