@@ -1,4 +1,5 @@
 import gc
+from random import randint
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import *
@@ -967,7 +968,6 @@ class GraphConsumer(WebsocketConsumer):
         AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
         AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
 
-        #TODO: multiaxis 에 구동 축 담겨있음
         upStatus = c_long()
         dVelocity = c_double()
         upStatus2 = c_long()
@@ -978,6 +978,7 @@ class GraphConsumer(WebsocketConsumer):
         dVelocity4 = c_double()
 
         # 다축 구동
+        #TODO: 축 별 속도를 html로 보내서 각각 보여준다.
         if len(multiaxis) >= 2:
             # multiaxis 각각의 축에 대한 구동상태 파악
             while True: 
@@ -986,6 +987,7 @@ class GraphConsumer(WebsocketConsumer):
                     AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
                     AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
                     
+                    #TODO: veldata, veldata2를 그냥 html로 보내주면 되지않나?
                     if upStatus.value == 1 or upStatus2.value == 1:
                         col = AxmStatusReadVel(multiaxis[0], pointer(dVelocity))
                         col2 = AxmStatusReadVel(multiaxis[1], pointer(dVelocity2))
@@ -1090,15 +1092,12 @@ class GraphConsumer(WebsocketConsumer):
         print(multiaxis)
 
         # #TODO: graph.js 테스트용 코드
-        # count=1
-        # for i in range(1000):
-        #     self.send(json.dumps({'value': count}))
-        #     if 'a' in locals():
-        #         self.send(json.dumps({'value': a}))
-        #         a = a + 2
-
-        #     count = count+4
-        #     sleep(0.0001)
+        # count=200
+        # a=400
+        # for i in range(2000):
+        #     self.send(json.dumps({'value': randint(0,1000)}))
+        #     self.send(json.dumps({'value': randint(-1000,0)}))
+        #     sleep(0.005)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")

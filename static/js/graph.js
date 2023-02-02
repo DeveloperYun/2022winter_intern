@@ -75,7 +75,7 @@ socket.onmessage = function(e){
     var axis = counter
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=400){
+    if(counter>=1000){
         // counter = 0
         // for(var i=0; i<75; i++){
         newGraphData.shift();
@@ -96,9 +96,6 @@ socket.onmessage = function(e){
 //https://dbza.tistory.com/entry/django-channels-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-consumer-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84
 //ws.send로 컨슈머에게 중지신호를 보내면 컨슈머의 receive에서 받아서 그 안에서 close
 //<input id="socket-cut" type="button" value="cut">
-document.querySelector('#socket-cut').onclick = function(e){
-    socket.close();
-}
 
 document.querySelector('.open-right-area').addEventListener('click', function () {
     document.querySelector('.app-right').classList.add('show');
