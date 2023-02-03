@@ -497,7 +497,7 @@
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value1', 1);
+                  formData.set('lAxisNo', 1);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
