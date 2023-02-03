@@ -138,7 +138,7 @@ button {
 }
 
 .nav-list-item {
-  margin-bottom: 12px;
+  margin-bottom: 0px;
 }
 .nav-list-item:not(.active):hover {
   background-color: var(--list-item-hover);
@@ -852,4 +852,42 @@ button {
   content: "On";
   color: #007177;
   left: 190px;
+}
+
+
+.accordion {
+  background-color: #01081f;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: 1px solid #fff;
+  text-align: left;
+  outline: none;
+  font-size: 20px;
+  transition: 0.4s;
+}
+
+.active, .accordion:hover {
+  background-color: #01081f; 
+}
+
+.accordion:after {
+  content: '\002B';
+  color: #01081f;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
 }
