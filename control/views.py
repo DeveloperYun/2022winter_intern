@@ -224,7 +224,7 @@ def signal_servo_on(request):
     elif res_AxmSignalServoOn == 4101:
         print("해당 축이 존재하지 않음")
     else:
-        print("서브온 실패")
+        print(lAxisNo, "서브온 실패")
 
     return render(request, 'control/ready_to_control.html',{'users':users})
     # users = User.objects.all()
@@ -275,7 +275,7 @@ def signal_servo_off(request):
     elif res_AxmSignalServoOn == 4101:
         print("해당 축이 존재하지 않음")
     else:
-        print("servo off 실패")
+        print(lAxisNo, "servo off 실패")
 
     return render(request, 'control/ready_to_control.html',{'users':users})
     # users = User.objects.all()

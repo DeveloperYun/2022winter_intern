@@ -115,14 +115,27 @@
                         <input type="hidden" name="value" value="0">
                     </form>
 
-                    <input class="checkbox" id="codepen2" type="checkbox"/>
-                    <label for="codepen2"></label>
-                    <br/>
-                    <input class="checkbox" id="codepen3" type="checkbox"/>
-                    <label for="codepen3"></label>
-                    <br/>
-                    <input class="checkbox" id="codepen4" type="checkbox"/>
-                    <label for="codepen4"></label>
+                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
+                        {% csrf_token %}
+                        <input class="checkbox" id="codepen2" type="checkbox"/>
+                        <label for="codepen2"></label>
+                        <input type="hidden" name="value1" value="1">
+                    </form>
+                    
+                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
+                        {% csrf_token %}
+                        <input class="checkbox" id="codepen3" type="checkbox"/>
+                        <label for="codepen3"></label>
+                        <input type="hidden" name="value2" value="2">
+                    </form>
+
+                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
+                        {% csrf_token %}
+                        <input class="checkbox" id="codepen4" type="checkbox"/>
+                        <label for="codepen4"></label>
+                        <input type="hidden" name="value3" value="3">
+                    </form>
+
                     <!-- 모달창을 띄울 수 있도록 -->
                     <li class="nav-list-item active">
                         <div class="text-white" style="display:inline;">
@@ -144,7 +157,6 @@
                             </form>
                         </div>
                     </li>
-
                     <!--TODO: serve off -->
                     <!-- 모달창을 띄울 수 있도록 -->
                     <li class="nav-list-item active">
@@ -466,6 +478,66 @@
                 } else {
                   const formData = new FormData(document.forms[0]);
                   formData.set('value', 0);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+              });
+        </script>
+        <script>
+            const toggle2 = document.getElementById('codepen2');
+            toggle2.addEventListener('change', function() {
+                if (toggle2.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value1', 1);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value1', 0);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+              });
+        </script>
+        <script>
+            const toggle3 = document.getElementById('codepen3');
+            toggle3.addEventListener('change', function() {
+                if (toggle3.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value2', 1);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value2', 0);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+              });
+        </script>
+        <script>
+            const toggle4 = document.getElementById('codepen4');
+            toggle4.addEventListener('change', function() {
+                if (toggle4.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value3', 1);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value3', 0);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
