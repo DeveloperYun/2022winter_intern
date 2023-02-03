@@ -206,8 +206,10 @@ def signal_servo_on(request):
 
     if request.method == 'POST':
         lAxisNo = (request.POST.get('lAxisNo'))
+
     if lAxisNo is not None:
         lAxisNo = int(lAxisNo)
+
     AxmSignalServoOn = loaddll['AxmSignalServoOn']
     AxmSignalIsServoOn = loaddll['AxmSignalIsServoOn']
 

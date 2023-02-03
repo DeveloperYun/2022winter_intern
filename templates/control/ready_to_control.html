@@ -470,14 +470,14 @@
             toggle.addEventListener('change', function() {
                 if (toggle.checked) {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value', 1);
+                  formData.set('lAxisNo', 0);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_on" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value', 0);
+                  formData.set('lAxisNo', 0);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
@@ -490,14 +490,14 @@
             toggle2.addEventListener('change', function() {
                 if (toggle2.checked) {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value1', 1);
+                  formData.set('lAxisNo', 1);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_on" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value1', 0);
+                  formData.set('value1', 1);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
@@ -510,14 +510,14 @@
             toggle3.addEventListener('change', function() {
                 if (toggle3.checked) {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value2', 1);
+                  formData.set('lAxisNo', 2);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_on" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value2', 0);
+                  formData.set('lAxisNo', 2);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
@@ -530,14 +530,14 @@
             toggle4.addEventListener('change', function() {
                 if (toggle4.checked) {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value3', 1);
+                  formData.set('lAxisNo', 3);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_on" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
-                  formData.set('value3', 0);
+                  formData.set('lAxisNo', 3);
                   const xhr = new XMLHttpRequest();
                   xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
