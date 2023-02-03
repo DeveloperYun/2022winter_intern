@@ -83,7 +83,7 @@
                     <line x1="12" y1="20" x2="12" y2="4"/>
                     <line x1="6" y1="20" x2="6" y2="14"/>       </svg>
                     <a class="" href="{% url 'hello:index' %}">
-                        <span>Ajinextek</span>
+                        <span>AjinExtek</span>
                     </a>
                 </div>
                 <ul class="nav-list">
@@ -168,6 +168,43 @@
                     <main>
                         <div class="container-fluid px-4">
                             {% if user.is_authenticated %}
+                                
+                                <div class="chart-row two big">
+                                    <div class="chart-container-wrapper big">
+                                      <div class="chart-container">
+                                        <div class="chart-container-header">
+                                          <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
+                                        </div>
+                                        <div class="line-chart">
+                                            <h2 style="color:white; display:inline-block; margin:0">속도 : </h2>
+                                            <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
+                                            <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            
+                                <!-- django admin 에서 유저데이터 get -->
+                                <div class="chart-container applicants">
+                                    <div class="chart-container-header">
+                                      <h2>Applicants  </h2>
+                                    </div>
+                                   
+                                    <div class="applicant-line">
+                                        {% if users %}
+                                            {% for user in users %}
+                                                <img src="//source.unsplash.com/100x100" alt="">
+                                                <div class="applicant-info">
+                                                    <span>{{user.username}}</span>
+                                                    <p><strong>{{user.email}}</strong></p>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span>No users found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="chart-row three">
                                         <!-- 단축 구동 -->
@@ -376,41 +413,6 @@
                                     </div>
                                 </div>
 
-                                <div class="chart-row two big">
-                                    <div class="chart-container-wrapper big">
-                                      <div class="chart-container">
-                                        <div class="chart-container-header">
-                                          <h2>AxmMoveStartPos, AxmMoveVel 속도 측정 그래프</h2>
-                                        </div>
-                                        <div class="line-chart">
-                                            <h2 style="color:white; display:inline-block; margin:0">속도 : </h2>
-                                            <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
-                                            <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
-                                        </div>
-                                      </div>
-                                    </div>
-                                </div>
-
-                                <!-- django admin 에서 유저데이터 get -->
-                                <div class="chart-container applicants">
-                                    <div class="chart-container-header">
-                                      <h2>Applicants  </h2>
-                                    </div>
-                                   
-                                    <div class="applicant-line">
-                                        {% if users %}
-                                            {% for user in users %}
-                                                <img src="//source.unsplash.com/100x100" alt="">
-                                                <div class="applicant-info">
-                                                    <span>{{user.username}}</span>
-                                                    <p><strong>{{user.email}}</strong></p>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span>No users found</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
                             {% else %}
                                 <div class="plzLogin">
                                     로그인 후 이용해주세요
