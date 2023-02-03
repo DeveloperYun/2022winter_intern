@@ -256,27 +256,52 @@ def signal_servo_off(request):
     users = User.objects.all()
 
     if request.method == 'POST':
-        lAxisNo = request.POST.getlist('lAxisNo') #list
-
-    lAxisNo2 = [int(x) for x in lAxisNo] #[1,2,...]
+        lAxisNo = (request.POST.get('lAxisNo'))
+    if lAxisNo is not None:
+        lAxisNo = int(lAxisNo)
 
     AxmSignalServoOn = loaddll['AxmSignalServoOn']
     AxmSignalIsServoOn = loaddll['AxmSignalIsServoOn']
 
     level = c_ulong()
 
-    for i in range(len(lAxisNo2)):
-        res_AxmSignalServoOn = AxmSignalServoOn(lAxisNo2[i],0) #  Enable = 1, Disable = 0
-        AxmSignalIsServoOn(lAxisNo2[i], pointer(level))
+    res_AxmSignalServoOn = AxmSignalServoOn(lAxisNo,0) #  Enable = 1, Disable = 0
+    AxmSignalIsServoOn(lAxisNo, pointer(level))
 
-        if res_AxmSignalServoOn == 0000:
-            print("servo on 성공(0-off,1-on) : ", "on" if level.value==1 else "off")
-        elif res_AxmSignalServoOn == 4053:
-            print("해당 축 모션 초기화 실패")
-        elif res_AxmSignalServoOn == 4101:
-            print("해당 축이 존재하지 않음")
+    if res_AxmSignalServoOn == 0000:
+        print("servo on 성공(0-off,1-on) : ", "on" if level.value==1 else "off")
+    elif res_AxmSignalServoOn == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmSignalServoOn == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("servo off 실패")
 
     return render(request, 'control/ready_to_control.html',{'users':users})
+    # users = User.objects.all()
+
+    # if request.method == 'POST':
+    #     lAxisNo = request.POST.getlist('lAxisNo') #list
+
+    # lAxisNo2 = [int(x) for x in lAxisNo] #[1,2,...]
+
+    # AxmSignalServoOn = loaddll['AxmSignalServoOn']
+    # AxmSignalIsServoOn = loaddll['AxmSignalIsServoOn']
+
+    # level = c_ulong()
+
+    # for i in range(len(lAxisNo2)):
+    #     res_AxmSignalServoOn = AxmSignalServoOn(lAxisNo2[i],0) #  Enable = 1, Disable = 0
+    #     AxmSignalIsServoOn(lAxisNo2[i], pointer(level))
+
+    #     if res_AxmSignalServoOn == 0000:
+    #         print("servo on 성공(0-off,1-on) : ", "on" if level.value==1 else "off")
+    #     elif res_AxmSignalServoOn == 4053:
+    #         print("해당 축 모션 초기화 실패")
+    #     elif res_AxmSignalServoOn == 4101:
+    #         print("해당 축이 존재하지 않음")
+
+    # return render(request, 'control/ready_to_control.html',{'users':users})
 
 ############################## 서보모터(모션 파라미터) #################################
 

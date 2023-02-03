@@ -460,14 +460,14 @@
                   const formData = new FormData(document.forms[0]);
                   formData.set('value', 1);
                   const xhr = new XMLHttpRequest();
-                  xhr.open('POST', '{% url 'control:signal_servo_on' %}');
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 } else {
                   const formData = new FormData(document.forms[0]);
                   formData.set('value', 0);
                   const xhr = new XMLHttpRequest();
-                  xhr.open('POST', '{% url 'control:signal_servo_on' %}');
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 }
