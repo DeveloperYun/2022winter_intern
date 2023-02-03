@@ -112,11 +112,9 @@
                         {% csrf_token %}
                         <input class="checkbox" id="codepen" type="checkbox"/>
                         <label for="codepen"></label>
-                        <input type="hidden" value="0"/>
-                        <input type="submit" value="Submit" id="submit-button">
+                        <input type="hidden" name="value" value="0">
                     </form>
 
-                    <br/>
                     <input class="checkbox" id="codepen2" type="checkbox"/>
                     <label for="codepen2"></label>
                     <br/>
@@ -457,14 +455,23 @@
         <script src="{% static 'js/scripts.js'%}"></script>
         <script>
             const toggle = document.getElementById('codepen');
-            const submitButton = document.getElementById('submit-button');
             toggle.addEventListener('change', function() {
-              if (toggle.checked) {
-                submitButton.disabled = false;
-              } else {
-                submitButton.disabled = true;
-              }
-            });
-          </script>
+                if (toggle.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value', 1);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url 'control:signal_servo_on' %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('value', 0);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url 'control:signal_servo_on' %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+              });
+        </script>
     </body>
 </html>
