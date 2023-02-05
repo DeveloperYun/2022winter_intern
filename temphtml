@@ -183,27 +183,8 @@
                                     </div>
                                 </div>
                             
-                                <!-- django admin 에서 유저데이터 get -->
-                                <div class="chart-container applicants">
-                                    <div class="chart-container-header">
-                                      <h2>Applicants  </h2>
-                                    </div>
-                                   
-                                    <div class="applicant-line">
-                                        {% if users %}
-                                            {% for user in users %}
-                                                <img src="//source.unsplash.com/100x100" alt="">
-                                                <div class="applicant-info">
-                                                    <span>{{user.username}}</span>
-                                                    <p><strong>{{user.email}}</strong></p>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span>No users found</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
+                               
+                                {% comment %} 
                                 <div class="row">
                                     <div class="chart-row three">
                                         <!-- 단축 구동 -->
@@ -371,7 +352,7 @@
 
                                         <!-- 다축 구동 -->
                                         <div class="chart-container-wrapper">
-                                            <div class="chart-container">
+                                             <div class="chart-container">
                                                 <div class="chart-info-wrapper">
                                                     <h2>다축구동</h2>
                                                     <span>MultiPos</span>
@@ -407,10 +388,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
+                                {% endcomment %}
 
                                 <button class="accordion">
                                     <span>AxmMovePos</span>
@@ -486,6 +468,27 @@
                                             <input type="submit" value="제출">
                                         </div>
                                     </form>
+                                </div>
+
+                                 <!-- django admin 에서 유저데이터 get -->
+                                 <div class="chart-container applicants">
+                                    <div class="chart-container-header">
+                                      <h2>Applicants  </h2>
+                                    </div>
+                                   
+                                    <div class="applicant-line">
+                                        {% if users %}
+                                            {% for user in users %}
+                                                <img src="//source.unsplash.com/100x100" alt="">
+                                                <div class="applicant-info">
+                                                    <span>{{user.username}}</span>
+                                                    <p><strong>{{user.email}}</strong></p>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span>No users found</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             {% else %}
                                 <div class="plzLogin">
