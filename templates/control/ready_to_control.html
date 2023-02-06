@@ -619,13 +619,14 @@
         <script>
             const AxmMoveVel = document.getElementById('AxmMoveVel');
             AxmMoveVel.addEventListener('submit', function(event) {
-              event.preventDefault();
           
               const formData = new FormData(AxmMoveVel);
               const xhr = new XMLHttpRequest();
               xhr.open('POST', '{% url 'control:AxmMoveVel' %}');
               xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
               xhr.send(formData);
+              event.preventDefault();
+
             });
         </script>
         <script>
@@ -643,13 +644,14 @@
         <script>
             const AxmMoveStartMultiPos = document.getElementById('AxmMoveStartMultiPos');
             AxmMoveStartMultiPos.addEventListener('submit', function(event) {
-              event.preventDefault();
           
               const formData = new FormData(AxmMoveStartMultiPos);
               const xhr = new XMLHttpRequest();
               xhr.open('POST', '{% url 'control:AxmMoveStartMultiPos' %}');
               xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
               xhr.send(formData);
+              event.preventDefault();
+
             });
         </script>
 
