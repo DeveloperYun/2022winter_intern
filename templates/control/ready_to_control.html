@@ -510,26 +510,38 @@
         <!-- serve on/off 버튼 -->
         <script>
             const toggle = document.getElementById('codepen');
+
+            // 새로고침 전의 상태를 불러옵니다
+            if (localStorage.getItem('toggleState')) {
+            toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
+            }
+
             toggle.addEventListener('change', function() {
                 if (toggle.checked) {
-                  const formData = new FormData(document.forms[0]);
-                  formData.set('lAxisNo', 0);
-                  const xhr = new XMLHttpRequest();
-                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
-                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                  xhr.send(formData);
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 0);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
                 } else {
-                  const formData = new FormData(document.forms[0]);
-                  formData.set('lAxisNo', 0);
-                  const xhr = new XMLHttpRequest();
-                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
-                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-                  xhr.send(formData);
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 0);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
                 }
+
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState', toggle.checked);
               });
-        </script>
-        <script>
+       
             const toggle2 = document.getElementById('codepen2');
+            // 새로고침 전의 상태를 불러옵니다
+            if (localStorage.getItem('toggleState2')) {
+                toggle2.checked = JSON.parse(localStorage.getItem('toggleState2'));
+                }
             toggle2.addEventListener('change', function() {
                 if (toggle2.checked) {
                   const formData = new FormData(document.forms[0]);
@@ -546,10 +558,16 @@
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 }
+
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState2', toggle2.checked);
               });
-        </script>
-        <script>
+        
             const toggle3 = document.getElementById('codepen3');
+            // 새로고침 전의 상태를 불러옵니다
+            if (localStorage.getItem('toggleState3')) {
+                toggle3.checked = JSON.parse(localStorage.getItem('toggleState3'));
+                }
             toggle3.addEventListener('change', function() {
                 if (toggle3.checked) {
                   const formData = new FormData(document.forms[0]);
@@ -566,10 +584,15 @@
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 }
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState3', toggle3.checked);
               });
-        </script>
-        <script>
+        
             const toggle4 = document.getElementById('codepen4');
+             // 새로고침 전의 상태를 불러옵니다
+             if (localStorage.getItem('toggleState4')) {
+                toggle4.checked = JSON.parse(localStorage.getItem('toggleState4'));
+                }
             toggle4.addEventListener('change', function() {
                 if (toggle4.checked) {
                   const formData = new FormData(document.forms[0]);
@@ -586,75 +609,14 @@
                   xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
                   xhr.send(formData);
                 }
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState4', toggle4.checked);
               });
         </script>
 
         <!-- 주요기능 새로고침 방지 -->
         <!--FIXME: 이렇게 하니까 소켓통신이 안됨 -->
-        <script>
-            const AxmMovePos = document.getElementById('AxmMovePos');
-            AxmMovePos.addEventListener('submit', function(event) {
-              event.preventDefault();
-          
-              const formData = new FormData(AxmMovePos);
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', '{% url 'control:AxmMovePos' %}');
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-            });
-        </script>
-        <script>
-            const AxmMoveStartPos = document.getElementById('AxmMoveStartPos');
-            AxmMoveStartPos.addEventListener('submit', function(event) {
-              
-          
-              const formData = new FormData(AxmMoveStartPos);
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', '{% url 'control:AxmMoveStartPos' %}');
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-              event.preventDefault();
-            });
-        </script>
-        <script>
-            const AxmMoveVel = document.getElementById('AxmMoveVel');
-            AxmMoveVel.addEventListener('submit', function(event) {
-          
-              const formData = new FormData(AxmMoveVel);
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', '{% url 'control:AxmMoveVel' %}');
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-              event.preventDefault();
-
-            });
-        </script>
-        <script>
-            const HomeSearchMove = document.getElementById('HomeSearchMove');
-            HomeSearchMove.addEventListener('submit', function(event) {
-              event.preventDefault();
-          
-              const formData = new FormData(HomeSearchMove);
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', '{% url 'control:HomeSearchMove' %}');
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-            });
-        </script>
-        <script>
-            const AxmMoveStartMultiPos = document.getElementById('AxmMoveStartMultiPos');
-            AxmMoveStartMultiPos.addEventListener('submit', function(event) {
-          
-              const formData = new FormData(AxmMoveStartMultiPos);
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', '{% url 'control:AxmMoveStartMultiPos' %}');
-              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
-              xhr.send(formData);
-              event.preventDefault();
-
-            });
-        </script>
-
+        
         <!-- accordion -->
         <script>
             var acc = document.getElementsByClassName("accordion");
