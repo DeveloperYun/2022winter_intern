@@ -108,36 +108,46 @@
                     </li>
 
                     <!--TODO: serve on/off -->
-                    <div class="text-white" style="display:inline;">dd</div>
-                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
-                        {% csrf_token %}
-                        <input class="checkbox" id="codepen" type="checkbox"/>
-                        <label for="codepen"></label>
-                        <input type="hidden" name="value" value="0">
-                    </form>
+                    <div style="display: flex; align-items: center; margin-bottom: 5px; ">
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">0축 </label>
+                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                            {% csrf_token %}
+                            <input class="checkbox" id="codepen" type="checkbox"/>
+                            <label for="codepen"></label>
+                            <input type="hidden" name="value" value="0">
+                        </form>
+                    </div>
 
-                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
-                        {% csrf_token %}
-                        <input class="checkbox" id="codepen2" type="checkbox"/>
-                        <label for="codepen2"></label>
-                        <input type="hidden" name="value1" value="1">
-                    </form>
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 8px;">1축 </label>
+                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                            {% csrf_token %}
+                            <input class="checkbox" id="codepen2" type="checkbox"/>
+                            <label for="codepen2"></label>
+                            <input type="hidden" name="value1" value="1">
+                        </form>
+                    </div>
                     
-                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
-                        {% csrf_token %}
-                        <input class="checkbox" id="codepen3" type="checkbox"/>
-                        <label for="codepen3"></label>
-                        <input type="hidden" name="value2" value="2">
-                    </form>
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">2축 </label>
+                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                            {% csrf_token %}
+                            <input class="checkbox" id="codepen3" type="checkbox"/>
+                            <label for="codepen3"></label>
+                            <input type="hidden" name="value2" value="2">
+                        </form>
+                    </div>
 
-                    <form action="{% url 'control:signal_servo_on' %}" method="POST">
-                        {% csrf_token %}
-                        <input class="checkbox" id="codepen4" type="checkbox"/>
-                        <label for="codepen4"></label>
-                        <input type="hidden" name="value3" value="3">
-                    </form>
-
-                    <br/>
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">3축 </label>
+                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                            {% csrf_token %}
+                            <input class="checkbox" id="codepen4" type="checkbox"/>
+                            <label for="codepen4"></label>
+                            <input type="hidden" name="value3" value="3">
+                        </form>
+                    </div>
+                    <br/><br/>
                    
                     <li class="nav-list-item active">
                         <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
@@ -183,7 +193,6 @@
                                       </div>
                                     </div>
                                 </div>
-                            
                                
                                 {% comment %} 
                                 <div class="row">
