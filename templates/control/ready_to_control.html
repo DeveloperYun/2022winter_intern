@@ -107,7 +107,7 @@
                         </a>
                     </li>
 
-                    <!--TODO: serve on -->
+                    <!--TODO: serve on/off -->
                     <form action="{% url 'control:signal_servo_on' %}" method="POST">
                         {% csrf_token %}
                         <input class="checkbox" id="codepen" type="checkbox"/>
@@ -506,6 +506,8 @@
         <script src="{% static 'js/modal.js'%}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{% static 'js/scripts.js'%}"></script>
+        
+        <!-- serve on/off 버튼 -->
         <script>
             const toggle = document.getElementById('codepen');
             toggle.addEventListener('change', function() {
@@ -588,6 +590,7 @@
         </script>
 
         <!-- 주요기능 새로고침 방지 -->
+        <!--FIXME: 이렇게 하니까 소켓통신이 안됨 -->
         <script>
             const AxmMovePos = document.getElementById('AxmMovePos');
             AxmMovePos.addEventListener('submit', function(event) {
@@ -603,13 +606,14 @@
         <script>
             const AxmMoveStartPos = document.getElementById('AxmMoveStartPos');
             AxmMoveStartPos.addEventListener('submit', function(event) {
-              event.preventDefault();
+              
           
               const formData = new FormData(AxmMoveStartPos);
               const xhr = new XMLHttpRequest();
               xhr.open('POST', '{% url 'control:AxmMoveStartPos' %}');
               xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
               xhr.send(formData);
+              event.preventDefault();
             });
         </script>
         <script>
@@ -648,6 +652,7 @@
               xhr.send(formData);
             });
         </script>
+
         <!-- accordion -->
         <script>
             var acc = document.getElementsByClassName("accordion");
