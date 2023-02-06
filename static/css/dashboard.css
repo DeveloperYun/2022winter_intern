@@ -810,7 +810,7 @@ button {
 .checkbox + label {
   display: inline-block;
   position: relative;
-  width: 240px;
+  width: 200px;
   height: 50px;
   background: linear-gradient(to right, #fd1a15 0, #fc8b34 45%, #7fd03e 55%, #007177 100%) 0 0;
   background-size: 650px 100%;
@@ -849,7 +849,7 @@ button {
 .checkbox:checked + label:before {
   content: "On";
   color: #007177;
-  left: 190px;
+  left: 150px;
 }
 
 
