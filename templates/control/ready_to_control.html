@@ -70,6 +70,7 @@
                 document.getElementById('box3').removeChild(obj.parentNode);
             }
         </script>
+        
     </head>
     <body>
         <div class="app-container">
@@ -106,9 +107,7 @@
                         </a>
                     </li>
 
-                    {% comment %} <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/> {% endcomment %}
                     <!--TODO: serve on -->
-                    <br/>
                     <form action="{% url 'control:signal_servo_on' %}" method="POST">
                         {% csrf_token %}
                         <input class="checkbox" id="codepen" type="checkbox"/>
@@ -184,27 +183,8 @@
                                     </div>
                                 </div>
                             
-                                <!-- django admin 에서 유저데이터 get -->
-                                <div class="chart-container applicants">
-                                    <div class="chart-container-header">
-                                      <h2>Applicants  </h2>
-                                    </div>
-                                   
-                                    <div class="applicant-line">
-                                        {% if users %}
-                                            {% for user in users %}
-                                                <img src="//source.unsplash.com/100x100" alt="">
-                                                <div class="applicant-info">
-                                                    <span>{{user.username}}</span>
-                                                    <p><strong>{{user.email}}</strong></p>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span>No users found</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
+                               
+                                {% comment %} 
                                 <div class="row">
                                     <div class="chart-row three">
                                         <!-- 단축 구동 -->
@@ -372,7 +352,7 @@
 
                                         <!-- 다축 구동 -->
                                         <div class="chart-container-wrapper">
-                                            <div class="chart-container">
+                                             <div class="chart-container">
                                                 <div class="chart-info-wrapper">
                                                     <h2>다축구동</h2>
                                                     <span>MultiPos</span>
@@ -408,11 +388,108 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </div>
                                     </div>
+                                </div> 
+                                {% endcomment %}
+
+                                <button class="accordion">
+                                    <span>AxmMovePos</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMovePos" action="{% url 'control:AxmMovePos' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
                                 </div>
 
+                                <button class="accordion">
+                                    <span>AxmMoveStartPos</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveStartPos" action="{% url 'control:AxmMoveStartPos' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <button class="accordion">
+                                    <span>AxmMoveVel</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveVel" action="{% url 'control:AxmMoveVel' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white" style="display:inline;">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>     
+                                </div>
+
+                                <button class="accordion">
+                                    <span>AxmHomeSearch</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="HomeSearchMove" action="{% url 'control:HomeSearchMove' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <button class="accordion">
+                                    <span>AxmMoveStartMultiPos</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveStartMultiPos" action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div id="box">
+                                            <input type="button" value="추가" onclick="add_textbox()">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                 <!-- django admin 에서 유저데이터 get -->
+                                 <div class="chart-container applicants">
+                                    <div class="chart-container-header">
+                                      <h2>Applicants  </h2>
+                                    </div>
+                                   
+                                    <div class="applicant-line">
+                                        {% if users %}
+                                            {% for user in users %}
+                                                <img src="//source.unsplash.com/100x100" alt="">
+                                                <div class="applicant-info">
+                                                    <span>{{user.username}}</span>
+                                                    <p><strong>{{user.email}}</strong></p>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span>No users found</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             {% else %}
                                 <div class="plzLogin">
                                     로그인 후 이용해주세요
@@ -509,5 +586,84 @@
                 }
               });
         </script>
+
+        <!-- 주요기능 새로고침 방지 -->
+        <script>
+            const AxmMovePos = document.getElementById('AxmMovePos');
+            AxmMovePos.addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              const formData = new FormData(AxmMovePos);
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'control:AxmMovePos' %}');
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+              xhr.send(formData);
+            });
+        </script>
+        <script>
+            const AxmMoveStartPos = document.getElementById('AxmMoveStartPos');
+            AxmMoveStartPos.addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              const formData = new FormData(AxmMoveStartPos);
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'control:AxmMoveStartPos' %}');
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+              xhr.send(formData);
+            });
+        </script>
+        <script>
+            const AxmMoveVel = document.getElementById('AxmMoveVel');
+            AxmMoveVel.addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              const formData = new FormData(AxmMoveVel);
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'control:AxmMoveVel' %}');
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+              xhr.send(formData);
+            });
+        </script>
+        <script>
+            const HomeSearchMove = document.getElementById('HomeSearchMove');
+            HomeSearchMove.addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              const formData = new FormData(HomeSearchMove);
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'control:HomeSearchMove' %}');
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+              xhr.send(formData);
+            });
+        </script>
+        <script>
+            const AxmMoveStartMultiPos = document.getElementById('AxmMoveStartMultiPos');
+            AxmMoveStartMultiPos.addEventListener('submit', function(event) {
+              event.preventDefault();
+          
+              const formData = new FormData(AxmMoveStartMultiPos);
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url 'control:AxmMoveStartMultiPos' %}');
+              xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+              xhr.send(formData);
+            });
+        </script>
+        <!-- accordion -->
+        <script>
+            var acc = document.getElementsByClassName("accordion");
+            var i;
+            
+            for (i = 0; i < acc.length; i++) {
+              acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                  panel.style.maxHeight = null;
+                } else {
+                  panel.style.maxHeight = panel.scrollHeight + "px";
+                } 
+              });
+            }
+          </script>
     </body>
 </html>
