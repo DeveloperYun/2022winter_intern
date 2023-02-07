@@ -67,7 +67,8 @@ var graphData = {
         scales: {
             yAxes: [{
                 ticks: {
-                    fontColor: '#5e6a81'
+                    fontColor: '#5e6a81',
+                    autoSkip: false
                 },
                 gridLines: {
                     color: 'rgba(200, 200, 200, 0.08)',
