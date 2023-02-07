@@ -30,7 +30,7 @@ var graphData = {
         datasets: [
             {
                 label: '0축',
-                data: axis0,
+                data: [],
                 backgroundColor: gradient,
                 pointBackgroundColor: '#00c7d6',
                 borderWidth: 1,
@@ -38,7 +38,7 @@ var graphData = {
             },
             {
                 label: '1축',
-                data: axis1,
+                data: [],
                 backgroundColor: gradient2,
                 pointBackgroundColor: '#ff6384',
                 borderWidth: 1,
@@ -46,7 +46,7 @@ var graphData = {
             },
             {
                 label: '2축',
-                data: axis2,
+                data: [],
                 backgroundColor: gradient3,
                 pointBackgroundColor: '##ffff00',
                 borderWidth: 1,
@@ -54,7 +54,7 @@ var graphData = {
             },
             {
                 label: '3축',
-                data: axis3,
+                data: [],
                 backgroundColor: gradient4,
                 pointBackgroundColor: '#9966ff',
                 borderWidth: 1,
@@ -113,59 +113,9 @@ let counter = 0
 //서버로부터 전송받은 데이터
 //onmessage 이벤트 트리거시 차트의 데이터와 레이블을 업데이트하고 차트에서 업데이트 메소드를 호출
 
-var axis0 = [];
-var axis1 = [];
-var axis2 = [];
-var axis3 = [];
-
 socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
-    /*
-    if(djangoData.veldata){
-        axis0.push(djangoData.veldata);
-    }
-    if(djangoData.veldata2){
-        axis1.push(djangoData.veldata2);
-    }
-    if(djangoData.veldata3){
-        axis2.push(djangoData.veldata3);
-    }
-    if(djangoData.veldata4){
-        axis3.push(djangoData.veldata4);
-    }
-
-    if(axis0.length >= 1){
-        update_axis0(axis0);
-    }
-    if(axis1.length >= 1){
-        update_axis1(axis1);
-    }
-    if(axis2.length >= 1){
-        update_axis2(axis2);
-    }
-    if(axis3.length >= 1){
-        update_axis3(axis3);
-    }
-    */
-    /*
-    var newGraphData = graphData.data.datasets[0].data; 
-    var newx = graphData.data.labels;
-    var axis = counter // 새로운 x축 레이블에 사용될 값
-    
-    // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=1000){
-        newGraphData.shift();
-        newx.pop();
-    }
-
-    newGraphData.push(djangoData.value);
-    newx.push(axis); //0.00부터 카운팅되도록
-    graphData.data.datasets[0].data = newGraphData;
-    counter = counter + 1
-    myChart.update();
-
-    document.querySelector('#app').innerText = djangoData.value;
-    */
+  
     var newGraphData0 = graphData.data.datasets[0].data; //axis0
     var newGraphData1 = graphData.data.datasets[1].data; //axis1
     var newGraphData2 = graphData.data.datasets[2].data; //axis2
@@ -206,132 +156,10 @@ socket.onmessage = function(e){
     myChart.update();
 
     document.querySelector('#app').innerText = djangoData.veldata;
+    document.querySelector('#app1').innerText = djangoData.veldata2;
+    document.querySelector('#app2').innerText = djangoData.veldata3;
+    document.querySelector('#app3').innerText = djangoData.veldata4;
 }
-
-// function update_axis0(veldata){
-//     var newGraphData = graphData.data.datasets[0].data;
-//     var newx = graphData.data.labels;
-//     var axis = counter
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(veldata);
-//     newx.push(axis); //0.00부터 카운팅되도록
-//     graphData.data.datasets[0].data = veldata;
-//     counter = counter + 1
-//     myChart.update();
-// }
-
-// function update_axis1(veldata2){
-//     var newGraphData = graphData.data.datasets[1].data;
-//     var newx = graphData.data.labels;
-//     var axis = counter
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(veldata2);
-//     newx.push(axis); //0.00부터 카운팅되도록
-//     graphData.data.datasets[1].data = newGraphData;
-//     //counter = counter + 1
-//     myChart.update();
-// }
-
-// function update_axis2(veldata3){
-//     var newGraphData = graphData.data.datasets[2].data;
-//     var newx = graphData.data.labels;
-//     var axis = counter
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(veldata3);
-//     newx.push(axis); //0.00부터 카운팅되도록
-//     graphData.data.datasets[2].data = newGraphData;
-//     //counter = counter + 1
-//     myChart.update();
-// }
-
-// function update_axis3(veldata4){
-//     var newGraphData = graphData.data.datasets[3].data;
-//     var newx = graphData.data.labels;
-//     var axis = counter
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(veldata4);
-//     newx.push(axis); //0.00부터 카운팅되도록
-//     graphData.data.datasets[3].data = newGraphData;
-//     //counter = counter + 1
-//     myChart.update();
-// }
-
-// /***************************************** */
-// function updatecount(count){
-//     var newGraphData = graphData.data.datasets[0].data;
-//     var newx = graphData.data.labels;
-//     var axis = counter
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(count);
-//     newx.push(axis); //0.00부터 카운팅되도록
-//     graphData.data.datasets[0].data = count;
-//     counter = counter + 1
-//     myChart.update();
-// }
-
-// function updatea(a){
-//     var newGraphData = graphData.data.datasets[1].data;
-    
-//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-//     if(counter>=400){
-//         newGraphData.shift();
-//         newx.pop();
-//     }
-
-//     newGraphData.push(a);
-//     graphData.data.datasets[1].data = a;
-//     counter = counter + 1
-//     myChart.update();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //https://dbza.tistory.com/entry/django-channels-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-consumer-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%9D%90%EB%A6%84
