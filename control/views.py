@@ -12,9 +12,6 @@ from django.contrib.auth.models import User
 '''
 DWORD = unsigned long int
 python int == c long
-제품명 : PCIe-Rxx05-MLIII (SGD7) (네트워크) 
-            => 실험실 컴퓨터에 붙은 RTEX 종이는 무시할것..해당사항 없음
-set~ : setting함수 (보통)
 '''
 loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 axis = 0
@@ -227,7 +224,6 @@ def signal_servo_on(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
     
-
 def signal_servo_off(request):
     users = User.objects.all()
 
@@ -253,7 +249,6 @@ def signal_servo_off(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
     
-
 ############################## 서보모터(모션 파라미터) #################################
 
 # unit per pulse(프로그램상 지령값을 펄스 단위로 설정)
@@ -395,7 +390,7 @@ def signal_set_inpos(axis):
     AxmSignalGetInpos = loaddll['AxmSignalGetInpos']
     uUse = c_ulong()
 
-    res = AxmSignalSetInpos(axis, 1) #High로 설정
+    res = AxmSignalSetInpos(axis, 0) #High로 설정
     AxmSignalGetInpos(axis, pointer(uUse))
 
     if res == 0000:
@@ -806,37 +801,17 @@ def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
     upStatus = c_long()
 
-    for i in range(8): #최대 8축이라 가정
+    for i in range(8): #최대 8축이라 가정 (0~7번축 차례로 scan)
         axis = isInvalidAxis(i) # 제어 가능한 축 번호 반환(int)
 
         AxmMoveEStop = loaddll['AxmMoveEStop']
         res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
 
-        '''
-        if res==0000: 
-            print("AxmMoveEStop 성공")
-        elif res == 4053:
-            print("해당 축 모션 초기화 실패")
-        elif res == 4101:
-            print("해당 축이 존재하지 않음")
-        else:
-            print("뭔지 모를 이유로 AxmMoveEStop  실패")
-        '''
         if upStatus.value == 1: #만약 모션이 구동중이라면
             res2 = AxmMoveEStop(axis)
-            '''
-            if res2 == 0000:
-                print("AxmMoveEStop 함수 실행 성공.")
-            elif res2 == 4053:
-                print("해당 축 모션 초기화 실패")
-            elif res2 == 4101:
-                print("해당 축이 존재하지 않음")
-            else:
-                print("뭔지 모를 이유로 AxmMoveEStop 설정 실패. error: ",AxmMoveEStop)
-            
         else:
-            print("모션이 구동하지 않음")
-            '''
+            pass
+
     return render(request, 'control/ready_to_control.html',{'users':users})
 
 ####TODO:############################# (input)테스트해볼 다축구동 함수 ###############################
@@ -848,14 +823,6 @@ def AxmMoveStartMultiPos(request):
     # 다축위치 구동 - 시점탈출
     # 축 개수만큼 배열을 선언해서 for문 돌리는 식으로 구현
     # (축개수, 축번호 배열, 구동거리 배열, 속도 배열, 가속도 배열, 감속도 배열)
-    '''
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    board_status()
-    board_count()
-    # info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
-    # info_get_axis(1) # 1번축 보드/모듈 정보 확인 : 
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    '''
     
     print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
     is_lib_open()
@@ -983,7 +950,9 @@ class GraphConsumer(WebsocketConsumer):
         if len(multiaxis) >= 2:
             # multiaxis 각각의 축에 대한 구동상태 파악
             while True: 
-                # 한 보드당 최대 4개 축이니까 4가지 경우를 작성
+                # 한 보드당 최대 4개 축이니까 3 가지 경우를 작성
+
+                # 축이 2개
                 if len(multiaxis)==2:
                     AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
                     AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
@@ -995,8 +964,11 @@ class GraphConsumer(WebsocketConsumer):
                         if col == 0000 or col2 == 0000:
                             veldata = dVelocity.value
                             veldata2 = dVelocity2.value
-                            self.send(json.dumps({'value': veldata}))
-                            self.send(json.dumps({'value': veldata2}))
+                            message = {
+                                'veldata' : veldata,
+                                'veldata2' : veldata2,
+                            }
+                            self.send(text_data=json.dumps(message))
                             sleep(0.005)
                         elif col == 0000 or col2 == 0000:
                             print("모션 초기화 실패")
@@ -1005,6 +977,7 @@ class GraphConsumer(WebsocketConsumer):
                     else:
                         break
 
+                # 축이 3개
                 if len(multiaxis)==3:
                     AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
                     AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
@@ -1019,9 +992,12 @@ class GraphConsumer(WebsocketConsumer):
                             veldata = dVelocity.value
                             veldata2 = dVelocity2.value
                             veldata3 = dVelocity3.value
-                            self.send(json.dumps({'value': veldata}))
-                            self.send(json.dumps({'value': veldata2}))
-                            self.send(json.dumps({'value': veldata3}))
+                            message = {
+                                'veldata' : veldata,
+                                'veldata2' : veldata2,
+                                'veldata3' : veldata3,
+                            }
+                            self.send(text_data=json.dumps(message))
                             sleep(0.005)
                         elif col == 0000 or col2 == 0000 or col3 == 0000:
                             print("모션 초기화 실패")
@@ -1029,7 +1005,8 @@ class GraphConsumer(WebsocketConsumer):
                             print("안됨 : ",col)
                     else:
                         break
-
+                
+                # 축이 4개
                 if len(multiaxis)==4:
                     AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
                     AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
@@ -1047,12 +1024,13 @@ class GraphConsumer(WebsocketConsumer):
                             veldata2 = dVelocity2.value
                             veldata3 = dVelocity3.value
                             veldata4 = dVelocity4.value
-
-                            self.send(json.dumps({'value': veldata}))
-                            self.send(json.dumps({'value': veldata2}))
-                            self.send(json.dumps({'value': veldata3}))
-                            self.send(json.dumps({'value': veldata4}))
-
+                            message = {
+                                'veldata' : veldata,
+                                'veldata2' : veldata2,
+                                'veldata3' : veldata3,
+                                'veldata4' : veldata4,
+                            }
+                            self.send(text_data=json.dumps(message))
                             sleep(0.005)
                         elif col == 0000 or col2 == 0000 or col3 == 0000 or col4 == 0000:
                             print("모션 초기화 실패")
@@ -1060,7 +1038,6 @@ class GraphConsumer(WebsocketConsumer):
                             print("안됨 : ",col)
                     else:
                         break
-            #AxmStatusReadInMotion(multiaxis[0], pointer(upStatus)) # 모션 구동 상태 파악
         # 단축 구동    
         else:
             res1 = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
@@ -1092,12 +1069,19 @@ class GraphConsumer(WebsocketConsumer):
         self.send(json.dumps({'value': 0}))
         print(multiaxis)
 
-        # #TODO: graph.js 테스트용 코드
+
+        #TODO: graph.js 테스트용 코드. 축이 2개라고 가정
         # count=200
         # a=400
         # for i in range(2000):
-        #     self.send(json.dumps({'value': randint(0,1000)}))
-        #     self.send(json.dumps({'value': randint(-1000,0)}))
+        #     # python 객체를 json 문자열로 변환하는 dumps
+        #     message = {
+        #         'count' : count,
+        #         'a' : a,
+        #     }
+        #     self.send(text_data=json.dumps(message))
+        #     count += 4
+        #     a += 2
         #     sleep(0.005)
 
     def disconnect(self, code):
