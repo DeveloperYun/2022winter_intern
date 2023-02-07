@@ -120,7 +120,7 @@ var axis3 = [];
 
 socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
-
+    /*
     if(djangoData.veldata){
         axis0.push(djangoData.veldata);
     }
@@ -146,98 +146,139 @@ socket.onmessage = function(e){
     if(axis3.length >= 1){
         update_axis3(axis3);
     }
-
-    // var newGraphData = graphData.data.datasets[0].data;
-    // var newx = graphData.data.labels;
-    // var axis = counter
-    
-    // // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    // if(counter>=1000){
-    //     newGraphData.shift();
-    //     newx.pop();
-    // }
-
-    // newGraphData.push(djangoData.value);
-    // newx.push(axis); //0.00부터 카운팅되도록
-    // graphData.data.datasets[0].data = newGraphData;
-    // counter = counter + 1
-    // myChart.update();
-
-    // document.querySelector('#app').innerText = djangoData.value;
-        
-}
-
-function update_axis0(veldata){
-    var newGraphData = graphData.data.datasets[0].data;
+    */
+    /*
+    var newGraphData = graphData.data.datasets[0].data; 
     var newx = graphData.data.labels;
-    var axis = counter
+    var axis = counter // 새로운 x축 레이블에 사용될 값
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=400){
+    if(counter>=1000){
         newGraphData.shift();
         newx.pop();
     }
 
-    newGraphData.push(veldata);
+    newGraphData.push(djangoData.value);
     newx.push(axis); //0.00부터 카운팅되도록
     graphData.data.datasets[0].data = newGraphData;
     counter = counter + 1
     myChart.update();
-}
 
-function update_axis1(veldata2){
-    var newGraphData = graphData.data.datasets[1].data;
-    var newx = graphData.data.labels;
+    document.querySelector('#app').innerText = djangoData.value;
+    */
+    var newGraphData0 = graphData.data.datasets[0].data; //axis0
+    var newGraphData1 = graphData.data.datasets[1].data; //axis1
+    var newGraphData2 = graphData.data.datasets[2].data; //axis2
+    var newGraphData3 = graphData.data.datasets[3].data; //axis3
+
+    var newx = graphData.data.labels; // x축 레이블은 하나
     var axis = counter
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=400){
-        newGraphData.shift();
+    if(counter>=1000){
+        if(newGraphData0.length > 0){
+            newGraphData0.shift();
+        }
+        if(newGraphData1.length > 0){
+            newGraphData1.shift();
+        }
+        if(newGraphData2.length > 0){
+            newGraphData2.shift();
+        }
+        if(newGraphData3.length > 0){
+            newGraphData3.shift();
+        }
         newx.pop();
     }
 
-    newGraphData.push(veldata2);
+    newGraphData0.push(djangoData.veldata);
+    newGraphData1.push(djangoData.veldata2);
+    newGraphData2.push(djangoData.veldata3);
+    newGraphData3.push(djangoData.veldata4);
+
     newx.push(axis); //0.00부터 카운팅되도록
-    graphData.data.datasets[1].data = newGraphData;
-    //counter = counter + 1
+    graphData.data.datasets[0].data = newGraphData0;
+    graphData.data.datasets[1].data = newGraphData1;
+    graphData.data.datasets[2].data = newGraphData2;
+    graphData.data.datasets[3].data = newGraphData3;
+
+    counter = counter + 1
     myChart.update();
+
+    document.querySelector('#app').innerText = djangoData.veldata;
 }
 
-function update_axis2(veldata3){
-    var newGraphData = graphData.data.datasets[2].data;
-    var newx = graphData.data.labels;
-    var axis = counter
+// function update_axis0(veldata){
+//     var newGraphData = graphData.data.datasets[0].data;
+//     var newx = graphData.data.labels;
+//     var axis = counter
     
-    // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=400){
-        newGraphData.shift();
-        newx.pop();
-    }
+//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
+//     if(counter>=400){
+//         newGraphData.shift();
+//         newx.pop();
+//     }
 
-    newGraphData.push(veldata3);
-    newx.push(axis); //0.00부터 카운팅되도록
-    graphData.data.datasets[2].data = newGraphData;
-    //counter = counter + 1
-    myChart.update();
-}
+//     newGraphData.push(veldata);
+//     newx.push(axis); //0.00부터 카운팅되도록
+//     graphData.data.datasets[0].data = veldata;
+//     counter = counter + 1
+//     myChart.update();
+// }
 
-function update_axis3(veldata4){
-    var newGraphData = graphData.data.datasets[3].data;
-    var newx = graphData.data.labels;
-    var axis = counter
+// function update_axis1(veldata2){
+//     var newGraphData = graphData.data.datasets[1].data;
+//     var newx = graphData.data.labels;
+//     var axis = counter
     
-    // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=400){
-        newGraphData.shift();
-        newx.pop();
-    }
+//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
+//     if(counter>=400){
+//         newGraphData.shift();
+//         newx.pop();
+//     }
 
-    newGraphData.push(veldata4);
-    newx.push(axis); //0.00부터 카운팅되도록
-    graphData.data.datasets[3].data = newGraphData;
-    //counter = counter + 1
-    myChart.update();
-}
+//     newGraphData.push(veldata2);
+//     newx.push(axis); //0.00부터 카운팅되도록
+//     graphData.data.datasets[1].data = newGraphData;
+//     //counter = counter + 1
+//     myChart.update();
+// }
+
+// function update_axis2(veldata3){
+//     var newGraphData = graphData.data.datasets[2].data;
+//     var newx = graphData.data.labels;
+//     var axis = counter
+    
+//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
+//     if(counter>=400){
+//         newGraphData.shift();
+//         newx.pop();
+//     }
+
+//     newGraphData.push(veldata3);
+//     newx.push(axis); //0.00부터 카운팅되도록
+//     graphData.data.datasets[2].data = newGraphData;
+//     //counter = counter + 1
+//     myChart.update();
+// }
+
+// function update_axis3(veldata4){
+//     var newGraphData = graphData.data.datasets[3].data;
+//     var newx = graphData.data.labels;
+//     var axis = counter
+    
+//     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
+//     if(counter>=400){
+//         newGraphData.shift();
+//         newx.pop();
+//     }
+
+//     newGraphData.push(veldata4);
+//     newx.push(axis); //0.00부터 카운팅되도록
+//     graphData.data.datasets[3].data = newGraphData;
+//     //counter = counter + 1
+//     myChart.update();
+// }
 
 // /***************************************** */
 // function updatecount(count){
