@@ -26,7 +26,7 @@ gradient4.addColorStop(1, 'rgba(153, 102, 255, 0)');
 var graphData = {
     type: 'line',
     data: {
-        labels: Array.from({length: count.length}, (_, i) => i),
+        labels: ['0축', '1축', '2축', '3축'],
         datasets: [
             {
                 label: '0축',
@@ -86,7 +86,7 @@ var graphData = {
             }
         },
         legend: {
-            display: false
+            display: true
         },
         point: {
             backgroundColor: '#00c7d6'
