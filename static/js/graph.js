@@ -48,7 +48,7 @@ var graphData = {
                 label: '2축',
                 data: [],
                 backgroundColor: gradient3,
-                pointBackgroundColor: '##ffff00',
+                pointBackgroundColor: '#ffff00',
                 borderWidth: 1,
                 borderColor: '#0e1a2f',
             },
