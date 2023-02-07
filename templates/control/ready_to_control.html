@@ -108,52 +108,66 @@
                     </li>
 
                     <!--TODO: serve on/off -->
-                    <div style="display: flex; align-items: center; margin-bottom: 5px; ">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
-                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
-                            {% csrf_token %}
-                            <input class="checkbox" id="codepen" type="checkbox"/>
-                            <label for="codepen" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
-                            <input type="hidden" name="value" value="0">
-                        </form>
-                    </div>
+                    <div>
+                        <div style="display: flex; align-items: center; margin-bottom: 5px; ">
+                            <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
+                            <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                                {% csrf_token %}
+                                <input class="checkbox" id="codepen" type="checkbox"/>
+                                <label for="codepen" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
+                                <input type="hidden" name="value" value="0">
+                            </form>
+                        </div>
 
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 9px;">1축 </label>
-                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
-                            {% csrf_token %}
-                            <input class="checkbox" id="codepen2" type="checkbox"/>
-                            <label for="codepen2" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
-                            <input type="hidden" name="value1" value="1">
-                        </form>
-                    </div>
-                    
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">2축 </label>
-                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
-                            {% csrf_token %}
-                            <input class="checkbox" id="codepen3" type="checkbox"/>
-                            <label for="codepen3" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
-                            <input type="hidden" name="value2" value="2">
-                        </form>
-                    </div>
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <label style="color: white; display: inline-block; font-size: 20px; margin-right: 9px;">1축 </label>
+                            <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                                {% csrf_token %}
+                                <input class="checkbox" id="codepen2" type="checkbox"/>
+                                <label for="codepen2" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
+                                <input type="hidden" name="value1" value="1">
+                            </form>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">2축 </label>
+                            <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                                {% csrf_token %}
+                                <input class="checkbox" id="codepen3" type="checkbox"/>
+                                <label for="codepen3" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
+                                <input type="hidden" name="value2" value="2">
+                            </form>
+                        </div>
 
-                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">3축 </label>
-                        <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
-                            {% csrf_token %}
-                            <input class="checkbox" id="codepen4" type="checkbox"/>
-                            <label for="codepen4" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
-                            <input type="hidden" name="value3" value="3">
-                        </form>
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">3축 </label>
+                            <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
+                                {% csrf_token %}
+                                <input class="checkbox" id="codepen4" type="checkbox"/>
+                                <label for="codepen4" style="color: white; font-size: 20px; display: inline-block; text-align: center; margin-bottom:4px">serveOn</label>
+                                <input type="hidden" name="value3" value="3">
+                            </form>
+                        </div>
                     </div>
                     <br/><br/>
                    
                     <li class="nav-list-item active">
-                        <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
+                        <form action="{% url 'control:AxmMoveEStop' %}" method="POST">
                             {% csrf_token %}
                             <div class="text-white" style="display:inline;">
                                 <input type="submit" name="stop" id="stop" value="긴급정지" 
+                                       style="font-weight:bold ;
+                                            font-size:30px; width:240px; 
+                                            height:100px; 
+                                            border-radius:70px"/>  
+                            </div>
+                        </form>
+                    </li>
+                    <li class="nav-list-item active">
+                        <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="text-white" style="display:inline;">
+                                <input type="submit" name="stop" id="stop" value="감속정지" 
                                        style="font-weight:bold ;
                                             font-size:30px; width:240px; 
                                             height:100px; 
@@ -210,7 +224,7 @@
                                 </div>
                                
                                 <button class="accordion">
-                                    <span>AxmMovePos</span>
+                                    <span>AxmMovePos (테스트용)</span>
                                 </button>
                                 <div class="panel">
                                     <form id="AxmMovePos" action="{% url 'control:AxmMovePos' %}" method="POST">

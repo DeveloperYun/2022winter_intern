@@ -195,7 +195,7 @@ def close_lib():
     else:
         print("라이브러리가 종료되지 않음 : ",AxlClose())
  
-#######FIXME:#######################  모션 구동의 용어 해설  #################################
+##############################  모션 구동의 용어 해설  #################################
 
 # 이건 low 혹은 high를 serve on 으로 받아들이겠다를 셋팅하는 함수이다.
 def signal_servo_on(request):
@@ -796,7 +796,7 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
 
     return render(request, 'control/ready_to_control.html', {'users':users})
 
-def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)    
+def AxmMoveEStop(request): # 속도구동 중지 함수 (완성)    
     users = User.objects.all()
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
     upStatus = c_long()
@@ -814,7 +814,26 @@ def AxmMoveSStop(request): # 속도구동 중지 함수 (완성)
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
-####TODO:############################# (input)테스트해볼 다축구동 함수 ###############################
+#TODO: 속도구동 감속 정지 함수
+def AxmMoveSStop(request):  
+    users = User.objects.all()
+    AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
+    upStatus = c_long()
+
+    for i in range(8): #최대 8축이라 가정 (0~7번축 차례로 scan)
+        axis = isInvalidAxis(i) # 제어 가능한 축 번호 반환(int)
+
+        AxmMoveSStop = loaddll['AxmMoveSStop']
+        res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+
+        if upStatus.value == 1: #만약 모션이 구동중이라면
+            res2 = AxmMoveSStop(axis)
+        else:
+            pass
+
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+################################# (input)테스트해볼 다축구동 함수 ###############################
 
 multiaxis=[]
 def AxmMoveStartMultiPos(request): 
@@ -946,7 +965,7 @@ class GraphConsumer(WebsocketConsumer):
         dVelocity4 = c_double()
 
         # 다축 구동
-        #TODO: 축 별 속도를 html로 보내서 각각 보여준다.
+        # 축 별 속도를 html로 보내서 각각 보여준다.
         if len(multiaxis) >= 2:
             # multiaxis 각각의 축에 대한 구동상태 파악
             while True: 
@@ -957,7 +976,7 @@ class GraphConsumer(WebsocketConsumer):
                     AxmStatusReadInMotion(multiaxis[0], pointer(upStatus))  # 0번 축 모션 구동 상태 파악
                     AxmStatusReadInMotion(multiaxis[1], pointer(upStatus2)) # 1번 축 모션 구동 상태 파악
                     
-                    #TODO: veldata, veldata2를 그냥 html로 보내주면 되지않나?
+                    # veldata, veldata2를 그냥 html로 보내주면 되지않나?
                     if upStatus.value == 1 or upStatus2.value == 1:
                         col = AxmStatusReadVel(multiaxis[0], pointer(dVelocity))
                         col2 = AxmStatusReadVel(multiaxis[1], pointer(dVelocity2))
