@@ -164,7 +164,7 @@
                         </form>
                     </li>
                     <li class="nav-list-item active">
-                        <form action="{% url 'control:AxmMoveSStop' %}" method="POST">
+                        <form id="sstop" action="{% url 'control:AxmMoveSStop' %}" method="POST">
                             {% csrf_token %}
                             <div class="text-white" style="display:inline;">
                                 <input type="submit" name="stop" id="stop" value="감속정지" 
@@ -457,6 +457,21 @@
                 } 
               });
             }
+        </script>
+
+        <!-- 감속 정지 새로고침 방지 -->
+        <script>
+            document.getElementById("sstop").addEventListener("submit", function(event) {
+                
+                var form = event.target;
+                var data = new FormData(form);
+              
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+              });
         </script>
     </body>
 </html>

@@ -136,7 +136,8 @@ button {
 }
 
 .nav-list-item {
-  margin-bottom: 0px;
+  margin-bottom: 0;
+  margin-top: -10px;
 }
 .nav-list-item:not(.active):hover {
   background-color: var(--list-item-hover);
