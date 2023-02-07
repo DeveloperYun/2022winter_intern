@@ -109,7 +109,7 @@
 
                     <!--TODO: serve on/off -->
                     <div style="display: flex; align-items: center; margin-bottom: 5px; ">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 4px;">0축 </label>
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
                         <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
                             {% csrf_token %}
                             <input class="checkbox" id="codepen" type="checkbox"/>
@@ -119,7 +119,7 @@
                     </div>
 
                     <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 8px;">1축 </label>
+                        <label style="color: white; display: inline-block; font-size: 20px; margin-right: 9px;">1축 </label>
                         <form style="display: inline-block; height: 50px; line-height: 50px;" action="{% url 'control:signal_servo_on' %}" method="POST">
                             {% csrf_token %}
                             <input class="checkbox" id="codepen2" type="checkbox"/>
@@ -227,7 +227,7 @@
                                 </div>
 
                                 <button class="accordion">
-                                    <span>AxmMoveStartPos</span>
+                                    <span>Single Axis Move</span>
                                 </button>
                                 <div class="panel">
                                     <form id="AxmMoveStartPos" action="{% url 'control:AxmMoveStartPos' %}" method="POST">
@@ -244,7 +244,7 @@
                                 </div>
 
                                 <button class="accordion">
-                                    <span>AxmMoveVel</span>
+                                    <span>Velocity Move (Jog Move)</span>
                                 </button>
                                 <div class="panel">
                                     <form id="AxmMoveVel" action="{% url 'control:AxmMoveVel' %}" method="POST">
@@ -260,7 +260,7 @@
                                 </div>
 
                                 <button class="accordion">
-                                    <span>AxmHomeSearch</span>
+                                    <span>Home Search Move</span>
                                 </button>
                                 <div class="panel">
                                     <form id="HomeSearchMove" action="{% url 'control:HomeSearchMove' %}" method="POST">
@@ -273,7 +273,7 @@
                                 </div>
 
                                 <button class="accordion">
-                                    <span>AxmMoveStartMultiPos (다축구동 : 최대 4축)</span>
+                                    <span>Multi Axis Move (다축구동 : 최대 4축)</span>
                                 </button>
                                 <div class="panelmulti">
                                     <form id="AxmMoveStartMultiPos" action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
