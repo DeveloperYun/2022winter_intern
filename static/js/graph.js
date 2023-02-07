@@ -30,7 +30,7 @@ var graphData = {
         datasets: [
             {
                 label: '0축',
-                data: counts,
+                data: axis0,
                 backgroundColor: gradient,
                 pointBackgroundColor: '#00c7d6',
                 borderWidth: 1,
@@ -38,7 +38,7 @@ var graphData = {
             },
             {
                 label: '1축',
-                data: as,
+                data: axis1,
                 backgroundColor: gradient2,
                 pointBackgroundColor: '#ff6384',
                 borderWidth: 1,
@@ -46,7 +46,7 @@ var graphData = {
             },
             {
                 label: '2축',
-                data: [],
+                data: axis2,
                 backgroundColor: gradient3,
                 pointBackgroundColor: '##ffff00',
                 borderWidth: 1,
@@ -54,7 +54,7 @@ var graphData = {
             },
             {
                 label: '3축',
-                data: [],
+                data: axis3,
                 backgroundColor: gradient4,
                 pointBackgroundColor: '#9966ff',
                 borderWidth: 1,
@@ -121,15 +121,31 @@ var axis3 = [];
 socket.onmessage = function(e){
     var djangoData = JSON.parse(e.data);
 
-    axis0.push(djangoData.veldata);
-    axis1.push(djangoData.veldata2);
-    axis2.push(djangoData.veldata3);
-    axis3.push(djangoData.veldata4);
+    if(djangoData.veldata){
+        axis0.push(djangoData.veldata);
+    }
+    if(djangoData.veldata2){
+        axis1.push(djangoData.veldata2);
+    }
+    if(djangoData.veldata3){
+        axis2.push(djangoData.veldata3);
+    }
+    if(djangoData.veldata4){
+        axis3.push(djangoData.veldata4);
+    }
 
-    update_axis0(axis0);
-    update_axis1(axis1);
-    update_axis2(axis2);
-    update_axis3(axis3);
+    if(axis0){
+        update_axis0(axis0);
+    }
+    if(axis1){
+        update_axis1(axis1);
+    }
+    if(axis2){
+        update_axis2(axis2);
+    }
+    if(axis3){
+        update_axis3(axis3);
+    }
 
     // var newGraphData = graphData.data.datasets[0].data;
     // var newx = graphData.data.labels;

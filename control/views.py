@@ -1056,7 +1056,7 @@ class GraphConsumer(WebsocketConsumer):
                     col = AxmStatusReadVel(axis, pointer(dVelocity))
                     if col == 0000:
                         veldata = dVelocity.value
-                        self.send(json.dumps({'value': veldata}))
+                        self.send(json.dumps({'veldata': veldata}))
                         sleep(0.005)
                     elif col == 4053:
                         print("모션 초기화 실패")
