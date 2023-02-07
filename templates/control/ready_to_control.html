@@ -186,14 +186,23 @@
                                           <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
                                         </div>
                                         <div class="line-chart">
-                                            <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
-                                            <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
-                                            <h2 style="color:white; display:inline-block; margin:0">1축 : </h2>
-                                            <h2 id="app1" style="color:white; display:inline-block">{{text}}</h2>
-                                            <h2 style="color:white; display:inline-block; margin:0">2축 : </h2>
-                                            <h2 id="app2" style="color:white; display:inline-block">{{text}}</h2>
-                                            <h2 style="color:white; display:inline-block; margin:0">3축 : </h2>
-                                            <h2 id="app3" style="color:white; display:inline-block">{{text}}</h2>
+                                            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
+                                                    <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
+                                                    <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
+                                                </div>
+                                                <div style="margin-right: 1em;">
+                                                    <h2 style="color:white; display:inline-block; margin:0">1축 : </h2>
+                                                    <h2 id="app1" style="color:white; display:inline-block">{{text}}</h2>
+                                                </div>
+                                                <div style="margin-right: 1em;">
+                                                    <h2 style="color:white; display:inline-block; margin:0">2축 : </h2>
+                                                    <h2 id="app2" style="color:white; display:inline-block">{{text}}</h2>
+                                                </div>
+                                                <div style="margin-right: 1em;">
+                                                    <h2 style="color:white; display:inline-block; margin:0">3축 : </h2>
+                                                    <h2 id="app3" style="color:white; display:inline-block">{{text}}</h2>
+                                                </div>
+                                            </div>
                                             <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
                                         </div>
                                       </div>
@@ -266,7 +275,7 @@
                                 <button class="accordion">
                                     <span>AxmMoveStartMultiPos</span>
                                 </button>
-                                <div class="panel">
+                                <div class="panelmulti">
                                     <form id="AxmMoveStartMultiPos" action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
                                         {% csrf_token %}
                                         <div id="box">

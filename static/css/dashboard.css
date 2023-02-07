@@ -267,7 +267,7 @@ button {
   background-color: var(--app-bg-dark);
   padding: 16px;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 .chart-container.applicants {
   max-height: 336px;
@@ -362,6 +362,7 @@ button {
 }
 .chart-container-header {
   padding: 20px;
+  padding-left: 0;
   display: flex;
   align-items: center;
 }
@@ -889,3 +890,11 @@ button {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 } 
+
+.panelmulti{
+  padding: 0 18px;
+  background-color: white;
+  max-height: 128px;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
