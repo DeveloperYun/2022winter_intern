@@ -902,3 +902,8 @@ button {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.scroll::-webkit-scrollbar {
+  display: none;
+}
