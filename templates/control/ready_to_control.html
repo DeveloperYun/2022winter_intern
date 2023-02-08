@@ -152,27 +152,30 @@
                     </div>
                     <br/><br/>
                    
+
                     <li class="nav-list-item active">
                         <form id="estop" action="{% url 'control:AxmMoveEStop' %}" method="POST">
                             {% csrf_token %}
-                            <div class="text-white" style="display:inline;">
+                            <div class="text-white" style="display:flex; align-items:center;">
                                 <input type="submit" name="stop" id="stop" value="긴급정지" 
                                        style="font-weight:bold ;
-                                            font-size:30px; width:240px; 
-                                            height:100px; 
-                                            border-radius:70px"/>  
+                                            font-size:25px; width:200px; 
+                                            height:80px; 
+                                            border-radius:80px;
+                                            margin: 0 auto"/>  
                             </div>
-                        </form>
+                        </form>                        
                     </li>
                     <li class="nav-list-item active">
                         <form id="sstop" action="{% url 'control:AxmMoveSStop' %}" method="POST">
                             {% csrf_token %}
-                            <div class="text-white" style="display:inline;">
+                            <div class="text-white" style="display:flex; align-items:center;">
                                 <input type="submit" name="stop" id="stop" value="감속정지" 
-                                       style="font-weight:bold ;
-                                            font-size:30px; width:240px; 
-                                            height:100px; 
-                                            border-radius:70px"/>  
+                                        style="font-weight:bold ;
+                                            font-size:25px; width:200px; 
+                                            height:80px; 
+                                            border-radius:80px;
+                                            margin: 0 auto"/> 
                             </div>
                         </form>
                     </li>
