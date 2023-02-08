@@ -1034,6 +1034,104 @@ def AxmMoveStartMultiPos(request):
     
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+def AxmMoveStartMultiPos2(request): 
+    users = User.objects.all()
+    multiaxis.clear()
+    # 다축위치 구동 - 시점탈출
+    # 축 개수만큼 배열을 선언해서 for문 돌리는 식으로 구현
+    # (축개수, 축번호 배열, 구동거리 배열, 속도 배열, 가속도 배열, 감속도 배열)
+    
+    print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
+    is_lib_open()
+    is_moduleExists() 
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    
+    lAxisNo2 = [0,1,2,3] #[1,2,...]
+    dPos2 = [20000, 30000, 25000, 15000]
+    dVel2 = [5000, 2000, 10000, 4500]
+    dAccel2 = [1000, 1000, 1000, 1000]
+    dDecel2 = [1000, 1000, 1000, 1000]
+
+    for i in range(len(lAxisNo2)):
+        multiaxis.append(lAxisNo2[i])
+
+    AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+    AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+
+    for i in range(len(lAxisNo2)):
+        print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+
+        signal_set_limit(lAxisNo2[i])
+        set_moveUnitPerPulse(lAxisNo2[i])
+        set_startVel(lAxisNo2[i])
+        signal_read_limit(lAxisNo2[i])
+
+        res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+        res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+
+        #signal_servo_on(lAxisNo2[i])
+
+        mot_set_abs_mode(lAxisNo2[i])
+        mot_set_profile_mode(lAxisNo2[i])
+
+    if res_AxmStatusSetActPos == 0000:
+        print("AxmStatusSetActPos 함수 실행 성공")
+    elif res_AxmStatusSetActPos == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmStatusSetActPos == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
+
+    if res_AxmStatusSetCmdPos == 0000:
+        print("AxmStatusSetCmdPos 함수 실행 성공")
+    elif res_AxmStatusSetCmdPos == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res_AxmStatusSetCmdPos == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+
+    def to_c_array(py_list):
+        arr = (c_int * len(py_list))(*py_list)
+        return arr
+
+    def to_c_array2(py_list):
+        arr = (c_double * len(py_list))(*py_list)
+        return arr
+
+    a = to_c_array(lAxisNo2)
+    b = to_c_array2(dPos2)
+    c = to_c_array2(dVel2)
+    d = to_c_array2(dAccel2)
+    e = to_c_array2(dDecel2)
+
+    for i in range(len(lAxisNo2)):
+        print(">>>",i,"번 축의 세팅")
+        print("축 : ",a[i], ",위치 : ",b[i],
+              ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
+    print("------------------------------------------------------------")
+    
+    AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+    AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
+    # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+    res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+    
+    
+    if res == 0000:
+        print("AxmMoveStartMultiPos 성공")
+    elif res == 4154:
+        print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+    elif res == 4201:
+        print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+    elif res == 4255:
+        print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+    elif res == 4536:
+        print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
+    else:
+        print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+    
+    return render(request, 'control/ready_to_control.html',{'users':users})
 ################################# (output)테스트해볼 2가지 함수 #################################
 veldata = 0
 
@@ -1178,21 +1276,6 @@ class GraphConsumer(WebsocketConsumer):
 
         self.send(json.dumps({'value': 0}))
         print(multiaxis)
-
-
-        #TODO: graph.js 테스트용 코드. 축이 2개라고 가정
-        # count=200
-        # a=400
-        # for i in range(2000):
-        #     # python 객체를 json 문자열로 변환하는 dumps
-        #     message = {
-        #         'count' : count,
-        #         'a' : a,
-        #     }
-        #     self.send(text_data=json.dumps(message))
-        #     count += 4
-        #     a += 2
-        #     sleep(0.005)
 
     def disconnect(self, code):
         print("socket 통신 cut 신호 수신")
