@@ -66,7 +66,7 @@ def control_initialization(request):
         print("라이브러리 초기화가 처음이 아니에요")
         open_no_reset()
     
-    result = show_boards() # 축 정보 
+    result = show_boards() # 축 정보 #result 는 str
     return render(request, 'control/ready_to_control.html', {'users':users , 'result':result})
 
 def open_no_reset():
@@ -211,7 +211,16 @@ def show_boards():
             else:
                 print(i, "는 제어 불가능한 상태")
                 response.append(str(i)+" 축은 제어 불가능한 상태")
+        else:
+            response.append(str(i)+" 축은 사용 불가능한 상태")
 
+
+    # str = ''
+    # separtor = ','
+    # for idx, val in enumerate(response):
+    #     str += val + ('' if idx == len(response) -1 else separtor)
+
+    # print(str)
     return response
 
 # 라이브러리 종료

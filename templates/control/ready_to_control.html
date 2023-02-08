@@ -72,8 +72,7 @@
         </script>
         
     </head>
-    <body onload="openPopup()">
-        <div id="popup"></div>
+    <body>
         <div class="app-container">
             <div class="app-left">
                 <button class="close-menu">
@@ -176,6 +175,10 @@
                             </div>
                         </form>
                     </li>
+                    <!-- TODO: 각 축의 상태정보 띄우기 -->
+                    {% for status in result %}
+                        <li for="codepen" style="color: white; font-size: 20px; text-align: center; margin-bottom:4px">{{status}}</li>
+                    {% endfor %}
                 </ul>
             </div>
             <div class="app-main">
@@ -463,7 +466,7 @@
             }
         </script>
 
-        <!--FIXME: 감속 정지 새로고침 방지 -->
+        <!--: 감속 정지 새로고침 방지 -->
         <script>
             document.getElementById("sstop").addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -479,12 +482,5 @@
               });
         </script>
 
-        <!-- popup.html -->
-        <script>
-            function openPopup() {
-                window.open("", "popup", "width=300,height=200");
-                document.getElementById("popup").innerHTML = "{{ result }}";
-            }
-        </script>
     </body>
 </html>
