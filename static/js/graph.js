@@ -69,7 +69,7 @@ var graphData = {
                 ticks: {
                     fontColor: '#5e6a81',
                     autoSkip: false,
-                    fontSize: 20
+                    fontSize: 15
                 },
                 gridLines: {
                     color: 'rgba(200, 200, 200, 0.08)',
@@ -79,7 +79,7 @@ var graphData = {
             xAxes:[{
                 ticks: {
                     fontColor: '#5e6a81',
-                    fontSize: 20
+                    fontSize: 15
                 }
             }]
         },

@@ -267,6 +267,7 @@
                                         </form>
                                     </div>
 
+                                    
                                     <button class="accordion">
                                         <span>Velocity Move (Jog Move)</span>
                                     </button>
@@ -296,7 +297,6 @@
                                         </form>
                                     </div>
 
-                                    <!--TODO: movestop 구현하기-->
                                     <button class="accordion">
                                         <span>Single Axis : Stop Decel Use Stop</span>
                                     </button>
@@ -362,7 +362,33 @@
                                         </form>
                                     </div>
                                 </div>
-                                
+
+                                <button class="accordion">
+                                    <span>Default Value : Single Axis Move</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveStartPos2" action="{% url 'control:AxmMoveStartPos2' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <button class="accordion">
+                                    <span>Default Value : Velocity Move(Jog Move)</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveVel2" action="{% url 'control:AxmMoveVel2' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
                                 <!-- django admin 에서 유저데이터 get -->
                                 <div class="chart-container applicants">
                                     <div class="chart-container-header">

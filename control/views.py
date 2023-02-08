@@ -772,6 +772,79 @@ def AxmMoveStartPos(request): # 위치구동 - 시점탈출(완성)
 
     return render(request, 'control/ready_to_control.html', {'users':users})
 
+def AxmMoveStartPos2(request): # 위치구동 - 시점탈출(완성)
+    users = User.objects.all()
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    board_status()
+    board_count()
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
+    is_lib_open()
+    is_moduleExists() 
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    if request.method == 'POST':
+        lAxisNo = int(request.POST['lAxisNo'])
+      
+    signal_set_limit(lAxisNo) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
+    set_moveUnitPerPulse(lAxisNo) # axis의 움직이는 거리당 출력되는 펄스 (1:1) 
+    set_startVel(lAxisNo) # axis 초기속도 설정
+    signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
+
+    # 현재 위치는 원점으로 설정한다.
+    AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+    res = AxmStatusSetActPos(lAxisNo, 0)
+    if res == 0000:
+        print("AxmStatusSetActPos 함수 실행 성공")
+    elif res == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패")
+        
+    AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+    res2 = AxmStatusSetCmdPos(lAxisNo, 0)
+    if res2 == 0000:
+        print("AxmStatusSetCmdPos 함수 실행 성공")
+    elif res2 == 4053:
+        print("해당 축 모션 초기화 실패")
+    elif res2 == 4101:
+        print("해당 축이 존재하지 않음")
+    else:
+        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패")
+
+    #signal_servo_on(lAxisNo) #servo on
+    mot_set_abs_mode(lAxisNo) # axis 이동거리 계산 모드 설정
+    mot_set_profile_mode(lAxisNo) # axis의 구동 속도 프로파일 설정
+    AxmMoveStartPos = loaddll['AxmMoveStartPos']
+
+    isInvalidAxis(lAxisNo)
+
+    AxmMoveStartPos.argtypes = [c_int, c_double, c_double, c_double, c_double]
+    ResAxmMoveStartPos = AxmMoveStartPos(
+        lAxisNo, 
+        100000,
+        1000,
+        1000,
+        500
+    )
+
+    #AxmStatusReadVel(mov.lAxisNo) # 속도 측정
+    if ResAxmMoveStartPos == 0000:
+        print("AxmMoveStartPos 성공")
+    elif ResAxmMoveStartPos == 4154:
+        print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+    elif ResAxmMoveStartPos == 4201:
+        print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+    elif ResAxmMoveStartPos == 4255:
+        print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+    else:
+        print("뭔가 모를 이유로 AxmMoveStartPos2 가 실행되지 않음")
+
+    return render(request, 'control/ready_to_control.html', {'users':users})
+
 def AxmMoveVel(request): # 속도구동(조그구동) (완성)
     users = User.objects.all()
     # 종료 명령이 나올 때까지 계속 움직이는 형태
@@ -822,6 +895,54 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
         print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
     else:
         print("뭔가 모를 이유로 AxmMoveVel 가 실행되지 않음. Error: ",ResAxmMoveVel)
+
+    return render(request, 'control/ready_to_control.html', {'users':users})
+
+def AxmMoveVel2(request): # 속도구동(조그구동) (완성)
+    users = User.objects.all()
+    # 종료 명령이 나올 때까지 계속 움직이는 형태
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 보드 상태 확인 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    board_status()
+    board_count()
+    info_get_axis(0) # 0번축 보드/모듈 정보 확인 : 보드번호=1, 모듈위치=0, 모듈아이디=35
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    print(">>>>>>>>>>>>>>>>>>>>>>> 라이브러리 open, 모듈 존재 확인 >>>>>>>>>>>>>>>>>>>>>>")
+    is_lib_open()
+    is_moduleExists() 
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    if request.method == 'POST':
+        lAxisNo = int(request.POST['lAxisNo'])
+
+    global axis
+    axis = lAxisNo
+    
+    signal_set_limit(lAxisNo) # 지정 축의 리미트 센서 사용 유무 및 신호 action level 설정
+    set_moveUnitPerPulse(lAxisNo) #axis의 움직이는 거리당 출력되는 펄스 (1:1) 
+    set_startVel(lAxisNo) #axis 초기속도 설정
+    signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
+    
+    AxmMoveVel = loaddll['AxmMoveVel']
+    AxmMoveVel.argtypes=[c_long,c_double,c_double,c_double]
+    isInvalidAxis(lAxisNo)
+    ResAxmMoveVel = AxmMoveVel(
+        (lAxisNo), 
+        5000,
+        2500,
+        2500
+    )
+    
+    if ResAxmMoveVel == 0000:
+        print("ResAxmMoveVel 함수 실행 성공")
+    elif ResAxmMoveVel == 4154:
+        print("AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+    elif ResAxmMoveVel == 4201:
+        print("AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+    elif ResAxmMoveVel == 4255:
+        print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+    else:
+        print("뭔가 모를 이유로 AxmMoveVel2 가 실행되지 않음. Error: ",ResAxmMoveVel)
 
     return render(request, 'control/ready_to_control.html', {'users':users})
 
