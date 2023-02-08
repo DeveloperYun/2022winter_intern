@@ -828,36 +828,34 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
 def AxmMoveEStop(request): # 긴급 정지 함수 (완성)    
     users = User.objects.all()
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
+
+    axis_count = Axis_counter()
     upStatus = c_long()
 
-    for i in range(8): #최대 8축이라 가정 (0~7번축 차례로 scan)
-        axis = isInvalidAxis(i) # 제어 가능한 축 번호 반환(int)
-
+    for i in range(axis_count): #최대 8축이라 가정 (0~7번축 차례로 scan)
         AxmMoveEStop = loaddll['AxmMoveEStop']
-        res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        res = AxmStatusReadInMotion(i, pointer(upStatus)) # 모션 구동 상태 파악
 
         if upStatus.value == 1: #만약 모션이 구동중이라면
-            res2 = AxmMoveEStop(axis)
-        else:
-            pass
+            res2 = AxmMoveEStop(i)
+            print("긴급정지 여부 : ",res2)
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
 def AxmMoveSStop(request):  
     users = User.objects.all()
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
+
+    axis_count = Axis_counter()
     upStatus = c_long()
 
-    for i in range(8): #최대 8축이라 가정 (0~7번축 차례로 scan)
-        axis = isInvalidAxis(i) # 제어 가능한 축 번호 반환(int)
-
+    for i in range(axis_count): #최대 8축이라 가정 (0~7번축 차례로 scan)
         AxmMoveSStop = loaddll['AxmMoveSStop']
-        res = AxmStatusReadInMotion(axis, pointer(upStatus)) # 모션 구동 상태 파악
+        res = AxmStatusReadInMotion(i, pointer(upStatus)) # 모션 구동 상태 파악
 
         if upStatus.value == 1: #만약 모션이 구동중이라면
-            res2 = AxmMoveSStop(axis)
-        else:
-            pass
+            res2 = AxmMoveSStop(i)
+            print("감속정지 여부 : ",res2)
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 

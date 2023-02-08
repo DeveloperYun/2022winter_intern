@@ -293,51 +293,51 @@
                                 </div>
 
                                 <!--TODO: movestop 구현하기-->
-                                <button class="accordion">
+                                {% comment %} <button class="accordion">
                                     <span>Single Axis Move Stop</span>
                                 </button>
-                                <div class="panel">
+                                <div class="panel"> {% endcomment %}
 
-                                    <button class="accordion">
-                                        <span>Stop Decel Use Stop</span>
-                                    </button>
-                                    <div class="panel">
-                                        <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                                <input type="submit" value="제출">
-                                            </div>
-                                        </form>
-                                    </div>
-                                
-                                    <button class="accordion">
-                                        <span>Emergency Stop</span>
-                                    </button>
-                                    <div class="panel">
-                                        <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input type="submit" value="제출">
-                                            </div>
-                                        </form>
-                                    </div>
-                                
-                                    <button class="accordion">
-                                        <span>Slow Down Stop</span>
-                                    </button>
-                                    <div class="panel">
-                                        <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input type="submit" value="제출">
-                                            </div>
-                                        </form>
-                                    </div>
+                                <button class="accordion">
+                                    <span>Single Axis : Stop Decel Use Stop</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
                                 </div>
+                            
+                                <button class="accordion">
+                                    <span>Single Axis : Emergency Stop</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+                            
+                                <button class="accordion">
+                                    <span>Single Axis : Slow Down Stop</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="small text-white">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+                            {% comment %} </div> {% endcomment %}
                                 
 
                                 <button class="accordion">
@@ -545,6 +545,32 @@
             });
 
             document.getElementById("SingleAxisStop").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+            
+            document.getElementById("SingleAxisEStop").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisSStop").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;
