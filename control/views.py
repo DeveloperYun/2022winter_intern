@@ -66,7 +66,8 @@ def control_initialization(request):
         print("라이브러리 초기화가 처음이 아니에요")
         open_no_reset()
     
-    return render(request, 'control/ready_to_control.html', {'users':users})
+    result = show_boards() # 축 정보 
+    return render(request, 'control/ready_to_control.html', {'users':users , 'result':result})
 
 def open_no_reset():
 
@@ -119,7 +120,8 @@ def info_get_axis(axis):
     res = AxmInfoGetAxis(axis, pointer(lBoardNo),pointer(lModulePos),pointer(uModuleID))
     print("============================================")
     if res==0000:
-        print("0번축의 보드 번호, 모듈위치, 모듈아이디: ",lBoardNo.value, ", ",lModulePos.value,", ",uModuleID.value)
+        print(axis,"번축의 보드 번호, 모듈위치, 모듈아이디: ",lBoardNo.value, ", ",lModulePos.value,", ",uModuleID.value)
+        return uModuleID.value
     elif res == 4053:
         print("해당 축 모션 초기화 실패")
     elif res == 4101:
@@ -169,23 +171,48 @@ def Axis_counter():
     print("============================================")
     '''
 
-# 해당 축이 사용 가능한지 확인, 제어 가능한지 확인
+# 해당 축이 사용 가능한지 확인
 def isInvalidAxis(axis):
     AxmInfoIsInvalidAxisNo = loaddll['AxmInfoIsInvalidAxisNo']
     uReturn = AxmInfoIsInvalidAxisNo(axis)
-    AxmInfoGetAxisStatus = loaddll['AxmInfoGetAxisStatus']
-    isControl = AxmInfoGetAxisStatus(axis)
 
     if uReturn != 0000:
         # print(uReturn," : 해당 축이 없음")
-        return
+        return False
     else:
-        print(axis," 번 축은 사용할 수 있음")
-        if isControl != 0000:
-            print(isControl, " : 제어 불가능")
-        elif isControl == 0000:
-            print(isControl, " : 제어 가능")
-        return axis
+        #print(axis," 번 축은 사용할 수 있음")
+        return True
+
+# 해당 축의 제어 가능 여부 반환
+def get_axis_status(axis):
+    AxmInfoGetAxisStatus = loaddll['AxmInfoGetAxisStatus']
+    isControl = AxmInfoGetAxisStatus(axis)
+
+    if isControl != 0000:
+        #print(isControl, " : 제어 불가능")
+        return False
+    elif isControl == 0000:
+        #print(isControl, " : 제어 가능")
+        return True
+
+#TODO: 장착된 축들의 상태를 화면에 출력해줄 것
+def show_boards():
+    axis_count = Axis_counter() # 축의 개수 
+    response = []
+
+    # 장착된 축의 개수만큼 0~n 번 축이 배정되므로 이렇게 하면 빠짐없이 검사가 가능하다.
+    for i in range(axis_count):
+        valid = isInvalidAxis(i) # 해당 축의 사용가능 여부에 따라
+        if valid == True:
+            control_valid = get_axis_status(i) # 사용 가능하다면 제어 가능 여부 파악
+            if control_valid == True:
+                print(i, "는 제어 가능한 상태")
+                response.append(str(i)+" 축은 제어 가능한 상태")
+            else:
+                print(i, "는 제어 불가능한 상태")
+                response.append(str(i)+" 축은 제어 불가능한 상태")
+
+    return response
 
 # 라이브러리 종료
 def close_lib():
@@ -796,7 +823,7 @@ def AxmMoveVel(request): # 속도구동(조그구동) (완성)
 
     return render(request, 'control/ready_to_control.html', {'users':users})
 
-def AxmMoveEStop(request): # 속도구동 중지 함수 (완성)    
+def AxmMoveEStop(request): # 긴급 정지 함수 (완성)    
     users = User.objects.all()
     AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
     upStatus = c_long()

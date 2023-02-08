@@ -72,7 +72,8 @@
         </script>
         
     </head>
-    <body>
+    <body onload="openPopup()">
+        <div id="popup"></div>
         <div class="app-container">
             <div class="app-left">
                 <button class="close-menu">
@@ -343,7 +344,6 @@
             if (localStorage.getItem('toggleState')) {
             toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
             }
-
             toggle.addEventListener('change', function() {
                 if (toggle.checked) {
                     const formData = new FormData(document.forms[0]);
@@ -366,6 +366,7 @@
               });
        
             const toggle2 = document.getElementById('codepen2');
+
             // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState2')) {
                 toggle2.checked = JSON.parse(localStorage.getItem('toggleState2'));
@@ -392,6 +393,7 @@
               });
         
             const toggle3 = document.getElementById('codepen3');
+
             // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState3')) {
                 toggle3.checked = JSON.parse(localStorage.getItem('toggleState3'));
@@ -417,10 +419,11 @@
               });
         
             const toggle4 = document.getElementById('codepen4');
+
              // 새로고침 전의 상태를 불러옵니다
-             if (localStorage.getItem('toggleState4')) {
+            if (localStorage.getItem('toggleState4')) {
                 toggle4.checked = JSON.parse(localStorage.getItem('toggleState4'));
-                }
+            }
             toggle4.addEventListener('change', function() {
                 if (toggle4.checked) {
                   const formData = new FormData(document.forms[0]);
@@ -441,6 +444,7 @@
                 localStorage.setItem('toggleState4', toggle4.checked);
               });
         </script>
+
         <!-- accordion -->
         <script>
             var acc = document.getElementsByClassName("accordion");
@@ -459,9 +463,10 @@
             }
         </script>
 
-        <!-- 감속 정지 새로고침 방지 -->
+        <!--FIXME: 감속 정지 새로고침 방지 -->
         <script>
             document.getElementById("sstop").addEventListener("submit", function(event) {
+                event.preventDefault();
                 
                 var form = event.target;
                 var data = new FormData(form);
@@ -472,6 +477,14 @@
                 
                 xhr.send(data);
               });
+        </script>
+
+        <!-- popup.html -->
+        <script>
+            function openPopup() {
+                window.open("", "popup", "width=300,height=200");
+                document.getElementById("popup").innerHTML = "{{ result }}";
+            }
         </script>
     </body>
 </html>
