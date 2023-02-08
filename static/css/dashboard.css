@@ -862,9 +862,7 @@ button {
   padding: 18px;
   width: 100%;
   border:#fff 1px solid;
-  /* border-bottom: #fff 1px solid;*/
-  border-left : 1px solid #041035;
-  border-right : 1px solid #041035; 
+  
   text-align: left;
   outline: none;
   font-size: 20px;
