@@ -353,6 +353,18 @@
                                     </form>
                                 </div>
 
+                                <button class="accordion">
+                                    <span>Default Value : Multi Axis Move (4축)</span>
+                                </button>
+                                <div class="panel">
+                                    <form id="AxmMoveStartMultiPos2" action="{% url 'control:AxmMoveStartMultiPos2' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div id="box">
+                                            <input type="submit" value="제출">
+                                        </div>
+                                    </form>
+                                </div>
+
                                  <!-- django admin 에서 유저데이터 get -->
                                  <div class="chart-container applicants">
                                     <div class="chart-container-header">
