@@ -107,7 +107,6 @@
                         </a>
                     </li>
 
-                    <!--TODO: serve on/off -->
                     <div>
                         <div style="display: flex; align-items: center; margin-bottom: 5px; ">
                             <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
@@ -232,145 +231,140 @@
                                       </div>
                                     </div>
                                 </div>
-                               
-                                <button class="accordion">
-                                    <span>AxmMovePos (테스트용)</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="AxmMovePos" action="{% url 'control:AxmMovePos' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <button class="accordion">
-                                    <span>Single Axis Move</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="AxmMoveStartPos" action="{% url 'control:AxmMoveStartPos' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <button class="accordion">
-                                    <span>Velocity Move (Jog Move)</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="AxmMoveVel" action="{% url 'control:AxmMoveVel' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white" style="display:inline;">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                            <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>     
-                                </div>
-
-                                <button class="accordion">
-                                    <span>Home Search Move</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="HomeSearchMove" action="{% url 'control:HomeSearchMove' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <!--TODO: movestop 구현하기-->
-                                {% comment %} <button class="accordion">
-                                    <span>Single Axis Move Stop</span>
-                                </button>
-                                <div class="panel"> {% endcomment %}
-
-                                <button class="accordion">
-                                    <span>Single Axis : Stop Decel Use Stop</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-                            
-                                <button class="accordion">
-                                    <span>Single Axis : Emergency Stop</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-                            
-                                <button class="accordion">
-                                    <span>Single Axis : Slow Down Stop</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-                            {% comment %} </div> {% endcomment %}
                                 
+                                <div>
+                                    <button class="accordion">
+                                        <span>AxmMovePos (테스트용)</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="AxmMovePos" action="{% url 'control:AxmMovePos' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
 
-                                <button class="accordion">
-                                    <span>Multi Axis Move (다축구동 : 최대 4축)</span>
-                                </button>
-                                <div class="panelmulti">
-                                    <form id="AxmMoveStartMultiPos" action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div id="box">
-                                            <input type="button" value="추가" onclick="add_textbox()">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
+                                    <button class="accordion">
+                                        <span>Single Axis Move</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="AxmMoveStartPos" action="{% url 'control:AxmMoveStartPos' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <button class="accordion">
+                                        <span>Velocity Move (Jog Move)</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="AxmMoveVel" action="{% url 'control:AxmMoveVel' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white" style="display:inline;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>     
+                                    </div>
+
+                                    <button class="accordion">
+                                        <span>Home Search Move</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="HomeSearchMove" action="{% url 'control:HomeSearchMove' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!--TODO: movestop 구현하기-->
+                                    <button class="accordion">
+                                        <span>Single Axis : Stop Decel Use Stop</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+                            
+                                    <button class="accordion">
+                                        <span>Single Axis : Emergency Stop</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+                                
+                                    <button class="accordion">
+                                        <span>Single Axis : Slow Down Stop</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+                                
+                                    <button class="accordion">
+                                        <span>Multi Axis Move (다축구동 : 최대 4축)</span>
+                                    </button>
+                                    <div class="panelmulti">
+                                        <form id="AxmMoveStartMultiPos" action="{% url 'control:AxmMoveStartMultiPos' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div id="box">
+                                                <input type="button" value="추가" onclick="add_textbox()">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <button class="accordion">
+                                        <span>Default Value : Multi Axis Move (4축)</span>
+                                    </button>
+                                    <div class="panel">
+                                        <form id="AxmMoveStartMultiPos2" action="{% url 'control:AxmMoveStartMultiPos2' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div id="box">
+                                                <input type="submit" value="제출">
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-
-                                <button class="accordion">
-                                    <span>Default Value : Multi Axis Move (4축)</span>
-                                </button>
-                                <div class="panel">
-                                    <form id="AxmMoveStartMultiPos2" action="{% url 'control:AxmMoveStartMultiPos2' %}" method="POST">
-                                        {% csrf_token %}
-                                        <div id="box">
-                                            <input type="submit" value="제출">
-                                        </div>
-                                    </form>
-                                </div>
-
-                                 <!-- django admin 에서 유저데이터 get -->
-                                 <div class="chart-container applicants">
+                                
+                                <!-- django admin 에서 유저데이터 get -->
+                                <div class="chart-container applicants">
                                     <div class="chart-container-header">
                                       <h2>Applicants  </h2>
                                     </div>
