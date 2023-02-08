@@ -128,7 +128,7 @@ socket.onmessage = function(e){
     var axis = counter
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=1000){
+    if(counter>=500){
         if(newGraphData0.length > 0){
             newGraphData0.shift();
         }
