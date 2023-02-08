@@ -152,7 +152,7 @@
                     <br/><br/>
                    
                     <li class="nav-list-item active">
-                        <form action="{% url 'control:AxmMoveEStop' %}" method="POST">
+                        <form id="estop" action="{% url 'control:AxmMoveEStop' %}" method="POST">
                             {% csrf_token %}
                             <div class="text-white" style="display:inline;">
                                 <input type="submit" name="stop" id="stop" value="긴급정지" 
@@ -176,9 +176,11 @@
                         </form>
                     </li>
                     <!-- TODO: 각 축의 상태정보 띄우기 -->
-                    {% for status in result %}
-                        <li for="codepen" style="color: white; font-size: 20px; text-align: center; margin-bottom:4px">{{status}}</li>
-                    {% endfor %}
+                    <ul>
+                        {% for status in result %}
+                            <li for="codepen" style="color: white; font-size: 20px; text-align: center; margin-bottom:4px">{{status}}</li>
+                        {% endfor %}
+                    </ul>
                 </ul>
             </div>
             <div class="app-main">
@@ -466,7 +468,7 @@
             }
         </script>
 
-        <!--: 감속 정지 새로고침 방지 -->
+        <!-- 정지 새로고침 방지 -->
         <script>
             document.getElementById("sstop").addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -480,6 +482,19 @@
                 
                 xhr.send(data);
               });
+
+            document.getElementById("estop").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
         </script>
 
     </body>
