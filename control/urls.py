@@ -17,4 +17,7 @@ urlpatterns = [
     path('AxmMoveStartMultiPos/', views.AxmMoveStartMultiPos, name='AxmMoveStartMultiPos'),
     path('signal_servo_on/', views.signal_servo_on, name='signal_servo_on'),
     path('signal_servo_off/', views.signal_servo_off, name='signal_servo_off'),
+    path('SingleAxisStop/', views.SingleAxisStop, name='SingleAxisStop'),
+    path('SingleAxisEStop/', views.SingleAxisEStop, name='SingleAxisEStop'),
+    path('SingleAxisSStop/', views.SingleAxisSStop, name='SingleAxisSStop'),
 ]
