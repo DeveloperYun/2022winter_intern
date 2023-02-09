@@ -1401,7 +1401,7 @@ class GraphConsumer(WebsocketConsumer):
                                 'veldata2' : veldata2,
                             }
                             self.send(text_data=json.dumps(message))
-                            sleep(0.005)
+                            sleep(0.02)
                         elif col == 0000 or col2 == 0000:
                             print("모션 초기화 실패")
                         else:
@@ -1430,7 +1430,7 @@ class GraphConsumer(WebsocketConsumer):
                                 'veldata3' : veldata3,
                             }
                             self.send(text_data=json.dumps(message))
-                            sleep(0.005)
+                            sleep(0.02)
                         elif col == 0000 or col2 == 0000 or col3 == 0000:
                             print("모션 초기화 실패")
                         else:
@@ -1463,7 +1463,7 @@ class GraphConsumer(WebsocketConsumer):
                                 'veldata4' : veldata4,
                             }
                             self.send(text_data=json.dumps(message))
-                            sleep(0.005)
+                            sleep(0.02)
                         elif col == 0000 or col2 == 0000 or col3 == 0000 or col4 == 0000:
                             print("모션 초기화 실패")
                         else:
@@ -1489,7 +1489,7 @@ class GraphConsumer(WebsocketConsumer):
                     if col == 0000:
                         veldata = dVelocity.value
                         self.send(json.dumps({'veldata': veldata}))
-                        sleep(0.005)
+                        sleep(0.02)
                     elif col == 4053:
                         print("모션 초기화 실패")
                     else:
