@@ -80,12 +80,13 @@ var graphData = {
                 ticks: {
                     fontColor: '#5e6a81',
                     fontSize: 15
-                }
+                },
+                bounds:[0,400]
             }]
         },
         elements: {
             line: {
-                tension: 0.4
+                tension: 0.1
             }
         },
         legend: {
@@ -129,19 +130,26 @@ socket.onmessage = function(e){
     
     // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
     if(counter>=500){
+        // if(newGraphData0.length > 0){
+        //     newGraphData0.shift();
+        // }
+        // if(newGraphData1.length > 0){
+        //     newGraphData1.shift();
+        // }
+        // if(newGraphData2.length > 0){
+        //     newGraphData2.shift();
+        // }
+        // if(newGraphData3.length > 0){
+        //     newGraphData3.shift();
+        // }
+        // newx.pop();
         if(newGraphData0.length > 0){
             newGraphData0.shift();
-        }
-        if(newGraphData1.length > 0){
             newGraphData1.shift();
-        }
-        if(newGraphData2.length > 0){
             newGraphData2.shift();
-        }
-        if(newGraphData3.length > 0){
             newGraphData3.shift();
+            newx.pop();
         }
-        newx.pop();
     }
 
     newGraphData0.push(djangoData.veldata);
