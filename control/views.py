@@ -1403,8 +1403,12 @@ class GraphConsumer(WebsocketConsumer):
                     AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
                     print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
                     print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
-                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
-                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
+                    
+                    message = {
+                        'HomeSetResult': uHomeStepNumber.value,
+                        'HomeSetResult1': uHomeStepNumber1.value
+                    }
+                    self.send(text_data=json.dumps(message))
                     sleep(1)
                 else:
                     break
@@ -1420,9 +1424,12 @@ class GraphConsumer(WebsocketConsumer):
                     print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
                     print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
                     print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
-                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
-                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
-                    self.send(json.dumps({'HomeSetResult2': uHomeStepNumber2.value}))
+                    message = {
+                        'HomeSetResult': uHomeStepNumber.value,
+                        'HomeSetResult1': uHomeStepNumber1.value,
+                        'HomeSetResult2': uHomeStepNumber2.value
+                    }
+                    self.send(text_data=json.dumps(message))
                     sleep(1)
                 else:
                     break
@@ -1441,10 +1448,13 @@ class GraphConsumer(WebsocketConsumer):
                     print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
                     print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
                     print("전송중인 현재 3축 검색 진행률 : ",uHomeStepNumber3.value," %")
-                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
-                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
-                    self.send(json.dumps({'HomeSetResult2': uHomeStepNumber2.value}))
-                    self.send(json.dumps({'HomeSetResult3': uHomeStepNumber3.value}))
+                    message = {
+                        'HomeSetResult': uHomeStepNumber.value,
+                        'HomeSetResult1': uHomeStepNumber1.value,
+                        'HomeSetResult2': uHomeStepNumber2.value,
+                        'HomeSetResult3': uHomeStepNumber3.value
+                    }
+                    self.send(text_data=json.dumps(message))
                     sleep(1)
                 else:
                     break
