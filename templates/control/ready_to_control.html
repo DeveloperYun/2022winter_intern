@@ -180,8 +180,11 @@
                     </li>
 
                     <!--TODO:TODO:TODO:TODO:TODO: 각 축의 원점탐색 진행률 표시 -->
-                
-
+                    
+                    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
+                        <h2 style="color:white; display:inline-block; margin:0">원점탐색 : </h2>
+                        <h2 id="app" style="color:white; display:inline-block">{{homesearch}}</h2>
+                    </div>
                     <!--: 각 축의 상태정보 띄우기 -->
                     <ul>
                         {% for status in result %}
@@ -213,7 +216,7 @@
                                           <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
                                         </div>
                                         <div class="line-chart">
-                                            <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
+                                                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
                                                     <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
                                                     <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
@@ -590,7 +593,7 @@
             }
         </script>
 
-        <!-- 정지, 원점탐색 새로고침 방지 -->
+        <!-- 정지 새로고침 방지 -->
         <script>
             document.getElementById("sstop").addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -735,18 +738,6 @@
                 xhr.send(data);
             });
 
-            document.getElementById("HomeSearchMove").addEventListener("submit", function(event) {
-                event.preventDefault();
-                
-                var form = event.target;
-                var data = new FormData(form);
-                
-                var xhr = new XMLHttpRequest();
-                xhr.open(form.method, form.action, true);
-                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
-                
-                xhr.send(data);
-            });
         </script>
     </body>
 </html>

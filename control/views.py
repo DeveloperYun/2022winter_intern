@@ -600,9 +600,49 @@ def HomeSearchMove(request): # 원점찾기(완성)
     signal_read_limit(lAxisNo) # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
     signal_read_inpos(lAxisNo) # 지정 축의 Inpositon 신호의 입력 상태를 반환한다.
 
-    mot_set_home_start(lAxisNo) # 원점 탐색
+    # 원점 탐색
+    AxmHomeSetMethod = loaddll['AxmHomeSetMethod']
+    AxmHomeSetVel = loaddll['AxmHomeSetVel']
+    AxmHomeSetStart = loaddll['AxmHomeSetStart']
+    AxmHomeGetResult = loaddll['AxmHomeGetResult']
+    AxmHomeGetRate = loaddll['AxmHomeGetRate']
 
-    return render(request, 'control/ready_to_control.html', {'users':users})
+    
+    uHomeResult = c_ulong()
+    uHomeStepNumber,uHomeMainStepNumber = c_ulong(), c_ulong()
+
+    AxmHomeSetMethod.argtypes=[c_long,c_long,c_ulong,c_ulong,c_double,c_double]
+    AxmHomeSetVel.argtypes=[c_long,c_double,c_double,c_double,c_double,c_double,c_double]
+
+    AxmHomeSetMethod(axis,0,4,0,1000,0)
+    AxmHomeSetVel(axis,60000, 3000, 1000, 50, 20000, 80000)
+
+    AxmHomeSetStart(axis)
+
+
+    while True:
+        AxmHomeGetResult(axis,pointer(uHomeResult))
+
+        if uHomeResult.value == 2:
+            #진행률 확인
+            AxmHomeGetRate(axis,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+            print("현재 원점 검색 진행률 : ",uHomeStepNumber.value," %")
+            sleep(1)
+        elif uHomeResult.value == 1:
+            AxmHomeGetRate(axis,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+            print("현재 원점 검색 진행률 : ",uHomeStepNumber.value," %")
+            sleep(1)
+            print("원점 검색 완료")
+            result = 'Home Search Success'
+            break
+        else:
+            print("이외의 에러로 종료")
+            result = 'Home Search Failed'
+            break
+
+
+
+    return render(request, 'control/ready_to_control.html', {'users':users}, {'homesearch':result})
 
 def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     users = User.objects.all()
