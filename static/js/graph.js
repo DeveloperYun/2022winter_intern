@@ -80,8 +80,7 @@ var graphData = {
                 ticks: {
                     fontColor: '#5e6a81',
                     fontSize: 15
-                },
-                bounds:[0,400]
+                }
             }]
         },
         elements: {
@@ -108,12 +107,11 @@ var graphData = {
 }
 
 
-
 // 라이브러리에 대한 유형 정보(이 경우 Chart.js)가 프로젝트에 포함되지 않았거나 유형 정보가 올바르지 않거나 오래된 경우에 발생할 수 있습니다.
 var myChart = new Chart(ctx, graphData);
 var socket = new WebSocket('ws://localhost:8000/ws/control/'); //해당 서버에 대한 웹소켓 연결 설정
 
-let counter = 0
+var counter = 0
 //서버로부터 전송받은 데이터
 //onmessage 이벤트 트리거시 차트의 데이터와 레이블을 업데이트하고 차트에서 업데이트 메소드를 호출
 
@@ -128,28 +126,20 @@ socket.onmessage = function(e){
     var newx = graphData.data.labels; // x축 레이블은 하나
     var axis = counter
     
-    // 데이터가 200개가 누적되면 1개씩 pop, push 되도록 하려면?
-    if(counter>=500){
-        // if(newGraphData0.length > 0){
-        //     newGraphData0.shift();
-        // }
-        // if(newGraphData1.length > 0){
-        //     newGraphData1.shift();
-        // }
-        // if(newGraphData2.length > 0){
-        //     newGraphData2.shift();
-        // }
-        // if(newGraphData3.length > 0){
-        //     newGraphData3.shift();
-        // }
-        // newx.pop();
+    if(counter>=1000){
         if(newGraphData0.length > 0){
             newGraphData0.shift();
-            newGraphData1.shift();
-            newGraphData2.shift();
-            newGraphData3.shift();
-            newx.pop();
         }
+        if(newGraphData1.length > 0){
+            newGraphData1.shift();
+        }
+        if(newGraphData2.length > 0){
+            newGraphData2.shift();
+        }
+        if(newGraphData3.length > 0){
+            newGraphData3.shift();
+        }
+        newx.pop();
     }
 
     newGraphData0.push(djangoData.veldata);
