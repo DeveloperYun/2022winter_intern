@@ -980,7 +980,6 @@ def AxmMoveSStop(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
-#TODO: Single Axis Move Stop 구현
 def SingleAxisStop(request):
     users = User.objects.all()
     AxmMoveStop = loaddll['AxmMoveStop']
@@ -1003,15 +1002,14 @@ def SingleAxisStop(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+
+#TODO: 축별 정지기능 버튼식으로 교체
 def SingleAxisEStop(request):
     users = User.objects.all()
     AxmMoveEStop = loaddll['AxmMoveEStop']
 
-    if request.method == 'POST':
-        lAxisNo = int(request.POST['lAxisNo'])
-
     AxmMoveEStop.argtypes=[c_long]
-    res = AxmMoveEStop(lAxisNo)
+    res = AxmMoveEStop(0)
 
     if res == 0000:
         print("정지성공")
@@ -1024,15 +1022,67 @@ def SingleAxisEStop(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+def SingleAxisEStop1(request):
+    users = User.objects.all()
+    AxmMoveEStop = loaddll['AxmMoveEStop']
+
+    AxmMoveEStop.argtypes=[c_long]
+    res = AxmMoveEStop(1)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+def SingleAxisEStop2(request):
+    users = User.objects.all()
+    AxmMoveEStop = loaddll['AxmMoveEStop']
+
+    AxmMoveEStop.argtypes=[c_long]
+    res = AxmMoveEStop(2)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+def SingleAxisEStop3(request):
+    users = User.objects.all()
+    AxmMoveEStop = loaddll['AxmMoveEStop']
+
+    AxmMoveEStop.argtypes=[c_long]
+    res = AxmMoveEStop(3)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+
 def SingleAxisSStop(request):
     users = User.objects.all()
     AxmMoveSStop = loaddll['AxmMoveSStop']
 
-    if request.method == 'POST':
-        lAxisNo = int(request.POST['lAxisNo'])
-
     AxmMoveSStop.argtypes=[c_long]
-    res = AxmMoveSStop(lAxisNo)
+    res = AxmMoveSStop(0)
 
     if res == 0000:
         print("정지성공")
@@ -1045,6 +1095,59 @@ def SingleAxisSStop(request):
         
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+def SingleAxisSStop1(request):
+    users = User.objects.all()
+    AxmMoveSStop = loaddll['AxmMoveSStop']
+
+    AxmMoveSStop.argtypes=[c_long]
+    res = AxmMoveSStop(1)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+        
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+def SingleAxisSStop2(request):
+    users = User.objects.all()
+    AxmMoveSStop = loaddll['AxmMoveSStop']
+
+    AxmMoveSStop.argtypes=[c_long]
+    res = AxmMoveSStop(2)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+        
+    return render(request, 'control/ready_to_control.html',{'users':users})
+
+def SingleAxisSStop3(request):
+    users = User.objects.all()
+    AxmMoveSStop = loaddll['AxmMoveSStop']
+
+    AxmMoveSStop.argtypes=[c_long]
+    res = AxmMoveSStop(3)
+
+    if res == 0000:
+        print("정지성공")
+    elif res == 4053:
+        print("AXT_RT_MOTION_NOT_INITIAL_AXIS_NO : 해당 축 모션 초기화 실패")   
+    elif res == 4101:
+        print("AXT_RT_MOTION_INVALID_AXIS_NO : 해당 축이 존재하지 않음") 
+    else:
+        print("왠지 모르지만 정지가 안됨:",res)
+        
+    return render(request, 'control/ready_to_control.html',{'users':users})
 ################################# (input)테스트해볼 다축구동 함수 ###############################
 
 multiaxis=[]

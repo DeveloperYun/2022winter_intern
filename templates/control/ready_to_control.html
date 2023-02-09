@@ -23,11 +23,11 @@
                 const box = document.getElementById("box");
                 const newform = document.createElement('div');
                 count = count + 1;
-                newform.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
-                                     <input required type='number' name='dPos' id='dPos${count}' placeholder='구동거리' ; style='width:70px;'> \
-                                     <input required type='number' name='dVel' id='dVel${count}' placeholder='속도' ; style='width:70px;'> \
-                                     <input required type='number' name='dAccel' id='dAccel${count}' placeholder='가속도' ; style='width:70px;'> \
-                                     <input required type='number' name='dDecel' id='dDecel${count}' placeholder='감속도' ; style='width:70px;'> \
+                newform.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px; height:30px;'> \
+                                     <input required type='number' name='dPos' id='dPos${count}' placeholder='구동거리' ; style='width:70px; height:30px;'> \
+                                     <input required type='number' name='dVel' id='dVel${count}' placeholder='속도' ; style='width:70px; height:30px;'> \
+                                     <input required type='number' name='dAccel' id='dAccel${count}' placeholder='가속도' ; style='width:70px; height:30px;'> \
+                                     <input required type='number' name='dDecel' id='dDecel${count}' placeholder='감속도' ; style='width:70px; height:30px;'> \
                                      <input type='button' value='삭제' onclick='remove(this)'>`
                 box.appendChild(newform);
             }
@@ -37,7 +37,7 @@
                 const box2 = document.getElementById("box2");
                 const newform2 = document.createElement('div');
                 count = count + 1;
-                newform2.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
+                newform2.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px; height:30px;'> \
                                      <input type='button' value='삭제' onclick='remove2(this)'>`
                 box2.appendChild(newform2);
             }
@@ -47,7 +47,7 @@
                 const box3 = document.getElementById("box3");
                 const newform3 = document.createElement('div');
                 count = count + 1;
-                newform3.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px;'> \
+                newform3.innerHTML = `<input required type='number' name='lAxisNo' id=lAxisNo${count} placeholder='채널번호' ; style='width:70px; height:30px;'> \
                                      <input type='button' value='삭제' onclick='remove3(this)'>`
                 box3.appendChild(newform3);
             }
@@ -240,11 +240,11 @@
                                         <form id="AxmMovePos" action="{% url 'control:AxmMovePos' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px; height:30px;">
                                                 <input type="submit" value="제출">
                                             </div>
                                         </form>
@@ -257,11 +257,11 @@
                                         <form id="AxmMoveStartPos" action="{% url 'control:AxmMoveStartPos' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px;">
-                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dPos" id="dPos" placeholder="구동거리"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px; height:30px;">
                                                 <input type="submit" value="제출">
                                             </div>
                                         </form>
@@ -275,10 +275,10 @@
                                         <form id="AxmMoveVel" action="{% url 'control:AxmMoveVel' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white" style="display:inline;">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px;">
-                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px;">
-                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dVel" id="dVel" placeholder="속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dAccel" id="dAccel" placeholder="가속도"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px; height:30px;">
                                                 <input type="submit" value="제출">
                                             </div>
                                         </form>     
@@ -291,7 +291,7 @@
                                         <form id="HomeSearchMove" action="{% url 'control:HomeSearchMove' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
                                                 <input type="submit" value="제출">
                                             </div>
                                         </form>
@@ -304,8 +304,8 @@
                                         <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px;">
+                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
+                                                <input required type="number" name="dDecel" id="dDecel" placeholder="감속도"; style="width:70px; height:30px;">
                                                 <input type="submit" value="제출">
                                             </div>
                                         </form>
@@ -318,8 +318,25 @@
                                         <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input type="submit" value="제출">
+                                                <input type="submit" value="0축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisEStop1" action="{% url 'control:SingleAxisEStop1' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="1축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisEStop2" action="{% url 'control:SingleAxisEStop2' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="2축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisEStop3" action="{% url 'control:SingleAxisEStop3' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="3축">
                                             </div>
                                         </form>
                                     </div>
@@ -331,8 +348,25 @@
                                         <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
-                                                <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
-                                                <input type="submit" value="제출">
+                                                <input type="submit" value="0축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop1" action="{% url 'control:SingleAxisSStop1' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="1축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop2" action="{% url 'control:SingleAxisSStop2' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="2축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop3" action="{% url 'control:SingleAxisSStop3' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="3축">
                                             </div>
                                         </form>
                                     </div>
@@ -370,7 +404,7 @@
                                     <form id="AxmMoveStartPos2" action="{% url 'control:AxmMoveStartPos2' %}" method="POST">
                                         {% csrf_token %}
                                         <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
                                             <input type="submit" value="제출">
                                         </div>
                                     </form>
@@ -383,7 +417,7 @@
                                     <form id="AxmMoveVel2" action="{% url 'control:AxmMoveVel2' %}" method="POST">
                                         {% csrf_token %}
                                         <div class="small text-white">
-                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px;">
+                                            <input required type="number" name="lAxisNo" id="lAxisNo" placeholder="채널번호"; style="width:70px; height:30px;">
                                             <input type="submit" value="제출">
                                         </div>
                                     </form>
@@ -606,7 +640,85 @@
                 xhr.send(data);
             });
 
+            document.getElementById("SingleAxisEStop1").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisEStop2").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisEStop3").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
             document.getElementById("SingleAxisSStop").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisSStop1").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisSStop2").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+
+            document.getElementById("SingleAxisSStop3").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;
