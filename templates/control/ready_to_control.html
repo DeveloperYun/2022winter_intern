@@ -178,7 +178,30 @@
                             </div>
                         </form>
                     </li>
-                    <!-- TODO: 각 축의 상태정보 띄우기 -->
+
+                    <!--TODO:TODO:TODO:TODO:TODO: 각 축의 원점탐색 진행률 표시 -->
+                    <div>
+                        <div style="flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
+                            <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
+                            <h2 id="home0" style="color:white; display:inline-block">{{text}}</h2>
+                        </div>
+                        <div style="margin-right: 1em;">
+                            <h2 style="color:white; display:inline-block; margin:0">1축 : </h2>
+                            <h2 id="home1" style="color:white; display:inline-block">{{text}}</h2>
+                        </div>
+                        <div style="margin-right: 1em;">
+                            <h2 style="color:white; display:inline-block; margin:0">2축 : </h2>
+                            <h2 id="home2" style="color:white; display:inline-block">{{text}}</h2>
+                        </div>
+                        <div style="margin-right: 1em;">
+                            <h2 style="color:white; display:inline-block; margin:0">3축 : </h2>
+                            <h2 id="home3" style="color:white; display:inline-block">{{text}}</h2>
+                        </div>
+                    </div>
+
+                    </div>
+
+                    <!--: 각 축의 상태정보 띄우기 -->
                     <ul>
                         {% for status in result %}
                             <li for="codepen" style="color: white; font-size: 20px; text-align: center; margin-bottom:4px">{{status}}</li>
@@ -298,7 +321,7 @@
                                     </div>
 
                                     <button class="accordion">
-                                        <span>Single Axis : Stop Decel Use Stop</span>
+                                        <span>Single Axis : 감속도 설정 정지</span>
                                     </button>
                                     <div class="panel">
                                         <form id="SingleAxisStop" action="{% url 'control:SingleAxisStop' %}" method="POST">
@@ -312,7 +335,7 @@
                                     </div>
                             
                                     <button class="accordion">
-                                        <span>Single Axis : Emergency Stop</span>
+                                        <span>Single Axis : 긴급 정지</span>
                                     </button>
                                     <div class="panel">
                                         <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
@@ -342,7 +365,7 @@
                                     </div>
                                 
                                     <button class="accordion">
-                                        <span>Single Axis : Slow Down Stop</span>
+                                        <span>Single Axis : 감속 정지</span>
                                     </button>
                                     <div class="panel">
                                         <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
@@ -586,7 +609,7 @@
             }
         </script>
 
-        <!-- 정지 새로고침 방지 -->
+        <!-- 정지, 원점탐색 새로고침 방지 -->
         <script>
             document.getElementById("sstop").addEventListener("submit", function(event) {
                 event.preventDefault();
@@ -730,7 +753,19 @@
                 
                 xhr.send(data);
             });
-        </script>
 
+            document.getElementById("HomeSearchMove").addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                var form = event.target;
+                var data = new FormData(form);
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open(form.method, form.action, true);
+                xhr.setRequestHeader('X-CSRFToken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+                
+                xhr.send(data);
+            });
+        </script>
     </body>
 </html>

@@ -1003,7 +1003,6 @@ def SingleAxisStop(request):
     return render(request, 'control/ready_to_control.html',{'users':users})
 
 
-#TODO: 축별 정지기능 버튼식으로 교체
 def SingleAxisEStop(request):
     users = User.objects.all()
     AxmMoveEStop = loaddll['AxmMoveEStop']
@@ -1367,7 +1366,6 @@ class GraphConsumer(WebsocketConsumer):
 
         AxmStatusReadVel = loaddll['AxmStatusReadVel'] # 속도 값의 단위는 unit/sec
         AxmStatusReadInMotion = loaddll['AxmStatusReadInMotion']
-
         upStatus = c_long()
         dVelocity = c_double()
         upStatus2 = c_long()
@@ -1376,6 +1374,82 @@ class GraphConsumer(WebsocketConsumer):
         dVelocity3 = c_double()
         upStatus4 = c_long()
         dVelocity4 = c_double()
+
+        #TODO:TODO:TODO:TODO:TODO:TODO: 원점탐색 퍼센테이지 TODO:TODO:TODO:TODO:TODO:TODO:
+        AxmHomeGetRate = loaddll['AxmHomeGetRate']
+        AxmHomeSetResult = loaddll['AxmHomeSetResult']
+        uHomeStepNumber,uHomeMainStepNumber,uHomeResult = c_ulong(), c_ulong(), c_ulong()
+        uHomeStepNumber1,uHomeMainStepNumber1,uHomeResult1 = c_ulong(), c_ulong(), c_ulong()
+        uHomeStepNumber2,uHomeMainStepNumber2,uHomeResult2 = c_ulong(), c_ulong(), c_ulong()
+        uHomeStepNumber3,uHomeMainStepNumber3,uHomeResult3 = c_ulong(), c_ulong(), c_ulong()
+
+        axiscount = Axis_counter()
+        if axiscount == 1: #축이 한개인 경우
+            while True:
+                AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
+                if uHomeResult.value == 2: # 원점 검색 진행 중이라면
+                    AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+                    print("전송중인 현재 원점 검색 진행률 : ",uHomeStepNumber.value," %")
+                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
+                    sleep(1)
+                else:
+                    break
+        elif axiscount == 2: #축이 2개인 경우
+            while True:
+                AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
+                AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
+                if uHomeResult.value == 2 or uHomeResult1.value == 2: # 원점 검색 진행 중이라면
+                    AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+                    AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
+                    print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
+                    print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
+                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
+                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
+                    sleep(1)
+                else:
+                    break
+        elif axiscount == 3: #축이 3개인 경우
+            while True:
+                AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
+                AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
+                AxmHomeSetResult2 = AxmHomeSetResult(2,pointer(uHomeResult2)) # 1축의 상태를 읽고
+                if uHomeResult.value == 2 or uHomeResult1.value == 2 or uHomeResult2.value == 2: # 원점 검색 진행 중이라면
+                    AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+                    AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
+                    AxmHomeGetRate(2,pointer(uHomeMainStepNumber2),pointer(uHomeStepNumber2))
+                    print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
+                    print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
+                    print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
+                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
+                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
+                    self.send(json.dumps({'HomeSetResult2': uHomeStepNumber2.value}))
+                    sleep(1)
+                else:
+                    break
+        elif axiscount == 4: #축이 4개인 경우
+            while True:
+                AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
+                AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
+                AxmHomeSetResult2 = AxmHomeSetResult(2,pointer(uHomeResult2)) # 2축의 상태를 읽고
+                AxmHomeSetResult3 = AxmHomeSetResult(3,pointer(uHomeResult2)) # 3축의 상태를 읽고
+                if uHomeResult.value == 2 or uHomeResult1.value == 2 or uHomeResult2.value == 2 or uHomeResult3.value == 2: # 원점 검색 진행 중이라면
+                    AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
+                    AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
+                    AxmHomeGetRate(2,pointer(uHomeMainStepNumber2),pointer(uHomeStepNumber2))
+                    AxmHomeGetRate(3,pointer(uHomeMainStepNumber3),pointer(uHomeStepNumber3))
+                    print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
+                    print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
+                    print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
+                    print("전송중인 현재 3축 검색 진행률 : ",uHomeStepNumber3.value," %")
+                    self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
+                    self.send(json.dumps({'HomeSetResult1': uHomeStepNumber1.value}))
+                    self.send(json.dumps({'HomeSetResult2': uHomeStepNumber2.value}))
+                    self.send(json.dumps({'HomeSetResult3': uHomeStepNumber3.value}))
+                    sleep(1)
+                else:
+                    break
+            
+        #TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
 
         # 다축 구동
         # 축 별 속도를 html로 보내서 각각 보여준다.
