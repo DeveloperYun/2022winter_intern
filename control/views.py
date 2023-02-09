@@ -1376,6 +1376,7 @@ class GraphConsumer(WebsocketConsumer):
         dVelocity4 = c_double()
 
         #TODO:TODO:TODO:TODO:TODO:TODO: 원점탐색 퍼센테이지 TODO:TODO:TODO:TODO:TODO:TODO:
+        '''
         AxmHomeGetRate = loaddll['AxmHomeGetRate']
         AxmHomeSetResult = loaddll['AxmHomeSetResult']
         uHomeStepNumber,uHomeMainStepNumber,uHomeResult = c_ulong(), c_ulong(), c_ulong()
@@ -1463,6 +1464,7 @@ class GraphConsumer(WebsocketConsumer):
                         break
         else:
             print("축 없음")
+        '''
         #TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
 
         # 다축 구동

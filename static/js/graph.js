@@ -163,10 +163,6 @@ socket.onmessage = function(e){
     document.querySelector('#app2').innerText = djangoData.veldata3;
     document.querySelector('#app3').innerText = djangoData.veldata4;
 
-    document.querySelector('#home0').innerText = djangoData.HomeSetResult;
-    document.querySelector('#home1').innerText = djangoData.HomeSetResult1;
-    document.querySelector('#home2').innerText = djangoData.HomeSetResult2;
-    document.querySelector('#home3').innerText = djangoData.HomeSetResult3;    
 }
 
 
