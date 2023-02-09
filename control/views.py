@@ -1,7 +1,4 @@
-import gc
-from random import randint
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import *
 from ctypes import *
 from channels.generic.websocket import WebsocketConsumer
@@ -9,10 +6,6 @@ import json
 from time import sleep
 from django.contrib.auth.models import User
 
-'''
-DWORD = unsigned long int
-python int == c long
-'''
 loaddll = PyDLL('./AXL.dll') # 불러오기 성공
 axis = 0
 
@@ -195,7 +188,6 @@ def get_axis_status(axis):
         #print(isControl, " : 제어 가능")
         return True
 
-#TODO: 장착된 축들의 상태를 화면에 출력해줄 것
 def show_boards():
     axis_count = Axis_counter() # 축의 개수 
     response = []
@@ -1020,6 +1012,7 @@ def AxmMoveSStop(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+# 감속도 설정 정지
 def SingleAxisStop(request):
     users = User.objects.all()
     AxmMoveStop = loaddll['AxmMoveStop']
@@ -1042,7 +1035,7 @@ def SingleAxisStop(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
-
+# 축 별로 긴급 정지
 def SingleAxisEStop(request):
     users = User.objects.all()
     AxmMoveEStop = loaddll['AxmMoveEStop']
@@ -1115,7 +1108,7 @@ def SingleAxisEStop3(request):
 
     return render(request, 'control/ready_to_control.html',{'users':users})
 
-
+# 축 별로 감속 정지
 def SingleAxisSStop(request):
     users = User.objects.all()
     AxmMoveSStop = loaddll['AxmMoveSStop']
@@ -1297,6 +1290,7 @@ def AxmMoveStartMultiPos(request):
     
     return render(request, 'control/ready_to_control.html',{'users':users})
 
+#Default value
 def AxmMoveStartMultiPos2(request): 
     users = User.objects.all()
     multiaxis.clear()
@@ -1395,7 +1389,7 @@ def AxmMoveStartMultiPos2(request):
         print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
     
     return render(request, 'control/ready_to_control.html',{'users':users})
-################################# (output)테스트해볼 2가지 함수 #################################
+################################# 장고 채널을 활용한 실시간 그래프 consumer #################################
 veldata = 0
 
 # channels를 통한 소켓 통신(백엔드 to 프론트엔드)
@@ -1414,98 +1408,6 @@ class GraphConsumer(WebsocketConsumer):
         dVelocity3 = c_double()
         upStatus4 = c_long()
         dVelocity4 = c_double()
-
-        #TODO:TODO:TODO:TODO:TODO:TODO: 원점탐색 퍼센테이지 TODO:TODO:TODO:TODO:TODO:TODO:
-        '''
-        AxmHomeGetRate = loaddll['AxmHomeGetRate']
-        AxmHomeSetResult = loaddll['AxmHomeSetResult']
-        uHomeStepNumber,uHomeMainStepNumber,uHomeResult = c_ulong(), c_ulong(), c_ulong()
-        uHomeStepNumber1,uHomeMainStepNumber1,uHomeResult1 = c_ulong(), c_ulong(), c_ulong()
-        uHomeStepNumber2,uHomeMainStepNumber2,uHomeResult2 = c_ulong(), c_ulong(), c_ulong()
-        uHomeStepNumber3,uHomeMainStepNumber3,uHomeResult3 = c_ulong(), c_ulong(), c_ulong()
-
-        axiscount = Axis_counter()
-        if axiscount > 0:
-            while True:
-                if axiscount == 1: #축이 한개인 경우
-                    while True:
-                        AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
-                        if uHomeResult.value == 2: # 원점 검색 진행 중이라면
-                            AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
-                            print("전송중인 현재 원점 검색 진행률 : ",uHomeStepNumber.value," %")
-                            self.send(json.dumps({'HomeSetResult': uHomeStepNumber.value}))
-                            sleep(1)
-                        else:
-                            break
-                if axiscount == 2: #축이 2개인 경우
-                    while True:
-                        AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
-                        AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
-                        if uHomeResult.value == 2 or uHomeResult1.value == 2: # 원점 검색 진행 중이라면
-                            AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
-                            AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
-                            print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
-                            print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
-                            
-                            message = {
-                                'HomeSetResult': uHomeStepNumber.value,
-                                'HomeSetResult1': uHomeStepNumber1.value
-                            }
-                            self.send(text_data=json.dumps(message))
-                            sleep(1)
-                        else:
-                            break
-                if axiscount == 3: #축이 3개인 경우
-                    while True:
-                        AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
-                        AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
-                        AxmHomeSetResult2 = AxmHomeSetResult(2,pointer(uHomeResult2)) # 1축의 상태를 읽고
-                        if uHomeResult.value == 2 or uHomeResult1.value == 2 or uHomeResult2.value == 2: # 원점 검색 진행 중이라면
-                            AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
-                            AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
-                            AxmHomeGetRate(2,pointer(uHomeMainStepNumber2),pointer(uHomeStepNumber2))
-                            print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
-                            print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
-                            print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
-                            message = {
-                                'HomeSetResult': uHomeStepNumber.value,
-                                'HomeSetResult1': uHomeStepNumber1.value,
-                                'HomeSetResult2': uHomeStepNumber2.value
-                            }
-                            self.send(text_data=json.dumps(message))
-                            sleep(1)
-                        else:
-                            break
-                if axiscount == 4: #축이 4개인 경우
-                    AxmHomeSetResult0 = AxmHomeSetResult(0,pointer(uHomeResult)) # 0축의 상태를 읽고
-                    AxmHomeSetResult1 = AxmHomeSetResult(1,pointer(uHomeResult1)) # 1축의 상태를 읽고
-                    AxmHomeSetResult2 = AxmHomeSetResult(2,pointer(uHomeResult2)) # 2축의 상태를 읽고
-                    AxmHomeSetResult3 = AxmHomeSetResult(3,pointer(uHomeResult2)) # 3축의 상태를 읽고
-
-                        
-                    if uHomeResult.value == 2 or uHomeResult1.value == 2 or uHomeResult2.value == 2 or uHomeResult3.value == 2: # 원점 검색 진행 중이라면
-                        AxmHomeGetRate(0,pointer(uHomeMainStepNumber),pointer(uHomeStepNumber))
-                        AxmHomeGetRate(1,pointer(uHomeMainStepNumber1),pointer(uHomeStepNumber1))
-                        AxmHomeGetRate(2,pointer(uHomeMainStepNumber2),pointer(uHomeStepNumber2))
-                        AxmHomeGetRate(3,pointer(uHomeMainStepNumber3),pointer(uHomeStepNumber3))
-                        print("전송중인 현재 0축 검색 진행률 : ",uHomeStepNumber.value," %")
-                        print("전송중인 현재 1축 검색 진행률 : ",uHomeStepNumber1.value," %")
-                        print("전송중인 현재 2축 검색 진행률 : ",uHomeStepNumber2.value," %")
-                        print("전송중인 현재 3축 검색 진행률 : ",uHomeStepNumber3.value," %")
-                        message = {
-                            'HomeSetResult': uHomeStepNumber.value,
-                            'HomeSetResult1': uHomeStepNumber1.value,
-                            'HomeSetResult2': uHomeStepNumber2.value,
-                            'HomeSetResult3': uHomeStepNumber3.value
-                        }
-                        self.send(text_data=json.dumps(message))
-                        sleep(1)
-                    else:
-                        break
-        else:
-            print("축 없음")
-        '''
-        #TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:TODO:
 
         # 다축 구동
         # 축 별 속도를 html로 보내서 각각 보여준다.
