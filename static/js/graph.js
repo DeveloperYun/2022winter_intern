@@ -79,7 +79,9 @@ var graphData = {
             xAxes:[{
                 ticks: {
                     fontColor: '#5e6a81',
-                    fontSize: 15
+                    fontSize: 15,
+                    min: 0,
+                    max: 500
                 }
             }]
         },
@@ -126,7 +128,7 @@ socket.onmessage = function(e){
     var newx = graphData.data.labels; // x축 레이블은 하나
     var axis = counter
     
-    if(counter>=1000){
+    if(counter>=800){
         if(newGraphData0.length > 0){
             newGraphData0.shift();
         }
