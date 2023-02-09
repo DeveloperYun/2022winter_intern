@@ -181,10 +181,13 @@
 
                     <!--TODO:TODO:TODO:TODO:TODO: 각 축의 원점탐색 진행률 표시 -->
                     
-                    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
-                        <h2 style="color:white; display:inline-block; margin:0">원점탐색 : </h2>
-                        <h2 id="app" style="color:white; display:inline-block">{{homesearch}}</h2>
+                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%">
+                        <div style="margin-right: 1em;">
+                          <h2 style="color:white; display:inline-block; margin:0">원점탐색</h2>
+                          <h2 id="" style="color:white; display:inline-block">{{homesearch}}</h2>
+                        </div>
                     </div>
+                      
                     <!--: 각 축의 상태정보 띄우기 -->
                     <ul>
                         {% for status in result %}

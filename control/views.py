@@ -642,7 +642,7 @@ def HomeSearchMove(request): # 원점찾기(완성)
 
 
 
-    return render(request, 'control/ready_to_control.html', {'users':users}, {'homesearch':result})
+    return render(request, 'control/ready_to_control.html', {'users':users,'homesearch':result})
 
 def AxmMovePos(request): # 위치구동 - 종점탈출(완성)
     users = User.objects.all()
