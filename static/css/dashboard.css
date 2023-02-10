@@ -65,7 +65,6 @@ body {
   background: radial-gradient(circle, #051340 1%, #040f32 100%);
 }
 
-
 .app-logo {
   display: flex;
   align-items: center;
@@ -73,6 +72,7 @@ body {
   margin-right: 16px;
   padding: 0 24px;
 }
+
 .app-logo span {
   color: #fff;
   display: inline-block;
@@ -129,9 +129,11 @@ button {
   align-items: center;
   position: relative;
 }
+
 .nav-list-link svg {
   margin-right: 12px;
 }
+
 .nav-list-link:after {
   content: "";
   height: 100%;
@@ -143,17 +145,6 @@ button {
   border-radius: 2px;
   opacity: 0;
   height: 0;
-}
-
-.open-right-area {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  border-radius: 4px;
-  height: 40px;
-  width: 40px;
-  padding: 0;
 }
 
 .main-header-line {
@@ -245,24 +236,6 @@ button {
   padding: 8px;
 }
 
-.chart-info-wrapper {
-  flex-shrink: 0;
-  flex-basis: 120px;
-}
-.chart-info-wrapper h2 {
-  color: var(--secondary-color);
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-}
-.chart-info-wrapper span {
-  color: var(--main-color);
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
-}
-
 .chart-svg {
   position: relative;
   max-width: 90px;
@@ -284,38 +257,6 @@ button {
           animation: progress 1s ease-out forwards;
 }
 
-.circular-chart.red .circle {
-  stroke: #f33e3e;
-}
-.circular-chart.red .circle-bg {
-  stroke: #776547;
-}
-.circular-chart.orange .circle {
-  stroke: #ff9f00;
-}
-.circular-chart.orange .circle-bg {
-  stroke: #776547;
-}
-.circular-chart.blue .circle {
-  stroke: #00cfde;
-}
-.circular-chart.blue .circle-bg {
-  stroke: #557b88;
-}
-.circular-chart.pink .circle {
-  stroke: #ff7dcb;
-}
-.circular-chart.pink .circle-bg {
-  stroke: #6f5684;
-}
-
-.percentage {
-  fill: #fff;
-  font-size: 0.5em;
-  text-anchor: middle;
-  font-weight: 400;
-}
-
 @-webkit-keyframes progress {
   0% {
     stroke-dasharray: 0 100;
@@ -327,6 +268,7 @@ button {
     stroke-dasharray: 0 100;
   }
 }
+
 .chart-container-header {
   padding: 20px;
   padding-left: 0;
@@ -344,71 +286,6 @@ button {
   color: var(--app-logo);
   font-size: 12px;
   line-height: 16px;
-}
-
-.acquisitions-bar {
-  width: 100%;
-  height: 4px;
-  border-radius: 4px;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  display: flex;
-}
-
-.bar-progress {
-  height: 4px;
-  display: inline-block;
-}
-.bar-progress.applications {
-  background-color: #ff7dcb;
-}
-.bar-progress.shortlisted {
-  background-color: #00cfde;
-}
-.bar-progress.on-hold {
-  background-color: #fdac42;
-}
-.bar-progress.rejected {
-  background-color: #ff5c5c;
-}
-
-.progress-bar-info {
-  display: flex;
-  align-items: center;
-  margin-top: 8px;
-  width: 100%;
-}
-
-.progress-color {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-.progress-color.applications {
-  background-color: #ff7dcb;
-}
-.progress-color.shortlisted {
-  background-color: #00cfde;
-}
-.progress-color.on-hold {
-  background-color: #fdac42;
-}
-.progress-color.rejected {
-  background-color: #ff5c5c;
-}
-
-.progress-type {
-  color: var(--secondary-color);
-  font-size: 12px;
-  line-height: 16px;
-}
-
-.progress-amount {
-  color: var(--secondary-color);
-  font-size: 12px;
-  line-height: 16px;
-  margin-left: auto;
 }
 
 .applicant-line {
@@ -505,6 +382,7 @@ button {
     margin-top: 0;
   }
 }
+
 @media screen and (max-width: 920px) {
   .menu-button {
     display: flex;
@@ -525,6 +403,7 @@ button {
     display: flex;
   }
 }
+
 @media screen and (max-width: 650px) {
   .chart-row.three {
     flex-direction: column;
@@ -539,6 +418,7 @@ button {
     min-width: 40px;
   }
 }
+
 @media screen and (max-width: 520px) {
   .chart-row.two .small {
     flex-direction: column;
@@ -570,14 +450,7 @@ button {
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-/* Modal Content/Box */
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 50%; /* Could be more or less, depending on screen size */
-}
+
 /* The Close Button */
 .close {
   color: #aaa;
@@ -596,10 +469,6 @@ button {
   color: white;
   font-size: xx-large;
 }
-
-
-
-
 
 * {
   box-sizing: border-box;
@@ -622,6 +491,7 @@ button {
   transition: all 500ms ease;
   box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2) inset;
 }
+
 .checkbox + label:before {
   content: "Off";
   width: 50px;
@@ -654,7 +524,6 @@ button {
   left: 150px;
 }
 
-
 .accordion {
   background-color: #01081f;
   color: white;
@@ -662,7 +531,6 @@ button {
   padding: 18px;
   width: 100%;
   border:#fff 1px solid;
-  
   text-align: left;
   outline: none;
   font-size: 20px;
