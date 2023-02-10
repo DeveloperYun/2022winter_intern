@@ -112,7 +112,7 @@ var graphData = {
 // 라이브러리에 대한 유형 정보(이 경우 Chart.js)가 프로젝트에 포함되지 않았거나 유형 정보가 올바르지 않거나 오래된 경우에 발생할 수 있습니다.
 var myChart = new Chart(ctx, graphData);
 var socket = new WebSocket('ws://localhost:8000/ws/control/'); //해당 서버에 대한 웹소켓 연결 설정
-
+// http://172.16.10.26:8000/
 var counter = 0
 //서버로부터 전송받은 데이터
 //onmessage 이벤트 트리거시 차트의 데이터와 레이블을 업데이트하고 차트에서 업데이트 메소드를 호출
