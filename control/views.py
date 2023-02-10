@@ -324,24 +324,33 @@ def signal_read_servo_alarm(axis):
 
     res = AxmSignalReadServoAlarm(axis, pointer(upStatus))
     if res == 0000:
-        print("0축 알람 신호 : ", "활성화" if upStatus.value==0 else "비활성화")
+        print(axis,"축 알람 신호 : ", "활성화" if upStatus.value==0 else "비활성화")
     else:
         print("알람 신호를 알 수 없음. ErrorCode : ",res)
+    return upStatus
 
 # 알람 발생 원인 제거 후 현재 알람 상태 벗어남
+# servo pack의 종류와 알람의 종류에 따라 clear 되지 않을 수도 있다.
 def signal_servo_alarm_Reset(axis):
     AxmSignalServoAlarmReset = loaddll['AxmSignalServoAlarmReset']
+    status = signal_read_servo_alarm(axis)
 
-    # 0축에 Servo Alarm Reset
-    resetalarm = AxmSignalServoAlarmReset(axis,1) #ENABLE = 1
-    if resetalarm == 0000:
-        print("alarm reset 성공")
-    elif resetalarm == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif resetalarm == 4101:
-        print("해당 축이 존재하지 않음")
+    # 축에 Servo Alarm Reset
+    if status.value == 0: # 알람이 비활성화 (이게 맞음)
+        pass
+    elif status.value == 1: # 알람이 활성화된 상태(축 동작 안함)이므로 off 해줘야함
+        resetalarm = AxmSignalServoAlarmReset(axis,1) #ENABLE = 1
+        if resetalarm == 0000:
+            print(axis,"alarm reset 성공")
+        elif resetalarm == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif resetalarm == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 알람 리셋 실패 : ",resetalarm)
     else:
-        print("뭔지 모를 이유로 알람 리셋 실패")
+        print("alarm status : ",status.value)
+    
 
 # 지정 축의 외부 센서 및 모터 관련 신호들의 상태를 반환한다
 def status_read_sensor(axis):
@@ -582,7 +591,7 @@ def HomeSearchMove(request): # 원점찾기(완성)
     set_startVel(lAxisNo) #axis 초기속도 설정
     #signal_servo_on(lAxisNo) #servo on
 
-    signal_read_servo_alarm(lAxisNo) # 현재 알람 상태 확인
+    #signal_read_servo_alarm(lAxisNo) # 현재 알람 상태 확인
     status_read_sensor(lAxisNo) # 현재 센서 상태 확인 (262179)
     signal_servo_alarm_Reset(lAxisNo) # 알람 발생 원인 제거 후 현재 알람 상태 벗어남
 
