@@ -208,6 +208,7 @@ def show_boards():
 
     return response
 
+'''
 # 라이브러리 종료
 def close_lib():
     AxlClose = loaddll['AxlClose']
@@ -215,7 +216,7 @@ def close_lib():
         print("라이브러리가 종료됨 : ",AxlClose())
     else:
         print("라이브러리가 종료되지 않음 : ",AxlClose())
- 
+'''
 ##############################  모션 구동의 용어 해설  #################################
 
 # 이건 low 혹은 high를 serve on 으로 받아들이겠다를 셋팅하는 함수이다.
@@ -350,8 +351,8 @@ def signal_servo_alarm_Reset(axis):
             print("뭔지 모를 이유로 알람 리셋 실패 : ",resetalarm)
     else:
         print("alarm status : ",status.value)
-    
 
+'''
 # 지정 축의 외부 센서 및 모터 관련 신호들의 상태를 반환한다
 def status_read_sensor(axis):
     status = c_ulong()
@@ -362,6 +363,7 @@ def status_read_sensor(axis):
         print("센서 감지 상태 : ",status.value)
     else:
         print("센서 상태 읽어올 수 없음")
+'''
 
 # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
 def signal_read_limit(axis):
@@ -452,8 +454,7 @@ def signal_set_limit(axis):
     else:
         print("뭔지 모를 이유로 signal_set_limit 결정 실패. Error: ",res)
 
-#############################################################################################
-##################################### 구동 전처리 함수 #######################################
+####################################### 구동 전처리 함수 #######################################
 
 # 원점 검색(AxmHomeSetMethod, AxmHomeSetVel 로 설정 후 AxmHomeSetStart 호출, 검색시작)
 def mot_set_home_start(axis):
@@ -592,7 +593,7 @@ def HomeSearchMove(request): # 원점찾기(완성)
     #signal_servo_on(lAxisNo) #servo on
 
     #signal_read_servo_alarm(lAxisNo) # 현재 알람 상태 확인
-    status_read_sensor(lAxisNo) # 현재 센서 상태 확인 (262179)
+    #status_read_sensor(lAxisNo) # 현재 센서 상태 확인 (262179)
     signal_servo_alarm_Reset(lAxisNo) # 알람 발생 원인 제거 후 현재 알람 상태 벗어남
 
     signal_set_inpos(lAxisNo) # axis의 inpos 신호 사용 여부 결정(사용안함)
