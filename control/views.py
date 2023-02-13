@@ -231,7 +231,6 @@ def signal_servo_on(request):
 
     level = c_ulong()
 
-
     res_AxmSignalServoOn = AxmSignalServoOn(lAxisNo,1) #  Enable = 1, Disable = 0
     AxmSignalIsServoOn(lAxisNo, pointer(level))
 
@@ -1313,90 +1312,266 @@ def AxmMoveStartMultiPos2(request):
     is_moduleExists() 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     
-    lAxisNo2 = [0,1,2,3] #[1,2,...]
-    dPos2 = [200000, 300000, 250000, 150000]
-    dVel2 = [5000, 2000, 10000, 4500]
-    dAccel2 = [100, 1000, 500, 800]
-    dDecel2 = [100, 1000, 10000, 8000]
+    axiscount = Axis_counter()
+    if axiscount < 2:
+        print("축이",axiscount,"개 이므로 다축구동 대상이 아닙니다")
+        show_alert = True
+        return render(request, 'control/ready_to_control.html',{'users':users, 'show_alert': show_alert})
+    elif axiscount == 2:
+        lAxisNo2 = [0,1] #[1,2,...]
+        dPos2 = [200000, 300000]
+        dVel2 = [5000, 2000]
+        dAccel2 = [100, 100]
+        dDecel2 = [100, 1000]
 
-    for i in range(len(lAxisNo2)):
-        multiaxis.append(lAxisNo2[i])
+        for i in range(len(lAxisNo2)):
+            multiaxis.append(lAxisNo2[i])
 
-    AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
-    AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+        AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+        AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
 
-    for i in range(len(lAxisNo2)):
-        print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+        for i in range(len(lAxisNo2)):
+            print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
 
-        signal_set_limit(lAxisNo2[i])
-        set_moveUnitPerPulse(lAxisNo2[i])
-        set_startVel(lAxisNo2[i])
-        signal_read_limit(lAxisNo2[i])
+            signal_set_limit(lAxisNo2[i])
+            set_moveUnitPerPulse(lAxisNo2[i])
+            set_startVel(lAxisNo2[i])
+            signal_read_limit(lAxisNo2[i])
 
-        res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
-        res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+            res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+            res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
 
-        #signal_servo_on(lAxisNo2[i])
+            #signal_servo_on(lAxisNo2[i])
 
-        mot_set_abs_mode(lAxisNo2[i])
-        mot_set_profile_mode(lAxisNo2[i])
+            mot_set_abs_mode(lAxisNo2[i])
+            mot_set_profile_mode(lAxisNo2[i])
 
-    if res_AxmStatusSetActPos == 0000:
-        print("AxmStatusSetActPos 함수 실행 성공")
-    elif res_AxmStatusSetActPos == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif res_AxmStatusSetActPos == 4101:
-        print("해당 축이 존재하지 않음")
-    else:
-        print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
+        if res_AxmStatusSetActPos == 0000:
+            print("AxmStatusSetActPos 함수 실행 성공")
+        elif res_AxmStatusSetActPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetActPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
 
-    if res_AxmStatusSetCmdPos == 0000:
-        print("AxmStatusSetCmdPos 함수 실행 성공")
-    elif res_AxmStatusSetCmdPos == 4053:
-        print("해당 축 모션 초기화 실패")
-    elif res_AxmStatusSetCmdPos == 4101:
-        print("해당 축이 존재하지 않음")
-    else:
-        print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+        if res_AxmStatusSetCmdPos == 0000:
+            print("AxmStatusSetCmdPos 함수 실행 성공")
+        elif res_AxmStatusSetCmdPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetCmdPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
 
-    def to_c_array(py_list):
-        arr = (c_int * len(py_list))(*py_list)
-        return arr
+        def to_c_array(py_list):
+            arr = (c_int * len(py_list))(*py_list)
+            return arr
 
-    def to_c_array2(py_list):
-        arr = (c_double * len(py_list))(*py_list)
-        return arr
+        def to_c_array2(py_list):
+            arr = (c_double * len(py_list))(*py_list)
+            return arr
 
-    a = to_c_array(lAxisNo2)
-    b = to_c_array2(dPos2)
-    c = to_c_array2(dVel2)
-    d = to_c_array2(dAccel2)
-    e = to_c_array2(dDecel2)
+        a = to_c_array(lAxisNo2)
+        b = to_c_array2(dPos2)
+        c = to_c_array2(dVel2)
+        d = to_c_array2(dAccel2)
+        e = to_c_array2(dDecel2)
 
-    for i in range(len(lAxisNo2)):
-        print(">>>",i,"번 축의 세팅")
-        print("축 : ",a[i], ",위치 : ",b[i],
-              ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
-    print("------------------------------------------------------------")
-    
-    AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
-    AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
-    # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
-    res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
-    
-    
-    if res == 0000:
-        print("AxmMoveStartMultiPos 성공")
-    elif res == 4154:
-        print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
-    elif res == 4201:
-        print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
-    elif res == 4255:
-        print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
-    elif res == 4536:
-        print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
-    else:
-        print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+        for i in range(len(lAxisNo2)):
+            print(">>>",i,"번 축의 세팅")
+            print("축 : ",a[i], ",위치 : ",b[i],
+                ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
+        print("------------------------------------------------------------")
+        
+        AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+        AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
+        # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+        res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+        
+        
+        if res == 0000:
+            print("AxmMoveStartMultiPos 성공")
+        elif res == 4154:
+            print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+        elif res == 4201:
+            print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+        elif res == 4255:
+            print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+        elif res == 4536:
+            print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
+        else:
+            print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+    elif axiscount == 3:
+        lAxisNo2 = [0,1,2] #[1,2,...]
+        dPos2 = [200000, 300000, 250000]
+        dVel2 = [5000, 2000, 10000]
+        dAccel2 = [100, 1000, 500]
+        dDecel2 = [100, 1000, 10000]
+
+        for i in range(len(lAxisNo2)):
+            multiaxis.append(lAxisNo2[i])
+
+        AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+        AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+
+        for i in range(len(lAxisNo2)):
+            print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+
+            signal_set_limit(lAxisNo2[i])
+            set_moveUnitPerPulse(lAxisNo2[i])
+            set_startVel(lAxisNo2[i])
+            signal_read_limit(lAxisNo2[i])
+
+            res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+            res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+
+            #signal_servo_on(lAxisNo2[i])
+
+            mot_set_abs_mode(lAxisNo2[i])
+            mot_set_profile_mode(lAxisNo2[i])
+
+        if res_AxmStatusSetActPos == 0000:
+            print("AxmStatusSetActPos 함수 실행 성공")
+        elif res_AxmStatusSetActPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetActPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
+
+        if res_AxmStatusSetCmdPos == 0000:
+            print("AxmStatusSetCmdPos 함수 실행 성공")
+        elif res_AxmStatusSetCmdPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetCmdPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+
+        def to_c_array(py_list):
+            arr = (c_int * len(py_list))(*py_list)
+            return arr
+
+        def to_c_array2(py_list):
+            arr = (c_double * len(py_list))(*py_list)
+            return arr
+
+        a = to_c_array(lAxisNo2)
+        b = to_c_array2(dPos2)
+        c = to_c_array2(dVel2)
+        d = to_c_array2(dAccel2)
+        e = to_c_array2(dDecel2)
+
+        for i in range(len(lAxisNo2)):
+            print(">>>",i,"번 축의 세팅")
+            print("축 : ",a[i], ",위치 : ",b[i],
+                ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
+        print("------------------------------------------------------------")
+        
+        AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+        AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
+        # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+        res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+        
+        
+        if res == 0000:
+            print("AxmMoveStartMultiPos 성공")
+        elif res == 4154:
+            print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+        elif res == 4201:
+            print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+        elif res == 4255:
+            print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+        elif res == 4536:
+            print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
+        else:
+            print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+    elif axiscount == 4:
+        lAxisNo2 = [0,1,2,3] #[1,2,...]
+        dPos2 = [200000, 300000, 250000, 150000]
+        dVel2 = [5000, 2000, 10000, 4500]
+        dAccel2 = [100, 1000, 500, 800]
+        dDecel2 = [100, 1000, 10000, 8000]
+
+        for i in range(len(lAxisNo2)):
+            multiaxis.append(lAxisNo2[i])
+
+        AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+        AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+
+        for i in range(len(lAxisNo2)):
+            print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+
+            signal_set_limit(lAxisNo2[i])
+            set_moveUnitPerPulse(lAxisNo2[i])
+            set_startVel(lAxisNo2[i])
+            signal_read_limit(lAxisNo2[i])
+
+            res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+            res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+
+            #signal_servo_on(lAxisNo2[i])
+
+            mot_set_abs_mode(lAxisNo2[i])
+            mot_set_profile_mode(lAxisNo2[i])
+
+        if res_AxmStatusSetActPos == 0000:
+            print("AxmStatusSetActPos 함수 실행 성공")
+        elif res_AxmStatusSetActPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetActPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
+
+        if res_AxmStatusSetCmdPos == 0000:
+            print("AxmStatusSetCmdPos 함수 실행 성공")
+        elif res_AxmStatusSetCmdPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetCmdPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+
+        def to_c_array(py_list):
+            arr = (c_int * len(py_list))(*py_list)
+            return arr
+
+        def to_c_array2(py_list):
+            arr = (c_double * len(py_list))(*py_list)
+            return arr
+
+        a = to_c_array(lAxisNo2)
+        b = to_c_array2(dPos2)
+        c = to_c_array2(dVel2)
+        d = to_c_array2(dAccel2)
+        e = to_c_array2(dDecel2)
+
+        for i in range(len(lAxisNo2)):
+            print(">>>",i,"번 축의 세팅")
+            print("축 : ",a[i], ",위치 : ",b[i],
+                ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
+        print("------------------------------------------------------------")
+        
+        AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+        AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
+        # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+        res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+        
+        
+        if res == 0000:
+            print("AxmMoveStartMultiPos 성공")
+        elif res == 4154:
+            print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+        elif res == 4201:
+            print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+        elif res == 4255:
+            print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+        elif res == 4536:
+            print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
+        else:
+            print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
     
     return render(request, 'control/ready_to_control.html',{'users':users})
 ################################# 장고 채널을 활용한 실시간 그래프 consumer #################################
