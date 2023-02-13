@@ -67,7 +67,7 @@ var graphData = {
         scales: {
             yAxes: [{
                 ticks: {
-                    fontColor: '#5e6a81',
+                    fontColor: '#a9b4c7',
                     autoSkip: false,
                     fontSize: 15
                 },
@@ -78,7 +78,7 @@ var graphData = {
             }],
             xAxes:[{
                 ticks: {
-                    fontColor: '#5e6a81',
+                    fontColor: '#a9b4c7',
                     fontSize: 15,
                     min: 0,
                     max: 600
