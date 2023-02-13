@@ -217,6 +217,8 @@ button {
 
 .line-chart {
   width: 100%;
+  overflow-x: auto;
+
 }
 
 .chart-container {
@@ -416,6 +418,56 @@ button {
   .chart-svg {
     min-height: 60px;
     min-width: 40px;
+  }
+}
+
+/*TODO: 그래프 사이즈 맞춤*/
+@media screen and (max-width: 640px) {
+  .line-chart {
+    width: 100%;
+  }
+  .chart-row.three {
+    flex-direction: column;
+  }
+
+  .chart-row.three .chart-container-wrapper {
+    width: 100%;
+  }
+  canvas {
+    height: 20vh;
+    width: 80vw;
+  }
+}
+@media screen and (max-width: 600px) {
+  .line-chart {
+    width: 100%;
+  }
+  .chart-row.three {
+    flex-direction: column;
+  }
+
+  .chart-row.three .chart-container-wrapper {
+    width: 100%;
+  }
+  canvas {
+    height: 20vh;
+    width: 70vw;
+  }
+}
+@media screen and (max-width: 500px) {
+  .line-chart {
+    width: 100%;
+  }
+  .chart-row.three {
+    flex-direction: column;
+  }
+
+  .chart-row.three .chart-container-wrapper {
+    width: 100%;
+  }
+  canvas {
+    height: 20vh;
+    width: 500px;
   }
 }
 
