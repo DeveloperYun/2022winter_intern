@@ -60,7 +60,9 @@ def control_initialization(request):
         open_no_reset()
     
     result = show_boards() # 축 정보 #result 는 str
-    return render(request, 'control/ready_to_control.html', {'users':users , 'result':result})
+    count = len(result)
+    context = list(range(count))
+    return render(request, 'control/ready_to_control.html', {'users':users , 'result':result, 'context':context})
 
 def open_no_reset():
 
@@ -146,23 +148,6 @@ def Axis_counter():
     print("============================================")
 
     return lAxisCount.value
-    '''
-    # 지정 베이스 보드의 지정 모듈에서 첫 번째 축 번호를 확인
-    lBoardNo, lModulsPos = 1, 0
-    lFirstAxisNo = c_long()
-    AxmInfoGetFirstAxisNo = loaddll['AxmInfoGetFirstAxisNo']
-    firstAxis = AxmInfoGetFirstAxisNo(lBoardNo,lModulsPos,pointer(lFirstAxisNo))
-
-    if firstAxis == 0000:
-        print("1번 베이스 보드의 0번째 모듈의 시작 축 번호 : ", lFirstAxisNo.value)
-    elif firstAxis == 1053:
-        print("AxmInfoGetFirstAxisNo : AXL lib 초기화 실패")
-    elif firstAxis == 1101:
-        print("AxmInfoGetFirstAxisNo : 유효하지 않은 보드 번호")
-    else:
-        print("AxmInfoGetFirstAxisNo : 알 수 없는 이유로 에러")
-    print("============================================")
-    '''
 
 # 해당 축이 사용 가능한지 확인
 def isInvalidAxis(axis):
@@ -351,19 +336,6 @@ def signal_servo_alarm_Reset(axis):
     else:
         print("alarm status : ",status.value)
 
-'''
-# 지정 축의 외부 센서 및 모터 관련 신호들의 상태를 반환한다
-def status_read_sensor(axis):
-    status = c_ulong()
-    AxmStatusReadMechanical = loaddll['AxmStatusReadMechanical']
-
-    res = AxmStatusReadMechanical(axis, pointer(status))
-    if res == 0000:
-        print("센서 감지 상태 : ",status.value)
-    else:
-        print("센서 상태 읽어올 수 없음")
-'''
-
 # 알람 신호 읽기 (지정 축의 리미트 센서 신호의 입력상태를 반환)
 def signal_read_limit(axis):
     uPositiveStatus, uNegativeStatus = c_ulong(), c_ulong()
@@ -527,20 +499,6 @@ def mot_set_profile_mode(axis):
     else:
         print("뭔지 모를 이유로 profile 모드 설정 실패")
 
-'''
-# 가속도 단위 설정
-def mot_set_accel_unit(axis):
-    AxmMotSetAccelUnit = loaddll['AxmMotSetAccelUnit']
-    AxmMotGetAccelUnit = loaddll['AxmMotGetAccelUnit']
-    uAccelUnit = c_ulong()
-
-    res = AxmMotSetAccelUnit(axis, 0) #0축의 가속도 단위 unit/sec2 설정
-    res2 = AxmMotGetAccelUnit(axis, pointer(uAccelUnit))
-    if res == 0000 and res2 == 0000:
-        print("0축의 가속도단위 설정 완료 : ","UNIT_SEC2" if uAccelUnit.value == 0 else "SEC")
-    else:
-        print("가속도 설정 실패. error: ",res)
-'''
 # 지정 축의 알람 신호 Active level 설정
 def signal_set_servo_alarm(axis):
     AxmSignalSetServoAlarm = loaddll['AxmSignalSetServoAlarm']
@@ -1572,7 +1530,92 @@ def AxmMoveStartMultiPos2(request):
             print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
         else:
             print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
-    
+    else:
+        lAxisNo2 = [0,1,2,3] #[1,2,...]
+        dPos2 = [200000, 300000, 250000, 150000]
+        dVel2 = [5000, 2000, 10000, 4500]
+        dAccel2 = [100, 1000, 500, 800]
+        dDecel2 = [100, 1000, 10000, 8000]
+
+        for i in range(len(lAxisNo2)):
+            multiaxis.append(lAxisNo2[i])
+
+        AxmStatusSetActPos = loaddll['AxmStatusSetActPos']
+        AxmStatusSetCmdPos = loaddll['AxmStatusSetCmdPos']
+
+        for i in range(len(lAxisNo2)):
+            print(">>>>>>>>>>>>>>>> 다축구동 {}축 전처리 <<<<<<<<<<<<<<<".format(lAxisNo2[i]))
+
+            signal_set_limit(lAxisNo2[i])
+            set_moveUnitPerPulse(lAxisNo2[i])
+            set_startVel(lAxisNo2[i])
+            signal_read_limit(lAxisNo2[i])
+
+            res_AxmStatusSetActPos = AxmStatusSetActPos(lAxisNo2[i],i)
+            res_AxmStatusSetCmdPos = AxmStatusSetCmdPos(lAxisNo2[i],i)
+
+            #signal_servo_on(lAxisNo2[i])
+
+            mot_set_abs_mode(lAxisNo2[i])
+            mot_set_profile_mode(lAxisNo2[i])
+
+        if res_AxmStatusSetActPos == 0000:
+            print("AxmStatusSetActPos 함수 실행 성공")
+        elif res_AxmStatusSetActPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetActPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetActPos 설정 실패",res_AxmStatusSetActPos)
+
+        if res_AxmStatusSetCmdPos == 0000:
+            print("AxmStatusSetCmdPos 함수 실행 성공")
+        elif res_AxmStatusSetCmdPos == 4053:
+            print("해당 축 모션 초기화 실패")
+        elif res_AxmStatusSetCmdPos == 4101:
+            print("해당 축이 존재하지 않음")
+        else:
+            print("뭔지 모를 이유로 AxmStatusSetCmdPos 설정 실패",res_AxmStatusSetCmdPos)
+
+        def to_c_array(py_list):
+            arr = (c_int * len(py_list))(*py_list)
+            return arr
+
+        def to_c_array2(py_list):
+            arr = (c_double * len(py_list))(*py_list)
+            return arr
+
+        a = to_c_array(lAxisNo2)
+        b = to_c_array2(dPos2)
+        c = to_c_array2(dVel2)
+        d = to_c_array2(dAccel2)
+        e = to_c_array2(dDecel2)
+
+        for i in range(len(lAxisNo2)):
+            print(">>>",i,"번 축의 세팅")
+            print("축 : ",a[i], ",위치 : ",b[i],
+                ",속도 : ", c[i], ",가속 : ",d[i], ",감속 : ", e[i])
+        print("------------------------------------------------------------")
+        
+        AxmMoveStartMultiPos = loaddll['AxmMoveStartMultiPos'] 
+        AxmMoveStartMultiPos.argtypes = [c_long, POINTER(c_long), POINTER(c_double), POINTER(c_double), POINTER(c_double), POINTER(c_double)]
+        # FIXME: MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임
+        res = AxmMoveStartMultiPos(len(lAxisNo2), a,b,c,d,e)
+        
+        
+        if res == 0000:
+            print("AxmMoveStartMultiPos 성공")
+        elif res == 4154:
+            print(" AXT_RT_MOTION_ERROR_GANTRY_ENABLE : Gantry Slave 축에 Move 명령이 내려졌을 때")
+        elif res == 4201:
+            print(" AXT_RT_MOTION_HOME_SEARCHING : 홈을 찾고있는 중일 때 또는 다른 모션 함수들을 사용할 때")
+        elif res == 4255:
+            print("AXT_RT_MOTION_SETTING_ERROR : 속도, 가속도, 저크, 프로파일 설정이 잘못됨")
+        elif res == 4536:
+            print("MLIII 통신 기준, 지정된 축에 대한 구동 위치 값이 오버플로우임")
+        else:
+            print("뭔가 모를 이유로 AxmMoveStartMultiPos 가 실행되지 않음. error: ",res)
+
     return render(request, 'control/ready_to_control.html',{'users':users})
 ################################# 장고 채널을 활용한 실시간 그래프 consumer #################################
 veldata = 0
