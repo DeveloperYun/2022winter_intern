@@ -70,7 +70,11 @@
                 document.getElementById('box3').removeChild(obj.parentNode);
             }
         </script>
-        
+        <script>
+            {% if show_alert %}
+                alert("축이 1개 이하이므로 다축구동 대상이 아닙니다");
+            {% endif %}
+        </script>
     </head>
     <body>
         <div class="app-container">
@@ -216,7 +220,7 @@
                                         <div class="chart-container-header">
                                           <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
                                         </div>
-                                        <div class="line-chart">
+                                            <div class="line-chart">
                                                 <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
                                                     <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
                                                     <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
