@@ -111,6 +111,21 @@
                         </a>
                     </li>
 
+                    <!-- servo on/off -->
+                    <!--
+                        {% for i in range(axiscounter) %}
+                        <div style="display: flex; align-items: center; margin-bottom: 5px; ">
+                            <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">{{ i }}축 </label>
+                            <form style="display: inline-block; height: 50px; " action="{% url 'control:signal_servo_on' %}" method="POST">
+                            {% csrf_token %}
+                            <input class="checkbox" id="codepen{{ i }}" type="checkbox"/>
+                            <label for="codepen{{ i }}" style="color: white; font-size: 20px; display: inline-block; text-align: center;">serveOn</label>
+                            <input type="hidden" name="value" value="{{ i }}">
+                            </form>
+                        </div>
+                        {% endfor %}
+
+                    -->
                     <div>
                         <div style="display: flex; align-items: center; margin-bottom: 5px; ">
                             <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
@@ -121,7 +136,6 @@
                                 <input type="hidden" name="value" value="0">
                             </form>
                         </div>
-
 
                         <div style="display: flex; align-items: center; margin-bottom: 5px;">
                             <label style="color: white; display: inline-block; font-size: 20px; margin-right: 9px;">1축 </label>
@@ -474,7 +488,6 @@
         <!-- serve on/off 버튼 -->
         <script>
             const toggle = document.getElementById('codepen');
-
             // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState')) {
             toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
@@ -501,7 +514,6 @@
               });
        
             const toggle2 = document.getElementById('codepen2');
-
             // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState2')) {
                 toggle2.checked = JSON.parse(localStorage.getItem('toggleState2'));
@@ -528,7 +540,6 @@
               });
         
             const toggle3 = document.getElementById('codepen3');
-
             // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState3')) {
                 toggle3.checked = JSON.parse(localStorage.getItem('toggleState3'));
@@ -554,7 +565,6 @@
               });
         
             const toggle4 = document.getElementById('codepen4');
-
              // 새로고침 전의 상태를 불러옵니다
             if (localStorage.getItem('toggleState4')) {
                 toggle4.checked = JSON.parse(localStorage.getItem('toggleState4'));
