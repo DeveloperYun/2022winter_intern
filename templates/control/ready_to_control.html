@@ -187,6 +187,7 @@
                             </div>
                         </form>                        
                     </li>
+                   
                     <li class="nav-list-item active">
                         <form id="sstop" action="{% url 'control:AxmMoveSStop' %}" method="POST">
                             {% csrf_token %}
@@ -340,12 +341,21 @@
                                             </div>
                                         </form>
                                     </div>
-                            
+                                    
+                                    <!-- TODO: 동적 긴급 정지 버튼으로 수정 -->
                                     <button class="accordion">
                                         <span>Single Axis : 긴급 정지</span>
                                     </button>
                                     <div class="panel">
-                                        <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
+                                        {% for i in context %}
+                                            <form id="SingleAxisEStop{{i}}" action="{% url 'control:SingleAxisEStop' i %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="{{i}}축">
+                                                </div>
+                                            </form>
+                                        {% endfor %}
+                                        {% comment %} <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
                                                 <input type="submit" value="0축">
@@ -368,37 +378,48 @@
                                             <div class="small text-white">
                                                 <input type="submit" value="3축">
                                             </div>
-                                        </form>
+                                        </form> {% endcomment %}
                                     </div>
-                                
+
+                                    <!-- TODO: 동적 감속 정지 버튼으로 수정 -->
                                     <button class="accordion">
                                         <span>Single Axis : 감속 정지</span>
                                     </button>
                                     <div class="panel">
-                                        <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input type="submit" value="0축">
-                                            </div>
-                                        </form>
-                                        <form id="SingleAxisSStop1" action="{% url 'control:SingleAxisSStop1' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input type="submit" value="1축">
-                                            </div>
-                                        </form>
-                                        <form id="SingleAxisSStop2" action="{% url 'control:SingleAxisSStop2' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input type="submit" value="2축">
-                                            </div>
-                                        </form>
-                                        <form id="SingleAxisSStop3" action="{% url 'control:SingleAxisSStop3' %}" method="POST">
-                                            {% csrf_token %}
-                                            <div class="small text-white">
-                                                <input type="submit" value="3축">
-                                            </div>
-                                        </form>
+                                        {% for i in context %}
+                                            <form id="SingleAxisSStop{{i}}" action="{% url 'control:SingleAxisSStop' i %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="{{i}}축">
+                                                </div>
+                                            </form>
+                                        {% endfor %}
+                                        {% comment %}                                         
+                                            <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="0축">
+                                                </div>
+                                            </form>
+                                            <form id="SingleAxisSStop1" action="{% url 'control:SingleAxisSStop1' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="1축">
+                                                </div>
+                                            </form>
+                                            <form id="SingleAxisSStop2" action="{% url 'control:SingleAxisSStop2' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="2축">
+                                                </div>
+                                            </form>
+                                            <form id="SingleAxisSStop3" action="{% url 'control:SingleAxisSStop3' %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="small text-white">
+                                                    <input type="submit" value="3축">
+                                                </div>
+                                            </form> 
+                                        {% endcomment %}
                                     </div>
                                 
                                     <button class="accordion">
@@ -797,6 +818,7 @@
                 xhr.send(data);
             });
 
+            //감속도 설정 정지
             document.getElementById("SingleAxisStop").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
@@ -810,7 +832,8 @@
                 xhr.send(data);
             });
             
-            document.getElementById("SingleAxisEStop").addEventListener("submit", function(event) {
+            //긴급정지
+            document.getElementById("SingleAxisEStop0").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;
@@ -862,7 +885,8 @@
                 xhr.send(data);
             });
 
-            document.getElementById("SingleAxisSStop").addEventListener("submit", function(event) {
+            //감속정지
+            document.getElementById("SingleAxisSStop0").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;

@@ -1003,7 +1003,7 @@ def SingleAxisStop(request):
     return render(request, 'control/ready_to_control.html',{'users':users})
 
 # 축 별로 긴급 정지
-def SingleAxisEStop(request):
+def SingleAxisEStop0(request):
     users = User.objects.all()
     AxmMoveEStop = loaddll['AxmMoveEStop']
 
@@ -1076,7 +1076,7 @@ def SingleAxisEStop3(request):
     return render(request, 'control/ready_to_control.html',{'users':users})
 
 # 축 별로 감속 정지
-def SingleAxisSStop(request):
+def SingleAxisSStop0(request):
     users = User.objects.all()
     AxmMoveSStop = loaddll['AxmMoveSStop']
 
