@@ -112,7 +112,7 @@
                     </li>
 
                     <!-- servo on/off -->
-                    <!--TODO: "동적" 스위치 구현부: codepen0...codepen3.. -->  
+                    <!--FIXME: "동적" 스위치 구현부: codepen0...codepen3.. -->  
                     <div>                               
                         {% for i in context %}
                             <div style="display: flex; align-items: center; margin-bottom: 5px; ">
@@ -128,7 +128,7 @@
                     </div>  
                             
                     {% comment %} 
-                    <!--TODO: 0,1,2,3축 고정 서브온오프 -->
+                    <!-- 0,1,2,3축 고정 서브온오프 -->
                     <div>
                         <div style="display: flex; align-items: center; margin-bottom: 5px; ">
                             <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
@@ -347,15 +347,7 @@
                                         <span>Single Axis : 긴급 정지</span>
                                     </button>
                                     <div class="panel">
-                                        {% for i in context %}
-                                            <form id="SingleAxisEStop{{i}}" action="{% url 'control:SingleAxisEStop' i %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="{{i}}축">
-                                                </div>
-                                            </form>
-                                        {% endfor %}
-                                        {% comment %} <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
+                                        <form id="SingleAxisEStop" action="{% url 'control:SingleAxisEStop' %}" method="POST">
                                             {% csrf_token %}
                                             <div class="small text-white">
                                                 <input type="submit" value="0축">
@@ -378,7 +370,7 @@
                                             <div class="small text-white">
                                                 <input type="submit" value="3축">
                                             </div>
-                                        </form> {% endcomment %}
+                                        </form>
                                     </div>
 
                                     <!-- TODO: 동적 감속 정지 버튼으로 수정 -->
@@ -386,40 +378,30 @@
                                         <span>Single Axis : 감속 정지</span>
                                     </button>
                                     <div class="panel">
-                                        {% for i in context %}
-                                            <form id="SingleAxisSStop{{i}}" action="{% url 'control:SingleAxisSStop' i %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="{{i}}축">
-                                                </div>
-                                            </form>
-                                        {% endfor %}
-                                        {% comment %}                                         
-                                            <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="0축">
-                                                </div>
-                                            </form>
-                                            <form id="SingleAxisSStop1" action="{% url 'control:SingleAxisSStop1' %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="1축">
-                                                </div>
-                                            </form>
-                                            <form id="SingleAxisSStop2" action="{% url 'control:SingleAxisSStop2' %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="2축">
-                                                </div>
-                                            </form>
-                                            <form id="SingleAxisSStop3" action="{% url 'control:SingleAxisSStop3' %}" method="POST">
-                                                {% csrf_token %}
-                                                <div class="small text-white">
-                                                    <input type="submit" value="3축">
-                                                </div>
-                                            </form> 
-                                        {% endcomment %}
+                                        <form id="SingleAxisSStop" action="{% url 'control:SingleAxisSStop' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="0축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop1" action="{% url 'control:SingleAxisSStop1' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="1축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop2" action="{% url 'control:SingleAxisSStop2' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="2축">
+                                            </div>
+                                        </form>
+                                        <form id="SingleAxisSStop3" action="{% url 'control:SingleAxisSStop3' %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="small text-white">
+                                                <input type="submit" value="3축">
+                                            </div>
+                                        </form> 
                                     </div>
                                 
                                     <button class="accordion">
@@ -833,7 +815,7 @@
             });
             
             //긴급정지
-            document.getElementById("SingleAxisEStop0").addEventListener("submit", function(event) {
+            document.getElementById("SingleAxisEStop").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;
@@ -886,7 +868,7 @@
             });
 
             //감속정지
-            document.getElementById("SingleAxisSStop0").addEventListener("submit", function(event) {
+            document.getElementById("SingleAxisSStop").addEventListener("submit", function(event) {
                 event.preventDefault();
                 
                 var form = event.target;
