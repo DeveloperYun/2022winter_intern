@@ -112,7 +112,7 @@
                     </li>
 
                     <!-- servo on/off -->
-                    <!--TODO: "동적" 스위치 구현부: codepen0...codepen3 -->  
+                    <!--TODO: "동적" 스위치 구현부: codepen0...codepen3.. -->  
                     <div>                               
                         {% for i in context %}
                             <div style="display: flex; align-items: center; margin-bottom: 5px; ">
@@ -127,6 +127,8 @@
                         {% endfor %}
                     </div>  
                             
+                    {% comment %} 
+                    <!--TODO: 0,1,2,3축 고정 서브온오프 -->
                     <div>
                         <div style="display: flex; align-items: center; margin-bottom: 5px; ">
                             <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">0축 </label>
@@ -167,7 +169,8 @@
                                 <input type="hidden" name="value3" value="3">
                             </form>
                         </div>
-                    </div> 
+                    </div>  
+                    {% endcomment %}
                     <br/><br/>
                    
 
@@ -486,8 +489,165 @@
         <script src="{% static 'js/modal.js'%}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{% static 'js/scripts.js'%}"></script>
-        <!-- serve on/off 버튼 -->
+
+        <!--TODO: 동적 서브온오프 버튼(최대 6축이라 가정) -->
         <script>
+            const toggle = document.getElementById('codepen0');
+            if (localStorage.getItem('toggleState')) {
+                toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
+            }
+            toggle.addEventListener('change', function() {
+                if (toggle.checked) {
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 0);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
+                } else {
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 0);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
+                }
+
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState', toggle.checked);
+              }
+            );
+            
+            const toggle1 = document.getElementById('codepen1');
+            if (localStorage.getItem('toggleState1')) {
+                toggle1.checked = JSON.parse(localStorage.getItem('toggleState1'));
+            }
+            toggle1.addEventListener('change', function() {
+                if (toggle1.checked) {
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 1);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
+                } else {
+                    const formData = new FormData(document.forms[0]);
+                    formData.set('lAxisNo', 1);
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                    xhr.send(formData);
+                }
+
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState1', toggle1.checked);
+              }
+            );
+
+            const toggle2 = document.getElementById('codepen2');
+            if (localStorage.getItem('toggleState2')) {
+                toggle2.checked = JSON.parse(localStorage.getItem('toggleState2'));
+                }
+            toggle2.addEventListener('change', function() {
+                if (toggle2.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 2);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 2);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState2', toggle2.checked);
+              }
+            );
+        
+            const toggle3 = document.getElementById('codepen3');
+            if (localStorage.getItem('toggleState3')) {
+                toggle3.checked = JSON.parse(localStorage.getItem('toggleState3'));
+                }
+            toggle3.addEventListener('change', function() {
+                if (toggle3.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 3);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 3);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState3', toggle3.checked);
+              }
+            );
+        
+            const toggle4 = document.getElementById('codepen4');
+             if (localStorage.getItem('toggleState4')) {
+                toggle4.checked = JSON.parse(localStorage.getItem('toggleState4'));
+            }
+            toggle4.addEventListener('change', function() {
+                if (toggle4.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 4);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 4);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState4', toggle4.checked);
+              }
+            );
+
+            const toggle5 = document.getElementById('codepen5');
+             if (localStorage.getItem('toggleState5')) {
+                toggle5.checked = JSON.parse(localStorage.getItem('toggleState5'));
+            }
+            toggle5.addEventListener('change', function() {
+                if (toggle5.checked) {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 5);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_on" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                } else {
+                  const formData = new FormData(document.forms[0]);
+                  formData.set('lAxisNo', 5);
+                  const xhr = new XMLHttpRequest();
+                  xhr.open('POST', '{% url "control:signal_servo_off" %}');
+                  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+                  xhr.send(formData);
+                }
+                // 상태 정보를 저장합니다
+                localStorage.setItem('toggleState5', toggle5.checked);
+              }
+            );
+        </script>
+
+        <!-- 정적 serve on/off 버튼 -->
+        {% comment %} <script>
             const toggle = document.getElementById('codepen');
             if (localStorage.getItem('toggleState')) {
                 toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
@@ -589,7 +749,7 @@
                 localStorage.setItem('toggleState4', toggle4.checked);
               }
             );
-        </script>
+        </script> {% endcomment %}
 
         <!-- accordion -->
         <script>
