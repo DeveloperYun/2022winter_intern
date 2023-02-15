@@ -216,9 +216,12 @@ button {
 }
 
 .line-chart {
+  max-width: 100%;
   width: 100%;
-  overflow-x: auto;
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chart-container {

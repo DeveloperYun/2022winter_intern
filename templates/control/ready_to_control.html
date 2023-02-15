@@ -113,7 +113,7 @@
 
                     <!-- servo on/off -->
                     <!--FIXME: "동적" 스위치 구현부: codepen0...codepen3.. -->  
-                    <div>                               
+                    {% comment %} <div>                               
                         {% for i in context %}
                             <div style="display: flex; align-items: center; margin-bottom: 5px; ">
                                 <label style="color: white; display: inline-block; font-size: 20px; margin-right: 5px;">{{ i }}축 </label>
@@ -125,9 +125,9 @@
                                 </form>
                             </div>
                         {% endfor %}
-                    </div>  
+                    </div>   {% endcomment %}
                             
-                    {% comment %} 
+                    
                     <!-- 0,1,2,3축 고정 서브온오프 -->
                     <div>
                         <div style="display: flex; align-items: center; margin-bottom: 5px; ">
@@ -170,7 +170,7 @@
                             </form>
                         </div>
                     </div>  
-                    {% endcomment %}
+                    
                     <br/><br/>
                    
 
@@ -240,11 +240,11 @@
                                           <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
                                         </div>
                                             <div class="line-chart">
-                                                <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%">                                                <div style="margin-right: 1em;">
+                                                <div style="margin-right: 1em;">
                                                     <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
                                                     <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
-                                                <div style="margin-right: 1em;">
+                                                <div>
                                                     <h2 style="color:white; display:inline-block; margin:0">1축 : </h2>
                                                     <h2 id="app1" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
@@ -256,8 +256,8 @@
                                                     <h2 style="color:white; display:inline-block; margin:0">3축 : </h2>
                                                     <h2 id="app3" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
+                                                <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
                                             </div>
-                                            <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
                                         </div>
                                       </div>
                                     </div>
@@ -298,7 +298,6 @@
                                         </form>
                                     </div>
 
-                                    
                                     <button class="accordion">
                                         <span>Velocity Move (Jog Move)</span>
                                     </button>
@@ -494,7 +493,7 @@
         <script src="{% static 'js/scripts.js'%}"></script>
 
         <!--TODO: 동적 서브온오프 버튼(최대 6축이라 가정) -->
-        <script>
+        {% comment %} <script>
             const toggle = document.getElementById('codepen0');
             if (localStorage.getItem('toggleState')) {
                 toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
@@ -647,10 +646,10 @@
                 localStorage.setItem('toggleState5', toggle5.checked);
               }
             );
-        </script>
+        </script> {% endcomment %}
 
         <!-- 정적 serve on/off 버튼 -->
-        {% comment %} <script>
+        <script>
             const toggle = document.getElementById('codepen');
             if (localStorage.getItem('toggleState')) {
                 toggle.checked = JSON.parse(localStorage.getItem('toggleState'));
@@ -752,7 +751,7 @@
                 localStorage.setItem('toggleState4', toggle4.checked);
               }
             );
-        </script> {% endcomment %}
+        </script>
 
         <!-- accordion -->
         <script>
