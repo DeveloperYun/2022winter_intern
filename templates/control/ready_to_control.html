@@ -203,7 +203,7 @@
                     </li>
                     
                     <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%">
-                        <div style="margin-right: 1em;">
+                        <div style="">
                             <h2 style="color:white; display:inline-block; margin:0">원점탐색결과</h2>
                             <h2 id="" style="color:white; display:inline-block">{{homesearch}}</h2>
                         </div>
@@ -232,15 +232,14 @@
                     <main>
                         <div class="container-fluid px-4">
                             {% if user.is_authenticated %}
-                                
                                 <div class="chart-row two big">
                                     <div class="chart-container-wrapper big">
-                                      <div class="chart-container">
-                                        <div class="chart-container-header">
-                                          <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
-                                        </div>
+                                        <div class="chart-container">
+                                            <div class="chart-container-header">
+                                            <h2>StartPos, MoveVel, MultiPos 속도 측정 그래프</h2>
+                                            </div>
                                             <div class="line-chart">
-                                                <div style="margin-right: 1em;">
+                                                <div style="">
                                                     <h2 style="color:white; display:inline-block; margin:0">0축 : </h2>
                                                     <h2 id="app" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
@@ -248,18 +247,17 @@
                                                     <h2 style="color:white; display:inline-block; margin:0">1축 : </h2>
                                                     <h2 id="app1" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
-                                                <div style="margin-right: 1em;">
+                                                <div style="">
                                                     <h2 style="color:white; display:inline-block; margin:0">2축 : </h2>
                                                     <h2 id="app2" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
-                                                <div style="margin-right: 1em;">
+                                                <div style="">
                                                     <h2 style="color:white; display:inline-block; margin:0">3축 : </h2>
                                                     <h2 id="app3" style="color:white; display:inline-block">{{text}}</h2>
                                                 </div>
                                                 <canvas id="myChart" style="height:30vh; width:50vw"></canvas>
                                             </div>
                                         </div>
-                                      </div>
                                     </div>
                                 </div>
                                 
