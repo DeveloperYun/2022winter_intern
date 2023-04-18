@@ -6,4 +6,5 @@
 <h5>channels : 3.0.2
 <h5>asgiref : 3.2.10
 
--- 시연영상: https://www.youtube.com/watch?v=B0ldawMC3Dk
+-----
+시연영상: https://www.youtube.com/watch?v=B0ldawMC3Dk
