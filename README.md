@@ -4,11 +4,11 @@
 분산형 모션 제어 제품(이하 네트워크 제품)을 웹 기반으로 제어하기 위한 것이 주요 목표이다.
 
 <h3>프로젝트에 사용된 tools</h3>
-<h5>python : 3.9.5
-<h5>Django : 3.2
-<h5>pyinstaller : 5.0.1
-<h5>channels : 3.0.2
-<h5>asgiref : 3.2.10
+<h5>python : 3.9.5</h5>
+<h5>Django : 3.2</h5>
+<h5>pyinstaller : 5.0.1</h5>
+<h5>channels : 3.0.2</h5>
+<h5>asgiref : 3.2.10</h5>
 
 <h5>요구조사에 따라 작성한 유즈케이스 다이아그램
   
