@@ -4,8 +4,7 @@
 분산형 모션 제어 제품(이하 네트워크 제품)을 웹 기반으로 제어하기 위한 것이 주요 목표이다.
 
 <h3>프로젝트에 사용된 tools</h3>
-<h5>python : 3.9.5</h5>
-<h5>Django : 3.2</h5>
+<h5>python : 3.9.5</h5><h5>Django : 3.2</h5>
 <h5>pyinstaller : 5.0.1</h5>
 <h5>channels : 3.0.2</h5>
 <h5>asgiref : 3.2.10</h5>
@@ -15,13 +14,13 @@
 ![20240315_201251](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/14c8365f-dc0a-40f3-862c-61d853c4d4e1)
 
 <h3>주요 기능 목록</h3>
-1. AxmMovePos (테스트 용 단축 구동)
-2. AxmMoveStartPos (단축 구동)
-3. AxmMoveVel (단축 구동)
-4. AxmHomeSetStart (단축 구동)
-5. AxmMoveStartMultiPos (다축 구동)
-6. AxmStatusReadVel (속도 읽기)
-7. AxmMoveSStop, AxmMoveEStop, AxmMoveStop (정지)
+1. AxmMovePos (테스트 용 단축 구동)<br/>
+2. AxmMoveStartPos (단축 구동)<br/>
+3. AxmMoveVel (단축 구동)<br/>
+4. AxmHomeSetStart (단축 구동)<br/>
+5. AxmMoveStartMultiPos (다축 구동)<br/>
+6. AxmStatusReadVel (속도 읽기)<br/>
+7. AxmMoveSStop, AxmMoveEStop, AxmMoveStop (정지)<br/>
 
 
 -----
