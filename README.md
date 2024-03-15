@@ -22,10 +22,22 @@
 6. AxmStatusReadVel (속도 읽기)<br/>
 7. AxmMoveSStop, AxmMoveEStop, AxmMoveStop (정지)<br/>
 
-<h3>주요 화면</h3>
-1. 접속화면 및 회원/로그인 화면<br/> 
+<h3>주요 화면</h3> 
 
-![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/d9ceaf16-8e3e-4d02-963d-90aab8656cfe)
+1. 접속화면 및 회원/로그인 화면<br/>
+![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/e94a9b32-ead4-4f5a-a2af-47ff1ecac754)
+
+2. 로그인 후 대시보드 화면<br/>
+![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/188327b9-f8ec-40d0-9866-d1a1565c4e83)
+
+3. 동작 화면<br/>
+![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/d4de6fa1-39a7-4bfd-bfaf-8077ea3b62dd)
+
+4. 모바일 화면<br/>
+![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/d704e893-b07b-4785-9410-9f5961662ca7)
+
+5. 원격 제어 화면<br/>
+![image](https://github.com/DeveloperYun/2022winter_intern/assets/81633639/8c6c543d-21d4-4584-afd6-6d5cb31699d1)
 
 -----
 시연영상: https://www.youtube.com/watch?v=B0ldawMC3Dk
